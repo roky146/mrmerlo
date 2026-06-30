@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+.env
+.env.local
+
+# graphify
+graphify-out/
+.graphify_*
+
+# referencia (bundles minificados de otros sitios, no parte del portafolio)
+EXAMPLES/
