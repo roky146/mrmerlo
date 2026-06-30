@@ -1,0 +1,10 @@
+{
+  // Cloudflare Workers (Static Assets) — sirve el export estático de Next desde ./out
+  "name": "mrmerlo",
+  "compatibility_date": "2025-06-01",
+  "assets": {
+    "directory": "./out",
+    // Next genera 404.html en el export; lo servimos en rutas no encontradas
+    "not_found_handling": "404-page"
+  }
+}
