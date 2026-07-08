@@ -1,23 +1,18 @@
-import Head from 'next/head'
 import Hero from '../components/Hero'
 import FeaturedProjects from '../components/Projects/Featured'
-import MoreProjects from '../components/Projects/MoreProjects'
 import Footer from '../components/Footer'
+import Seo from '../components/Seo'
+import JsonLd from '../components/JsonLd'
+import { graph, profilePageSchema, webDevServiceSchema } from '../data/site'
 
 export default function Home() {
   return (
     <>
-      <Head>
-        <title>Marcos Rodríguez — mrmerlo.com</title>
-        <meta name="description" content="Marcos Rodríguez Merlo — Ingeniero de Producción TI, estudiante de Ciberseguridad y desarrollador creativo desde Santo Domingo, RD." />
-        <link rel="canonical" href="https://mrmerlo.com" />
-        <meta property="og:url"   content="https://mrmerlo.com" />
-        <meta property="og:title" content="Marcos Rodríguez — mrmerlo.com" />
-      </Head>
-      <main>
+      <Seo path="/" />
+      <JsonLd data={graph(profilePageSchema(), webDevServiceSchema())} />
+      <main id="main-content">
         <Hero />
         <FeaturedProjects />
-        <MoreProjects />
         <Footer />
       </main>
     </>

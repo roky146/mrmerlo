@@ -6,8 +6,9 @@
    (title, technologies, palette, colores, year…) se dejan como string.
 
    localize(node, lang) resuelve recursivamente cualquier estructura
-   (objeto de proyecto, array de tags, features…) al idioma pedido,
-   con español como fallback.
+   al idioma pedido, con español como fallback.
+
+   `highlights`: etiquetas cortas para el mosaico/bento de cada proyecto.
    ────────────────────────────────────────────────────────────── */
 
 const LANGS = ['es', 'en', 'it', 'fr', 'pt']
@@ -33,60 +34,9 @@ const T = {
   automation: { es: 'Automatización', en: 'Automation',     it: 'Automazione',     fr: 'Automatisation',  pt: 'Automação' },
   desktop:    { es: 'Escritorio',     en: 'Desktop',        it: 'Desktop',         fr: 'Bureau',          pt: 'Desktop' },
   observ:     { es: 'Observabilidad', en: 'Observability',  it: 'Osservabilità',   fr: 'Observabilité',   pt: 'Observabilidade' },
-  analysis:   { es: 'Análisis',       en: 'Analysis',       it: 'Analisi',         fr: 'Analyse',         pt: 'Análise' },
 }
 
 export const featuredProjects = [
-  {
-    id: 'yukikun-pos',
-    slug: 'yukikun-pos',
-    title: 'Yukikun POS',
-    subtitle: {
-      es: 'Plataforma POS — Restaurante de sushi full-stack',
-      en: 'POS Platform — Full-stack sushi restaurant',
-      it: 'Piattaforma POS — Ristorante di sushi full-stack',
-      fr: 'Plateforme POS — Restaurant de sushi full-stack',
-      pt: 'Plataforma POS — Restaurante de sushi full-stack',
-    },
-    description: {
-      es: 'Sistema POS completo para un negocio de sushi con cuatro interfaces en tiempo real: Admin, Camarero, Cocina (KDS) y Menú público. Monorepo TypeScript con Node.js + Fastify y React 18.',
-      en: 'Complete POS system for a sushi business with four real-time interfaces: Admin, Waiter, Kitchen (KDS) and public Menu. TypeScript monorepo with Node.js + Fastify and React 18.',
-      it: 'Sistema POS completo per un ristorante di sushi con quattro interfacce in tempo reale: Admin, Cameriere, Cucina (KDS) e Menù pubblico. Monorepo TypeScript con Node.js + Fastify e React 18.',
-      fr: 'Système POS complet pour un restaurant de sushi avec quatre interfaces en temps réel : Admin, Serveur, Cuisine (KDS) et Menu public. Monorepo TypeScript avec Node.js + Fastify et React 18.',
-      pt: 'Sistema POS completo para um negócio de sushi com quatro interfaces em tempo real: Admin, Garçom, Cozinha (KDS) e Menu público. Monorepo TypeScript com Node.js + Fastify e React 18.',
-    },
-    tags: ['TypeScript', 'Node.js', 'React', 'Socket.io', 'PWA'],
-    year: '2025',
-    color: '#52B788',
-    colorDark: '#1B4332',
-    role: {
-      es: 'Desarrollador Full-Stack',
-      en: 'Full-Stack Developer',
-      it: 'Sviluppatore Full-Stack',
-      fr: 'Développeur Full-Stack',
-      pt: 'Desenvolvedor Full-Stack',
-    },
-    overview: {
-      es: 'Yukikun POS es una plataforma de operaciones completa para un negocio de sushi con modalidades de salón, para llevar, delivery y menú web público. Construida como monorepo (pnpm workspaces) con TypeScript en toda la stack, ofrece comunicación en tiempo real vía Socket.io entre el panel de admin, las pantallas de camarero, la cocina KDS y el menú del cliente. Incluye gestión de mesas con floor plan drag & drop, arqueo de turnos de caja, analytics, impresión térmica ESC/POS y estructura lista para facturación electrónica.',
-      en: 'Yukikun POS is a complete operations platform for a sushi business with dine-in, takeout, delivery and public web menu. Built as a monorepo (pnpm workspaces) with TypeScript across the whole stack, it provides real-time communication via Socket.io between the admin panel, waiter screens, the KDS kitchen and the customer menu. It includes table management with a drag & drop floor plan, cash-shift reconciliation, analytics, ESC/POS thermal printing and a structure ready for electronic invoicing.',
-      it: 'Yukikun POS è una piattaforma operativa completa per un ristorante di sushi con servizio al tavolo, asporto, delivery e menù web pubblico. Costruita come monorepo (pnpm workspaces) con TypeScript su tutto lo stack, offre comunicazione in tempo reale via Socket.io tra il pannello admin, le schermate del cameriere, la cucina KDS e il menù del cliente. Include gestione dei tavoli con floor plan drag & drop, riconciliazione dei turni di cassa, analytics, stampa termica ESC/POS e una struttura pronta per la fatturazione elettronica.',
-      fr: "Yukikun POS est une plateforme d'opérations complète pour un restaurant de sushi avec service sur place, à emporter, livraison et menu web public. Conçue comme un monorepo (pnpm workspaces) avec TypeScript sur toute la stack, elle offre une communication en temps réel via Socket.io entre le panneau d'admin, les écrans serveur, la cuisine KDS et le menu client. Elle inclut la gestion des tables avec un plan de salle drag & drop, le rapprochement des caisses, des analytics, l'impression thermique ESC/POS et une structure prête pour la facturation électronique.",
-      pt: 'Yukikun POS é uma plataforma de operações completa para um negócio de sushi com salão, para viagem, delivery e menu web público. Construída como monorepo (pnpm workspaces) com TypeScript em toda a stack, oferece comunicação em tempo real via Socket.io entre o painel de admin, as telas de garçom, a cozinha KDS e o menu do cliente. Inclui gestão de mesas com floor plan drag & drop, fechamento de turnos de caixa, analytics, impressão térmica ESC/POS e estrutura pronta para faturação eletrónica.',
-    },
-    features: {
-      es: ['4 interfaces en tiempo real (Admin, Camarero, Cocina, Menú)', 'Floor plan interactivo con drag & drop de mesas', 'Pedidos en tiempo real vía Socket.io', 'Gestión de turnos de caja con arqueo', 'Analytics y reportes avanzados', 'Impresión térmica ESC/POS'],
-      en: ['4 real-time interfaces (Admin, Waiter, Kitchen, Menu)', 'Interactive floor plan with drag & drop tables', 'Real-time orders via Socket.io', 'Cash-shift management with reconciliation', 'Advanced analytics and reports', 'ESC/POS thermal printing'],
-      it: ['4 interfacce in tempo reale (Admin, Cameriere, Cucina, Menù)', 'Floor plan interattivo con drag & drop dei tavoli', 'Ordini in tempo reale via Socket.io', 'Gestione dei turni di cassa con riconciliazione', 'Analytics e report avanzati', 'Stampa termica ESC/POS'],
-      fr: ['4 interfaces en temps réel (Admin, Serveur, Cuisine, Menu)', 'Plan de salle interactif avec tables drag & drop', 'Commandes en temps réel via Socket.io', 'Gestion des caisses avec rapprochement', 'Analytics et rapports avancés', 'Impression thermique ESC/POS'],
-      pt: ['4 interfaces em tempo real (Admin, Garçom, Cozinha, Menu)', 'Floor plan interativo com drag & drop de mesas', 'Pedidos em tempo real via Socket.io', 'Gestão de turnos de caixa com fecho', 'Analytics e relatórios avançados', 'Impressão térmica ESC/POS'],
-    },
-    technologies: ['TypeScript', 'Node.js', 'Fastify', 'React 18', 'Vite', 'Socket.io', 'Drizzle ORM', 'PostgreSQL', 'Tailwind CSS', 'Zustand', 'PWA', 'pnpm Workspaces'],
-    palette: ['#1B4332', '#52B788', '#D8F3DC', '#FFFFFF'],
-    typography: ['Inter', 'Satoshi'],
-    github: null,
-    private: true,
-  },
-
   {
     id: 'god',
     slug: 'god',
@@ -109,6 +59,8 @@ export const featuredProjects = [
     year: '2026',
     color: '#A8E6C1',
     colorDark: '#2D6A4F',
+    operatingSystem: 'Windows, macOS, Linux',
+    highlights: ['APIs', 'Usuarios', 'Graphman', 'RestMan', 'mTLS', 'Multiplataforma'],
     role: {
       es: 'Desarrollador',
       en: 'Developer',
@@ -159,6 +111,8 @@ export const featuredProjects = [
     year: '2026',
     color: '#6366F1',
     colorDark: '#4F46E5',
+    operatingSystem: 'Kubernetes, Linux',
+    highlights: ['Kubernetes', 'Informers', 'Sharding', 'Zabbix', 'OpenTelemetry', 'Distroless'],
     role: {
       es: 'Desarrollador & Arquitecto',
       en: 'Developer & Architect',
@@ -187,190 +141,45 @@ export const featuredProjects = [
     private: true,
   },
 
+  /* ── Capacidad (no proyecto): desarrollo web/app. Sin detalle, sin citar clientes. ── */
   {
-    id: 'velox-motors',
-    slug: 'velox-motors',
-    title: 'Velox Motors',
+    id: 'web-dev',
+    capability: true,
+    slug: null,
+    title: {
+      es: 'Desarrollo Web & Apps',
+      en: 'Web & App Development',
+      it: 'Sviluppo Web & App',
+      fr: 'Développement Web & Apps',
+      pt: 'Desenvolvimento Web & Apps',
+    },
     subtitle: {
-      es: 'Concesionario web — PHP full-stack',
-      en: 'Web dealership — PHP full-stack',
-      it: 'Concessionaria web — PHP full-stack',
-      fr: 'Concession web — PHP full-stack',
-      pt: 'Concessionária web — PHP full-stack',
+      es: 'Aplicaciones a medida — full-stack',
+      en: 'Custom applications — full-stack',
+      it: 'Applicazioni su misura — full-stack',
+      fr: 'Applications sur mesure — full-stack',
+      pt: 'Aplicações à medida — full-stack',
     },
     description: {
-      es: 'Sistema web completo para un concesionario de vehículos con panel de administración, galería de inventario, calculadora de valoración de usados y seguridad implementada en capas.',
-      en: 'Complete web system for a vehicle dealership with an admin panel, inventory gallery, used-car valuation calculator and layered security.',
-      it: 'Sistema web completo per una concessionaria di veicoli con pannello di amministrazione, galleria di inventario, calcolatrice di valutazione dell\'usato e sicurezza a più livelli.',
-      fr: "Système web complet pour une concession de véhicules avec panneau d'administration, galerie d'inventaire, calculateur d'estimation de l'occasion et sécurité en couches.",
-      pt: 'Sistema web completo para uma concessionária de veículos com painel de administração, galeria de inventário, calculadora de avaliação de usados e segurança em camadas.',
+      es: 'Diseño y construyo aplicaciones web y de escritorio a medida: paneles de administración, sistemas POS, APIs e integraciones y automatización de procesos. Full-stack con React, Node.js, TypeScript y Flutter, con foco en rendimiento, seguridad y una UX limpia.',
+      en: 'I design and build custom web and desktop applications: admin panels, POS systems, APIs and integrations, and process automation. Full-stack with React, Node.js, TypeScript and Flutter, focused on performance, security and clean UX.',
+      it: 'Progetto e costruisco applicazioni web e desktop su misura: pannelli di amministrazione, sistemi POS, API e integrazioni e automazione dei processi. Full-stack con React, Node.js, TypeScript e Flutter, con focus su performance, sicurezza e UX pulita.',
+      fr: "Je conçois et développe des applications web et de bureau sur mesure : panneaux d'administration, systèmes POS, API et intégrations, et automatisation des processus. Full-stack avec React, Node.js, TypeScript et Flutter, axé sur la performance, la sécurité et une UX soignée.",
+      pt: 'Desenho e construo aplicações web e de desktop à medida: painéis de administração, sistemas POS, APIs e integrações e automação de processos. Full-stack com React, Node.js, TypeScript e Flutter, com foco em desempenho, segurança e uma UX limpa.',
     },
-    tags: ['PHP', 'MySQL', 'JavaScript', T.security],
-    year: '2025',
-    color: '#74C69D',
+    tags: ['React', 'Node.js', 'TypeScript', 'Flutter'],
+    color: '#40916C',
     colorDark: '#1B4332',
-    role: {
-      es: 'Desarrollador Full-Stack',
-      en: 'Full-Stack Developer',
-      it: 'Sviluppatore Full-Stack',
-      fr: 'Développeur Full-Stack',
-      pt: 'Desenvolvedor Full-Stack',
-    },
-    overview: {
-      es: 'Velox Motors es un sistema web completo para un concesionario. Incluye un frontend responsivo con galería de vehículos y calculadora de valoración interactiva, un panel de administración PHP con roles (Admin, Editor, Viewer), auditoría de operaciones, API REST propia y múltiples capas de seguridad: protección CSRF, rate limiting en login, validación de subida de archivos y sesiones seguras.',
-      en: 'Velox Motors is a complete web system for a dealership. It includes a responsive frontend with a vehicle gallery and an interactive valuation calculator, a PHP admin panel with roles (Admin, Editor, Viewer), operations auditing, its own REST API and multiple security layers: CSRF protection, login rate limiting, file-upload validation and secure sessions.',
-      it: 'Velox Motors è un sistema web completo per una concessionaria. Include un frontend responsive con galleria di veicoli e calcolatrice di valutazione interattiva, un pannello di amministrazione PHP con ruoli (Admin, Editor, Viewer), audit delle operazioni, una propria REST API e più livelli di sicurezza: protezione CSRF, rate limiting al login, validazione degli upload e sessioni sicure.',
-      fr: "Velox Motors est un système web complet pour une concession. Il inclut un frontend responsive avec galerie de véhicules et calculateur d'estimation interactif, un panneau d'administration PHP avec rôles (Admin, Editor, Viewer), l'audit des opérations, sa propre API REST et plusieurs couches de sécurité : protection CSRF, rate limiting au login, validation des téléversements et sessions sécurisées.",
-      pt: 'Velox Motors é um sistema web completo para uma concessionária. Inclui um frontend responsivo com galeria de veículos e calculadora de avaliação interativa, um painel de administração PHP com papéis (Admin, Editor, Viewer), auditoria de operações, uma API REST própria e múltiplas camadas de segurança: proteção CSRF, rate limiting no login, validação de upload de ficheiros e sessões seguras.',
-    },
-    features: {
-      es: ['Panel de administración con roles y permisos', 'Galería de vehículos con filtros dinámicos', 'Calculadora de valoración de usados', 'Auditoría completa de operaciones', 'Protección CSRF + rate limiting en login', 'Subida segura de imágenes con validación'],
-      en: ['Admin panel with roles and permissions', 'Vehicle gallery with dynamic filters', 'Used-car valuation calculator', 'Full operations auditing', 'CSRF protection + login rate limiting', 'Secure image upload with validation'],
-      it: ['Pannello di amministrazione con ruoli e permessi', 'Galleria di veicoli con filtri dinamici', 'Calcolatrice di valutazione dell\'usato', 'Audit completo delle operazioni', 'Protezione CSRF + rate limiting al login', 'Upload sicuro di immagini con validazione'],
-      fr: ["Panneau d'administration avec rôles et permissions", 'Galerie de véhicules avec filtres dynamiques', "Calculateur d'estimation de l'occasion", 'Audit complet des opérations', 'Protection CSRF + rate limiting au login', "Téléversement sécurisé d'images avec validation"],
-      pt: ['Painel de administração com papéis e permissões', 'Galeria de veículos com filtros dinâmicos', 'Calculadora de avaliação de usados', 'Auditoria completa de operações', 'Proteção CSRF + rate limiting no login', 'Upload seguro de imagens com validação'],
-    },
-    technologies: ['PHP 7.4+', 'MySQL / MariaDB', 'HTML5', 'CSS3', 'JavaScript', 'REST API', 'Composer'],
-    palette: ['#0D1117', '#74C69D', '#F4A261', '#FFFFFF'],
-    typography: ['Inter', 'Roboto'],
-    github: 'https://github.com/roky146/Velox_Motors',
-  },
-
-  {
-    id: 'api-gateway-scripts',
-    slug: 'api-gateway-scripts',
-    title: 'Gateway Inventory',
-    subtitle: {
-      es: 'Automatización — Layer7 API Gateway V9 & V11',
-      en: 'Automation — Layer7 API Gateway V9 & V11',
-      it: 'Automazione — Layer7 API Gateway V9 & V11',
-      fr: 'Automatisation — Layer7 API Gateway V9 & V11',
-      pt: 'Automação — Layer7 API Gateway V9 & V11',
-    },
-    description: {
-      es: 'Scripts en Python para automatizar el inventario de servicios en Layer7 API Gateway. RESTPy opera contra RESTMAN (V9) y GraphPy usa Graphman/GraphQL (V11).',
-      en: 'Python scripts to automate the inventory of services on Layer7 API Gateway. RESTPy works against RESTMAN (V9) and GraphPy uses Graphman/GraphQL (V11).',
-      it: 'Script in Python per automatizzare l\'inventario dei servizi su Layer7 API Gateway. RESTPy opera contro RESTMAN (V9) e GraphPy usa Graphman/GraphQL (V11).',
-      fr: "Scripts Python pour automatiser l'inventaire des services sur Layer7 API Gateway. RESTPy fonctionne contre RESTMAN (V9) et GraphPy utilise Graphman/GraphQL (V11).",
-      pt: 'Scripts em Python para automatizar o inventário de serviços no Layer7 API Gateway. RESTPy opera contra RESTMAN (V9) e GraphPy usa Graphman/GraphQL (V11).',
-    },
-    tags: ['Python', 'REST API', 'GraphQL', T.automation],
-    year: '2025',
-    color: '#95D5B2',
-    colorDark: '#1B4332',
-    role: {
-      es: 'Desarrollador & Automatización',
-      en: 'Developer & Automation',
-      it: 'Sviluppatore & Automazione',
-      fr: 'Développeur & Automatisation',
-      pt: 'Desenvolvedor & Automação',
-    },
-    overview: {
-      es: 'Dos scripts de automatización —RESTPy y GraphPy— que inventarían todos los servicios expuestos en Layer7 API Gateway y generan reportes exportables. Cubren tanto la versión clásica (RESTMAN/V9) como la moderna (Graphman/GraphQL/V11), con autenticación y paginación automáticas.',
-      en: 'Two automation scripts —RESTPy and GraphPy— that inventory every service exposed on Layer7 API Gateway and generate exportable reports. They cover both the classic version (RESTMAN/V9) and the modern one (Graphman/GraphQL/V11), with automatic authentication and pagination.',
-      it: 'Due script di automazione —RESTPy e GraphPy— che inventariano tutti i servizi esposti su Layer7 API Gateway e generano report esportabili. Coprono sia la versione classica (RESTMAN/V9) sia quella moderna (Graphman/GraphQL/V11), con autenticazione e paginazione automatiche.',
-      fr: "Deux scripts d'automatisation —RESTPy et GraphPy— qui inventorient tous les services exposés sur Layer7 API Gateway et génèrent des rapports exportables. Ils couvrent la version classique (RESTMAN/V9) et la moderne (Graphman/GraphQL/V11), avec authentification et pagination automatiques.",
-      pt: 'Dois scripts de automação —RESTPy e GraphPy— que inventariam todos os serviços expostos no Layer7 API Gateway e geram relatórios exportáveis. Cobrem tanto a versão clássica (RESTMAN/V9) como a moderna (Graphman/GraphQL/V11), com autenticação e paginação automáticas.',
-    },
-    features: {
-      es: ['Inventario automático de servicios Layer7', 'Soporte V9 (RESTMAN) y V11 (Graphman)', 'Exportación de reportes', 'Autenticación y paginación automática'],
-      en: ['Automatic inventory of Layer7 services', 'V9 (RESTMAN) and V11 (Graphman) support', 'Report export', 'Automatic authentication and pagination'],
-      it: ['Inventario automatico dei servizi Layer7', 'Supporto V9 (RESTMAN) e V11 (Graphman)', 'Esportazione dei report', 'Autenticazione e paginazione automatiche'],
-      fr: ['Inventaire automatique des services Layer7', 'Prise en charge V9 (RESTMAN) et V11 (Graphman)', 'Export de rapports', 'Authentification et pagination automatiques'],
-      pt: ['Inventário automático de serviços Layer7', 'Suporte V9 (RESTMAN) e V11 (Graphman)', 'Exportação de relatórios', 'Autenticação e paginação automáticas'],
-    },
-    technologies: ['Python', 'REST API', 'GraphQL', 'Layer7 Graphman', 'RESTMAN'],
-    palette: ['#1B4332', '#95D5B2', '#D8F3DC', '#FFFFFF'],
-    typography: ['Satoshi', 'Monospace'],
-    github: 'https://github.com/roky146/Api-Gateway-Inventory-Scripts',
+    highlights: ['React', 'Node.js', 'TypeScript', 'Flutter', 'Sistemas POS', 'Automatización', 'APIs', 'Paneles admin'],
+    cta: 'mailto:iroky146@gmail.com',
   },
 ]
 
-export const moreProjects = [
-  {
-    id: 'phishing-scanner',
-    slug: 'phishing-scanner',
-    title: 'PhishingScanner',
-    subtitle: {
-      es: 'Ciberseguridad — Detección de phishing',
-      en: 'Cybersecurity — Phishing detection',
-      it: 'Cybersecurity — Rilevamento di phishing',
-      fr: 'Cybersécurité — Détection de phishing',
-      pt: 'Cibersegurança — Deteção de phishing',
-    },
-    description: {
-      es: 'Detector de indicadores de phishing en archivos de texto y correos. Puntúa el nivel de riesgo basándose en patrones de amenaza conocidos.',
-      en: 'Phishing indicator detector for text files and emails. It scores the risk level based on known threat patterns.',
-      it: 'Rilevatore di indicatori di phishing in file di testo ed email. Assegna un punteggio di rischio in base a pattern di minaccia noti.',
-      fr: 'Détecteur d\'indicateurs de phishing dans les fichiers texte et les emails. Il note le niveau de risque selon des schémas de menace connus.',
-      pt: 'Detetor de indicadores de phishing em ficheiros de texto e emails. Pontua o nível de risco com base em padrões de ameaça conhecidos.',
-    },
-    tags: ['C#', '.NET', T.security, T.analysis],
-    year: '2024',
-    color: '#52B788',
-    colorDark: '#081C15',
-    role: {
-      es: 'Desarrollador',
-      en: 'Developer',
-      it: 'Sviluppatore',
-      fr: 'Développeur',
-      pt: 'Desenvolvedor',
-    },
-    overview: {
-      es: 'PhishingScanner es una herramienta de análisis de seguridad que detecta palabras y patrones comúnmente usados en ataques de phishing dentro de archivos de texto o correos electrónicos, generando una puntuación de riesgo y listando los indicadores encontrados. Desarrollada en C#/.NET como herramienta de línea de comandos.',
-      en: 'PhishingScanner is a security-analysis tool that detects words and patterns commonly used in phishing attacks within text files or emails, generating a risk score and listing the indicators found. Built in C#/.NET as a command-line tool.',
-      it: 'PhishingScanner è uno strumento di analisi di sicurezza che rileva parole e pattern comunemente usati negli attacchi di phishing all\'interno di file di testo o email, generando un punteggio di rischio ed elencando gli indicatori trovati. Sviluppato in C#/.NET come strumento da riga di comando.',
-      fr: "PhishingScanner est un outil d'analyse de sécurité qui détecte les mots et schémas couramment utilisés dans les attaques de phishing au sein de fichiers texte ou d'emails, en générant un score de risque et en listant les indicateurs trouvés. Développé en C#/.NET comme outil en ligne de commande.",
-      pt: 'PhishingScanner é uma ferramenta de análise de segurança que deteta palavras e padrões usados em ataques de phishing dentro de ficheiros de texto ou emails, gerando uma pontuação de risco e listando os indicadores encontrados. Desenvolvido em C#/.NET como ferramenta de linha de comandos.',
-    },
-    features: {
-      es: ['Análisis de archivos de texto y correos', 'Puntuación de riesgo automática', 'Listado de indicadores encontrados', 'Herramienta de línea de comandos'],
-      en: ['Analysis of text files and emails', 'Automatic risk scoring', 'Listing of found indicators', 'Command-line tool'],
-      it: ['Analisi di file di testo ed email', 'Punteggio di rischio automatico', 'Elenco degli indicatori trovati', 'Strumento da riga di comando'],
-      fr: ['Analyse de fichiers texte et emails', 'Score de risque automatique', 'Liste des indicateurs trouvés', 'Outil en ligne de commande'],
-      pt: ['Análise de ficheiros de texto e emails', 'Pontuação de risco automática', 'Listagem de indicadores encontrados', 'Ferramenta de linha de comandos'],
-    },
-    technologies: ['C#', '.NET', 'File I/O', 'Pattern Matching'],
-    palette: ['#081C15', '#52B788', '#95D5B2', '#F8F9FA'],
-    typography: ['Inter', 'JetBrains Mono'],
-    github: 'https://github.com/roky146/PhishingScanner',
-  },
-  {
-    id: 'hs-autofiller',
-    title: 'HSAutoFiller',
-    slug: null,
-    description: {
-      es: 'Chrome Extension en TypeScript para autocompletar formularios de registro en HS Consulting.',
-      en: 'TypeScript Chrome Extension to autofill registration forms at HS Consulting.',
-      it: 'Estensione Chrome in TypeScript per compilare automaticamente i moduli di registrazione di HS Consulting.',
-      fr: "Extension Chrome en TypeScript pour remplir automatiquement les formulaires d'inscription de HS Consulting.",
-      pt: 'Chrome Extension em TypeScript para preencher automaticamente formulários de registo na HS Consulting.',
-    },
-    tags: ['TypeScript', 'Chrome Extension', T.automation],
-    year: '2024',
-    github: 'https://github.com/roky146/HSAutoFiller',
-  },
-  {
-    id: 'portfolio',
-    title: 'mrmerlo.com',
-    slug: null,
-    description: {
-      es: 'Este mismo portafolio — diseñado y construido desde cero con Next.js, Framer Motion y GSAP.',
-      en: 'This very portfolio — designed and built from scratch with Next.js, Framer Motion and GSAP.',
-      it: 'Questo stesso portfolio — progettato e costruito da zero con Next.js, Framer Motion e GSAP.',
-      fr: 'Ce portfolio même — conçu et construit de zéro avec Next.js, Framer Motion et GSAP.',
-      pt: 'Este mesmo portefólio — desenhado e construído de raiz com Next.js, Framer Motion e GSAP.',
-    },
-    tags: ['Next.js', 'Styled Components', 'Framer Motion'],
-    year: '2025',
-    github: null,
-  },
-]
+/* Compat: ya no hay sección "Más proyectos" */
+export const moreProjects = []
 
-/* Slugs con página de detalle (tienen overview localizado) */
-export const detailProjects = [...featuredProjects, ...moreProjects].filter(
-  (p) => p.slug && p.overview
-)
+/* Slugs con página de detalle (tienen overview localizado): solo GOD y Reccon */
+export const detailProjects = featuredProjects.filter((p) => p.slug && p.overview)
 
 export function getProjectBySlug(slug) {
   return detailProjects.find((p) => p.slug === slug) || null

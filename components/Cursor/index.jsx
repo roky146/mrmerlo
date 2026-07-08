@@ -138,9 +138,9 @@ export default function Cursor() {
   }, [])
 
   return (
-    <>
+    <div aria-hidden="true">
       <Dot ref={dotRef} />
       <Ring ref={ringRef} />
-    </>
+    </div>
   )
 }

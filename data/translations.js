@@ -20,6 +20,7 @@ export const translations = {
     /* ── Featured Projects ── */
     featured_label:   'Proyectos',
     project_cta:      'Ver proyecto →',
+    project_cta_talk: 'Hablemos →',
 
     /* ── More Projects ── */
     more_label:       'Más proyectos',
@@ -51,6 +52,7 @@ export const translations = {
 
     /* ── About — Experience ── */
     exp_label:        'Experiencia & Formación',
+    faq_label:        'Preguntas frecuentes',
 
     /* ── About — Currently ── */
     currently_label:  'Actualmente',
@@ -107,6 +109,7 @@ export const translations = {
     /* ── Featured Projects ── */
     featured_label:   'Projects',
     project_cta:      'View project →',
+    project_cta_talk: "Let's talk →",
 
     /* ── More Projects ── */
     more_label:       'More projects',
@@ -138,6 +141,7 @@ export const translations = {
 
     /* ── About — Experience ── */
     exp_label:        'Experience & Education',
+    faq_label:        'FAQ',
 
     /* ── About — Currently ── */
     currently_label:  'Currently',
@@ -194,6 +198,7 @@ export const translations = {
     /* ── Featured Projects ── */
     featured_label:   'Progetti',
     project_cta:      'Vedi progetto →',
+    project_cta_talk: 'Parliamone →',
 
     /* ── More Projects ── */
     more_label:       'Altri progetti',
@@ -225,6 +230,7 @@ export const translations = {
 
     /* ── About — Experience ── */
     exp_label:        'Esperienza & Formazione',
+    faq_label:        'Domande frequenti',
 
     /* ── About — Currently ── */
     currently_label:  'Attualmente',
@@ -281,6 +287,7 @@ export const translations = {
     /* ── Featured Projects ── */
     featured_label:   'Projets',
     project_cta:      'Voir le projet →',
+    project_cta_talk: 'Discutons →',
 
     /* ── More Projects ── */
     more_label:       'Plus de projets',
@@ -312,6 +319,7 @@ export const translations = {
 
     /* ── About — Experience ── */
     exp_label:        'Expérience & Formation',
+    faq_label:        'Questions fréquentes',
 
     /* ── About — Currently ── */
     currently_label:  'Actuellement',
@@ -368,6 +376,7 @@ export const translations = {
     /* ── Featured Projects ── */
     featured_label:   'Projetos',
     project_cta:      'Ver projeto →',
+    project_cta_talk: 'Vamos falar →',
 
     /* ── More Projects ── */
     more_label:       'Mais projetos',
@@ -399,6 +408,7 @@ export const translations = {
 
     /* ── About — Experience ── */
     exp_label:        'Experiência & Formação',
+    faq_label:        'Perguntas frequentes',
 
     /* ── About — Currently ── */
     currently_label:  'Atualmente',

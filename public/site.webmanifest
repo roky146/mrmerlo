@@ -1,0 +1,13 @@
+{
+  "name": "Marcos Rodríguez Merlo — mrmerlo.com",
+  "short_name": "mrmerlo.com",
+  "description": "Portafolio de Marcos Rodríguez Merlo — Ingeniero de Producción TI, ciberseguridad y desarrollo full-stack.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F0FAF4",
+  "theme_color": "#F0FAF4",
+  "lang": "es",
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "any", "type": "image/x-icon" }
+  ]
+}

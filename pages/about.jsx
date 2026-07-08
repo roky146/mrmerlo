@@ -1,7 +1,9 @@
-import Head from 'next/head'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import Footer from '../components/Footer'
+import Seo from '../components/Seo'
+import JsonLd from '../components/JsonLd'
+import { graph, faqSchema } from '../data/site'
 import { useLang } from '../contexts/LanguageContext'
 
 /* ─── Layout ─────────────────────────────────────────────── */
@@ -73,12 +75,42 @@ const Section = styled.div`
   }
 `
 
-const SectionLabel = styled.h3`
+const SectionLabel = styled.h2`
   font-size: 0.72rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text-secondary);
   margin-bottom: 2rem;
+`
+
+/* ── FAQ (accesible con <details>/<summary>; potencia SEO/GEO/LLMO) ── */
+const FaqList = styled.div`
+  max-width: 780px;
+  border-top: 1px solid var(--border);
+`
+const FaqItem = styled.details`
+  border-bottom: 1px solid var(--border);
+  padding: 1.25rem 0;
+  &[open] summary::after { content: '−'; }
+`
+const FaqQ = styled.summary`
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  &::-webkit-details-marker { display: none; }
+  &::after { content: '+'; color: var(--text-secondary); margin-left: auto; }
+`
+const FaqA = styled.p`
+  margin-top: 0.85rem;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  max-width: 680px;
 `
 
 const Divider = styled.hr`
@@ -276,6 +308,106 @@ const experience = [
   },
 ]
 
+/* Preguntas frecuentes — respuestas derivadas del contenido real del portafolio */
+const FAQS = [
+  {
+    q: {
+      es: '¿Quién es Marcos Rodríguez Merlo?',
+      en: 'Who is Marcos Rodríguez Merlo?',
+      it: 'Chi è Marcos Rodríguez Merlo?',
+      fr: 'Qui est Marcos Rodríguez Merlo ?',
+      pt: 'Quem é Marcos Rodríguez Merlo?',
+    },
+    a: {
+      es: 'Marcos Rodríguez Merlo (Marcos Merlo) es Ingeniero de Producción TI y estudiante de Ingeniería en Ciberseguridad en Santo Domingo, República Dominicana. Construye herramientas empresariales, automatización y aplicaciones full-stack.',
+      en: 'Marcos Rodríguez Merlo (Marcos Merlo) is an IT Production Engineer and Cybersecurity Engineering student in Santo Domingo, Dominican Republic. He builds enterprise tools, automation and full-stack applications.',
+      it: 'Marcos Rodríguez Merlo (Marcos Merlo) è un Ingegnere di Produzione IT e studente di Ingegneria della Cybersecurity a Santo Domingo, Repubblica Dominicana. Costruisce strumenti aziendali, automazione e applicazioni full-stack.',
+      fr: "Marcos Rodríguez Merlo (Marcos Merlo) est ingénieur de production IT et étudiant en ingénierie de la cybersécurité à Saint-Domingue, République dominicaine. Il construit des outils d'entreprise, de l'automatisation et des applications full-stack.",
+      pt: 'Marcos Rodríguez Merlo (Marcos Merlo) é Engenheiro de Produção TI e estudante de Engenharia em Cibersegurança em Santo Domingo, República Dominicana. Constrói ferramentas empresariais, automação e aplicações full-stack.',
+    },
+  },
+  {
+    q: {
+      es: '¿En qué se especializa Marcos Merlo?',
+      en: 'What does Marcos Merlo specialize in?',
+      it: 'In cosa è specializzato Marcos Merlo?',
+      fr: 'Dans quoi Marcos Merlo est-il spécialisé ?',
+      pt: 'Em que se especializa Marcos Merlo?',
+    },
+    a: {
+      es: 'En infraestructura TI y operaciones en producción, ciberseguridad y desarrollo de software full-stack. Trabaja con Kubernetes, Go, Flutter, React, Node.js y Layer7 API Gateway.',
+      en: 'In IT infrastructure and production operations, cybersecurity and full-stack software development. He works with Kubernetes, Go, Flutter, React, Node.js and Layer7 API Gateway.',
+      it: "In infrastruttura IT e operazioni in produzione, cybersecurity e sviluppo software full-stack. Lavora con Kubernetes, Go, Flutter, React, Node.js e Layer7 API Gateway.",
+      fr: "Dans l'infrastructure IT et les opérations en production, la cybersécurité et le développement logiciel full-stack. Il travaille avec Kubernetes, Go, Flutter, React, Node.js et Layer7 API Gateway.",
+      pt: 'Em infraestrutura TI e operações em produção, cibersegurança e desenvolvimento de software full-stack. Trabalha com Kubernetes, Go, Flutter, React, Node.js e Layer7 API Gateway.',
+    },
+  },
+  {
+    q: {
+      es: '¿Marcos Merlo trabaja con Kubernetes?',
+      en: 'Does Marcos Merlo work with Kubernetes?',
+      it: 'Marcos Merlo lavora con Kubernetes?',
+      fr: 'Marcos Merlo travaille-t-il avec Kubernetes ?',
+      pt: 'Marcos Merlo trabalha com Kubernetes?',
+    },
+    a: {
+      es: 'Sí. Desarrolló Reccon, un agente de observabilidad cloud-native en Go que monitorea miles de microservicios en Kubernetes y envía métricas y alertas a Zabbix.',
+      en: 'Yes. He built Reccon, a cloud-native observability agent in Go that monitors thousands of microservices on Kubernetes and sends metrics and alerts to Zabbix.',
+      it: 'Sì. Ha sviluppato Reccon, un agente di osservabilità cloud-native in Go che monitora migliaia di microservizi su Kubernetes e invia metriche e alert a Zabbix.',
+      fr: "Oui. Il a développé Reccon, un agent d'observabilité cloud-native en Go qui surveille des milliers de microservices sur Kubernetes et envoie métriques et alertes vers Zabbix.",
+      pt: 'Sim. Desenvolveu o Reccon, um agente de observabilidade cloud-native em Go que monitora milhares de microsserviços no Kubernetes e envia métricas e alertas para o Zabbix.',
+    },
+  },
+  {
+    q: {
+      es: '¿Desarrolla herramientas de automatización empresarial?',
+      en: 'Does he build enterprise automation tools?',
+      it: 'Sviluppa strumenti di automazione aziendale?',
+      fr: "Développe-t-il des outils d'automatisation d'entreprise ?",
+      pt: 'Desenvolve ferramentas de automação empresarial?',
+    },
+    a: {
+      es: 'Sí. Construyó GOD (Gateway Ops Dashboard) para operar Layer7 API Gateway, además de integraciones y scripts de automatización de procesos.',
+      en: 'Yes. He built GOD (Gateway Ops Dashboard) to operate Layer7 API Gateway, along with integrations and process-automation scripts.',
+      it: 'Sì. Ha costruito GOD (Gateway Ops Dashboard) per operare Layer7 API Gateway, oltre a integrazioni e script di automazione dei processi.',
+      fr: "Oui. Il a construit GOD (Gateway Ops Dashboard) pour opérer Layer7 API Gateway, ainsi que des intégrations et des scripts d'automatisation de processus.",
+      pt: 'Sim. Construiu o GOD (Gateway Ops Dashboard) para operar Layer7 API Gateway, além de integrações e scripts de automação de processos.',
+    },
+  },
+  {
+    q: {
+      es: '¿Desarrolla sistemas POS y aplicaciones web?',
+      en: 'Does he build POS systems and web applications?',
+      it: 'Sviluppa sistemi POS e applicazioni web?',
+      fr: 'Développe-t-il des systèmes POS et des applications web ?',
+      pt: 'Desenvolve sistemas POS e aplicações web?',
+    },
+    a: {
+      es: 'Sí. Desarrolla aplicaciones web y de escritorio a medida —incluidos sistemas POS, paneles de administración y APIs— con React, Node.js, TypeScript y Flutter.',
+      en: 'Yes. He builds custom web and desktop applications —including POS systems, admin panels and APIs— with React, Node.js, TypeScript and Flutter.',
+      it: 'Sì. Sviluppa applicazioni web e desktop su misura —inclusi sistemi POS, pannelli di amministrazione e API— con React, Node.js, TypeScript e Flutter.',
+      fr: "Oui. Il développe des applications web et de bureau sur mesure —y compris des systèmes POS, des panneaux d'administration et des API— avec React, Node.js, TypeScript et Flutter.",
+      pt: 'Sim. Desenvolve aplicações web e de desktop à medida —incluindo sistemas POS, painéis de administração e APIs— com React, Node.js, TypeScript e Flutter.',
+    },
+  },
+  {
+    q: {
+      es: '¿Está disponible para proyectos freelance o consultoría?',
+      en: 'Is he available for freelance projects or consulting?',
+      it: 'È disponibile per progetti freelance o consulenza?',
+      fr: 'Est-il disponible pour des projets freelance ou du conseil ?',
+      pt: 'Está disponível para projetos freelance ou consultoria?',
+    },
+    a: {
+      es: 'Sí. Está disponible para proyectos freelance y consultoría tecnológica —desarrollo web y de apps, automatización e infraestructura— desde República Dominicana. Escríbele a iroky146@gmail.com.',
+      en: 'Yes. He is available for freelance projects and technology consulting —web and app development, automation and infrastructure— from the Dominican Republic. Reach him at iroky146@gmail.com.',
+      it: 'Sì. È disponibile per progetti freelance e consulenza tecnologica —sviluppo web e app, automazione e infrastruttura— dalla Repubblica Dominicana. Scrivi a iroky146@gmail.com.',
+      fr: "Oui. Il est disponible pour des projets freelance et du conseil technologique —développement web et apps, automatisation et infrastructure— depuis la République dominicaine. Contactez-le à iroky146@gmail.com.",
+      pt: 'Sim. Está disponível para projetos freelance e consultoria tecnológica —desenvolvimento web e apps, automação e infraestrutura— a partir da República Dominicana. Contacte iroky146@gmail.com.',
+    },
+  },
+]
+
 const LINE_VARIANTS = {
   hidden: { y: '110%' },
   visible: (i) => ({
@@ -285,7 +417,8 @@ const LINE_VARIANTS = {
 }
 
 export default function About() {
-  const { t } = useLang()
+  const { t, lang } = useLang()
+  const loc = (o) => o[lang] ?? o.es
 
   const skillGroups = [
     { key: 'languages', items: skills.languages },
@@ -304,12 +437,14 @@ export default function About() {
 
   return (
     <>
-      <Head>
-        <title>Sobre mí — Marcos Rodríguez</title>
-        <meta name="description" content="Ingeniero de Producción TI y estudiante de Ciberseguridad. Desarrollador de herramientas y aplicaciones." />
-      </Head>
+      <Seo
+        title="Sobre mí"
+        description="Marcos Rodríguez Merlo — Ingeniero de Producción TI y estudiante de Ingeniería en Ciberseguridad en Santo Domingo, RD. Kubernetes, automatización empresarial, desarrollo full-stack y consultoría tecnológica."
+        path="/about/"
+      />
+      <JsonLd data={graph(faqSchema(FAQS.map((f) => ({ q: f.q.es, a: f.a.es }))))} />
 
-      <PageWrapper>
+      <PageWrapper as="main" id="main-content">
 
         {/* ── Hero ── */}
         <PageHero>
@@ -451,6 +586,19 @@ export default function About() {
               </span>
             </motion.div>
           ))}
+        </Section>
+
+        {/* ── FAQ ── */}
+        <Section>
+          <SectionLabel>{t('faq_label')}</SectionLabel>
+          <FaqList>
+            {FAQS.map((f, i) => (
+              <FaqItem key={i}>
+                <FaqQ>{loc(f.q)}</FaqQ>
+                <FaqA>{loc(f.a)}</FaqA>
+              </FaqItem>
+            ))}
+          </FaqList>
         </Section>
 
         <Footer />

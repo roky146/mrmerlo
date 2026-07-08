@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { featuredProjects, localize } from '../../data/projects'
 import { useLang } from '../../contexts/LanguageContext'
+import BentoMosaic from './BentoMosaic'
 
 const Section = styled.section`
   padding: 8rem 4rem;
@@ -86,14 +87,15 @@ const ProjectDesc = styled.p`
   margin-bottom: 2rem;
 `
 
-const Tags = styled.div`
+const Tags = styled.ul`
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-bottom: 2rem;
+  list-style: none;
 `
 
-const Tag = styled.span`
+const Tag = styled.li`
   font-size: 0.75rem;
   letter-spacing: 0.06em;
   padding: 0.3rem 0.75rem;
@@ -122,51 +124,13 @@ const ExploreBtn = styled(Link)`
   }
 `
 
-const ImageGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-`
-
-const ImagePlaceholder = styled(motion.div)`
-  width: 100%;
-  aspect-ratio: 4/3;
-  background: ${p => p.$color || 'var(--bg-secondary)'};
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
-
-  &:first-child {
-    grid-column: span 2;
-    aspect-ratio: 16/9;
-  }
-`
-
-const PlaceholderLabel = styled.span`
-  font-size: 0.75rem;
-  color: rgba(0,0,0,0.4);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-`
-
-const imgVariants = {
-  offscreen: { opacity: 0, y: 30 },
-  onscreen: (i) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.1, duration: 0.6, ease: 'easeOut' }
-  })
-}
-
 export default function FeaturedProjects() {
   const { lang, t } = useLang()
 
   return (
-    <Section id="projects">
+    <Section id="projects" aria-labelledby="projects-heading">
       <SectionHeading
+        id="projects-heading"
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -178,41 +142,31 @@ export default function FeaturedProjects() {
       {featuredProjects.map((raw, idx) => {
         const project = localize(raw, lang)
         return (
-        <ProjectBlock key={project.id} className={idx % 2 === 1 ? 'reversed' : ''}>
-          <ProjectInfo>
-            <ProjectNumber>0{idx + 1}</ProjectNumber>
-            <ProjectTitle
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              {project.title}
-            </ProjectTitle>
-            <ProjectSubtitle>{project.subtitle}</ProjectSubtitle>
-            <ProjectDesc>{project.description}</ProjectDesc>
-            <Tags>
-              {project.tags.map(tag => <Tag key={tag}>{tag}</Tag>)}
-            </Tags>
-            <ExploreBtn href={`/projects/${project.slug}`}>{t('project_cta')}</ExploreBtn>
-          </ProjectInfo>
-
-          <ImageGrid>
-            {[0, 1, 2].map(i => (
-              <ImagePlaceholder
-                key={i}
-                $color={i === 0 ? project.color + '55' : project.color + '33'}
-                custom={i}
-                initial="offscreen"
-                whileInView="onscreen"
-                viewport={{ once: true, amount: 0.2 }}
-                variants={imgVariants}
+          <ProjectBlock as="article" key={project.id} className={idx % 2 === 1 ? 'reversed' : ''}>
+            <ProjectInfo>
+              <ProjectNumber>0{idx + 1}</ProjectNumber>
+              <ProjectTitle
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
               >
-                <PlaceholderLabel>{project.title} · {i + 1}</PlaceholderLabel>
-              </ImagePlaceholder>
-            ))}
-          </ImageGrid>
-        </ProjectBlock>
+                {project.title}
+              </ProjectTitle>
+              <ProjectSubtitle>{project.subtitle}</ProjectSubtitle>
+              <ProjectDesc>{project.description}</ProjectDesc>
+              <Tags>
+                {project.tags.map((tag) => <Tag key={tag}>{tag}</Tag>)}
+              </Tags>
+              {project.capability ? (
+                <ExploreBtn as="a" href={project.cta}>{t('project_cta_talk')}</ExploreBtn>
+              ) : (
+                <ExploreBtn href={`/projects/${project.slug}`}>{t('project_cta')}</ExploreBtn>
+              )}
+            </ProjectInfo>
+
+            <BentoMosaic project={project} />
+          </ProjectBlock>
         )
       })}
     </Section>

@@ -95,6 +95,39 @@ const GlobalStyle = createGlobalStyle`
   .lenis.lenis-smooth [data-lenis-prevent] {
     overscroll-behavior: contain;
   }
+
+  /* ── Accesibilidad ── */
+
+  /* Skip-link: oculto hasta recibir foco por teclado */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 10001;
+    background: var(--text-primary);
+    color: var(--bg);
+    padding: 0.75rem 1.25rem;
+    border-radius: 0 0 8px 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  .skip-link:focus { left: 0; }
+
+  /* Foco visible por teclado (el cursor personalizado se oculta con pointer:fine) */
+  :focus-visible {
+    outline: 2px solid var(--accent-dim);
+    outline-offset: 2px;
+  }
+
+  /* Respetar prefers-reduced-motion: desactiva animaciones/transiciones pesadas */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 `
 
 export default GlobalStyle

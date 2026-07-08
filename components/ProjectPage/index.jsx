@@ -1,54 +1,19 @@
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { featuredProjects, localize } from '../../data/projects'
+import { detailProjects, localize } from '../../data/projects'
 import { useLang } from '../../contexts/LanguageContext'
+import BentoMosaic from '../Projects/BentoMosaic'
 
 const PageWrapper = styled.div`
   padding-top: 8rem;
 `
 
-const HeroGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+const HeroWrap = styled.div`
   padding: 0 2.5rem;
   margin-bottom: 4rem;
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    padding: 0 1.5rem;
-  }
-`
-
-const HeroImgMain = styled(motion.div)`
-  grid-column: span 2;
-  height: 55vh;
-  min-height: 300px;
-  background: ${p => p.$color || 'var(--bg-secondary)'};
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  @media (max-width: 768px) { grid-column: span 1; height: 40vh; }
-`
-
-const HeroImgSmall = styled(motion.div)`
-  height: 30vh;
-  min-height: 180px;
-  background: ${p => p.$color || 'var(--bg-secondary)'};
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-const ImgLabel = styled.span`
-  font-size: 0.75rem;
-  color: rgba(0,0,0,0.4);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  @media (max-width: 768px) { padding: 0 1.5rem; }
 `
 
 const ContentArea = styled.div`
@@ -100,7 +65,7 @@ const MetaValue = styled.span`
   color: var(--text-primary);
 `
 
-const SectionLabel = styled.h3`
+const SectionLabel = styled.h2`
   font-size: 0.75rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -275,30 +240,16 @@ export default function ProjectPage({ project: raw }) {
   const { lang, t } = useLang()
   const project = localize(raw, lang)
 
-  const related = featuredProjects
+  const relatedFinal = detailProjects
     .filter(p => p.id !== raw.id)
     .slice(0, 3)
     .map(p => localize(p, lang))
-  const relatedFinal = related.length ? related : featuredProjects.slice(0, 3).map(p => localize(p, lang))
 
   return (
-    <PageWrapper>
-      <HeroGrid>
-        <HeroImgMain
-          $color={project.color + '55'}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <ImgLabel>{project.title} — {t('proj_main_view')}</ImgLabel>
-        </HeroImgMain>
-        <HeroImgSmall $color={project.color + '33'} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}>
-          <ImgLabel>{t('proj_view')} 2</ImgLabel>
-        </HeroImgSmall>
-        <HeroImgSmall $color={project.color + '22'} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}>
-          <ImgLabel>{t('proj_view')} 3</ImgLabel>
-        </HeroImgSmall>
-      </HeroGrid>
+    <PageWrapper as="main" id="main-content">
+      <HeroWrap>
+        <BentoMosaic project={project} />
+      </HeroWrap>
 
       <ContentArea>
         <ProjectTitle

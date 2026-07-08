@@ -1,11 +1,15 @@
 import { Html, Head, Main, NextScript } from 'next/document'
+import { graph, personSchema, websiteSchema, SITE } from '../data/site'
 
 export default function Document() {
   return (
     <Html lang="es">
       <Head>
+        {/* Fuentes — preconnect a todos los orígenes para reducir latencia */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://gistcdn.githack.com" crossOrigin="anonymous" />
         <link
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
@@ -18,41 +22,47 @@ export default function Document() {
           rel="stylesheet"
           href="https://api.fontshare.com/css?f[]=satoshi@400,500,700&display=swap"
         />
-        {/* Base SEO — individual pages can override via <Head> */}
-        <meta name="description" content="Marcos Rodríguez Merlo — Ingeniero de Producción TI, estudiante de Ciberseguridad y desarrollador creativo desde Santo Domingo, RD. Construyo herramientas digitales y convierto la lógica en experiencias que funcionan." />
+
+        {/* SEO global — el resto (title, description, canonical, og:url/title…) va por página vía <Seo> */}
         <meta name="author" content="Marcos Rodríguez Merlo" />
         <meta name="robots" content="index, follow" />
+        <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1" />
 
-        {/* Open Graph */}
-        <meta property="og:type"        content="website" />
-        <meta property="og:locale"      content="es_DO" />
-        <meta property="og:url"         content="https://mrmerlo.com" />
-        <meta property="og:site_name"   content="mrmerlo.com" />
-        <meta property="og:title"       content="Marcos Rodríguez — mrmerlo.com" />
-        <meta property="og:description" content="Convierto la lógica en soluciones. Ingeniero de Producción TI · Ciberseguridad · Desarrollo Web." />
-        <meta property="og:image"       content="https://mrmerlo.com/og-image.png" />
+        {/* Open Graph (constantes) */}
+        <meta property="og:type"         content="website" />
+        <meta property="og:locale"       content="es_DO" />
+        <meta property="og:site_name"    content="mrmerlo.com" />
+        <meta property="og:image"        content={SITE.image} />
         <meta property="og:image:width"  content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt"    content="mrmerlo.com — Marcos Rodríguez" />
+        <meta property="og:image:alt"    content="mrmerlo.com — Marcos Rodríguez Merlo" />
 
-        {/* Twitter / X card */}
-        <meta name="twitter:card"        content="summary_large_image" />
-        <meta name="twitter:site"        content="@roky146" />
-        <meta name="twitter:creator"     content="@roky146" />
-        <meta name="twitter:title"       content="Marcos Rodríguez — mrmerlo.com" />
-        <meta name="twitter:description" content="Convierto la lógica en soluciones." />
-        <meta name="twitter:image"       content="https://mrmerlo.com/og-image.png" />
+        {/* Twitter / X card (constantes) */}
+        <meta name="twitter:card"    content="summary_large_image" />
+        <meta name="twitter:site"    content="@roky146" />
+        <meta name="twitter:creator" content="@roky146" />
+        <meta name="twitter:image"   content={SITE.image} />
 
-        {/* Theme */}
-        <meta name="theme-color" content="#F0FAF4" />
-        <meta name="color-scheme" content="light" />
+        {/* Theme (claro/oscuro) */}
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F0FAF4" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#0D1A12" />
 
-        {/* Favicon */}
+        {/* Iconos / manifest */}
         <link rel="icon" href="/favicon.ico" />
-        <link rel="canonical" href="https://mrmerlo.com" />
+        <link rel="apple-touch-icon" href="/favicon.ico" />
+        <link rel="manifest" href="/site.webmanifest" />
+
+        {/* Datos estructurados globales: Person + WebSite (identidad canónica para SEO/GEO/LLMO) */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(graph(personSchema(), websiteSchema())) }}
+        />
       </Head>
       <body>
-        {/* Black intro curtain — rendered in raw HTML so it appears before any JS */}
+        {/* Skip-link (accesibilidad / teclado) */}
+        <a className="skip-link" href="#main-content">Saltar al contenido</a>
+
+        {/* Cortina de intro negra — HTML crudo para que aparezca antes de cualquier JS */}
         <div
           id="__page-intro"
           style={{

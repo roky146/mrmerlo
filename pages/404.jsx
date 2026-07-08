@@ -1,7 +1,7 @@
-import Head from 'next/head'
 import Link from 'next/link'
 import styled, { keyframes } from 'styled-components'
 import { motion } from 'framer-motion'
+import Seo from '../components/Seo'
 import { useLang } from '../contexts/LanguageContext'
 
 /* ── Orbs (reusing Hero pattern, simplified) ─────────────────── */
@@ -144,12 +144,9 @@ export default function NotFound() {
 
   return (
     <>
-      <Head>
-        <title>404 — mrmerlo.com</title>
-        <meta name="robots" content="noindex" />
-      </Head>
+      <Seo title="404" noindex path="/404/" />
 
-      <Wrapper>
+      <Wrapper as="main" id="main-content">
         <OrbsLayer>
           <Orb1 />
           <Orb2 />
