@@ -69,7 +69,7 @@ const Circle = styled(motion.span)`
 /* La "M" persiste siempre (Major Mono Display = fuente de branding) */
 const MGlyph = styled(motion.span)`
   font-family: 'Major Mono Display', ui-monospace, monospace;
-  font-size: 1.15rem;
+  font-size: 1.6rem;
   line-height: 1;
   color: var(--text-primary);
   transform-origin: center;
@@ -82,7 +82,7 @@ const MGlyph = styled(motion.span)`
 /* "RMERLO" — aparece junto a la M para completar MRMERLO */
 const Rest = styled(motion.span)`
   font-family: 'Major Mono Display', ui-monospace, monospace;
-  font-size: 1.15rem;
+  font-size: 1.6rem;
   line-height: 1;
   color: var(--text-primary);
   overflow: hidden;
@@ -695,11 +695,11 @@ export default function Navbar() {
             aria-hidden={!scrolled}
             initial={{ width: 0, opacity: 0 }}
             animate={scrolled
-              ? { width: 'auto', opacity: 1, marginLeft: -12 }
+              ? { width: 'auto', opacity: 1, marginLeft: -13 }
               : { width: 0, opacity: 0, marginLeft: 0 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
-            RMERLO
+            rMerlo
           </Rest>
         </LogoBtn>
 
