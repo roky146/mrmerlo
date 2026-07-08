@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useThemeCtx } from '../../contexts/ThemeContext'
@@ -34,51 +35,62 @@ const Nav = styled(motion.nav)`
 
 /* ─── Logo morph: círculo con "M" ⇄ wordmark "mrmerlo" ─────── */
 
-const LogoSlot = styled.div`
+const LogoBtn = styled.button`
   pointer-events: all;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   height: 42px;
-  min-width: 120px;
+  background: none;
+  border: none;
+  padding: 0;
 `
 
-const LogoCircle = styled(motion.button)`
-  pointer-events: all;
+const MWrap = styled.div`
+  position: relative;
   width: 42px;
   height: 42px;
-  border-radius: 50%;
-  border: 2px solid var(--text-primary);
-  background: none;
-  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.3s;
-
-  &:hover { border-color: var(--accent-dim); }
+  flex-shrink: 0;
 `
 
-const MLetter = styled(motion.span)`
-  font-family: 'Gilroy', 'Satoshi', sans-serif;
-  font-style: italic;
-  font-weight: 800;
-  font-size: 1.4rem;
+/* El círculo que rodea la M (se desvanece "ampliándose" al hacer scroll) */
+const Circle = styled(motion.span)`
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--text-primary);
+  transition: border-color 0.3s;
+
+  ${LogoBtn}:hover & { border-color: var(--accent-dim); }
+`
+
+/* La "M" persiste siempre (Major Mono Display = fuente de branding) */
+const MGlyph = styled(motion.span)`
+  font-family: 'Major Mono Display', ui-monospace, monospace;
+  font-size: 1.15rem;
   line-height: 1;
   color: var(--text-primary);
   transform-origin: center;
-  padding-right: 1px;
+  transition: color 0.25s;
+  z-index: 1;
+
+  ${LogoBtn}:hover & { color: var(--accent-dim); }
 `
 
-const Wordmark = styled(motion.a)`
-  pointer-events: all;
-  font-family: 'Gilroy', 'Satoshi', sans-serif;
-  font-weight: 700;
-  font-size: 1.4rem;
-  letter-spacing: -0.03em;
+/* "RMERLO" — aparece junto a la M para completar MRMERLO */
+const Rest = styled(motion.span)`
+  font-family: 'Major Mono Display', ui-monospace, monospace;
+  font-size: 1.15rem;
+  line-height: 1;
   color: var(--text-primary);
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
   transition: color 0.25s;
 
-  &:hover { color: var(--accent-dim); }
+  ${LogoBtn}:hover & { color: var(--accent-dim); }
 `
 
 /* ─── Floating back-to-top (aparece al hacer scroll) ───────── */
@@ -582,6 +594,7 @@ export default function Navbar() {
   const [langOpen, setLangOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const langRef = useRef(null)
+  const router = useRouter()
   const { dark, toggle: toggleTheme } = useThemeCtx()
   const { lang, t, setLang } = useLang()
 
@@ -648,6 +661,14 @@ export default function Navbar() {
     }
   }, [])
 
+  /* Logo: en el hero = subir; ya con scroll (wordmark MRMERLO) = ir al inicio.
+     En la home siempre sube; en subpáginas navega a "/" (transición seamless). */
+  const onLogoClick = useCallback(() => {
+    close()
+    if (scrolled && router.pathname !== '/') router.push('/')
+    else scrollToTop()
+  }, [scrolled, router, scrollToTop])
+
   return (
     <>
       <Nav
@@ -655,45 +676,32 @@ export default function Navbar() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
       >
-        {/* ── Logo morph: círculo con M ⇄ wordmark "mrmerlo" ── */}
-        <LogoSlot>
-          <AnimatePresence mode="wait" initial={false}>
-            {scrolled ? (
-              <Wordmark
-                key="wordmark"
-                href="/"
-                onClick={close}
-                aria-label="Ir al inicio"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-              >
-                mrmerlo
-              </Wordmark>
-            ) : (
-              <LogoCircle
-                key="logo"
-                onClick={scrollToTop}
-                aria-label="Volver arriba"
-                initial={{ scale: 0.6, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 1.6, opacity: 0 }}
-                transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
-                whileHover={{ rotate: 6 }}
-              >
-                <MLetter
-                  initial={{ scale: 0.6 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: [1.05, 0] }}
-                  transition={{ duration: 0.35, ease: 'easeInOut' }}
-                >
-                  M
-                </MLetter>
-              </LogoCircle>
-            )}
-          </AnimatePresence>
-        </LogoSlot>
+        {/* ── Logo: "M" en círculo → el círculo se desvanece y aparece "RMERLO" = MRMERLO ── */}
+        <LogoBtn onClick={onLogoClick} aria-label={scrolled ? 'Ir al inicio' : 'Volver arriba'}>
+          <MWrap>
+            <Circle
+              initial={false}
+              animate={scrolled ? { opacity: 0, scale: 1.7 } : { opacity: 1, scale: 1 }}
+              transition={{ duration: 0.45, ease: [0.76, 0, 0.24, 1] }}
+            />
+            <MGlyph
+              whileHover={!scrolled ? { scale: 1.03 } : undefined}
+              transition={{ duration: 0.25 }}
+            >
+              M
+            </MGlyph>
+          </MWrap>
+          <Rest
+            aria-hidden={!scrolled}
+            initial={{ width: 0, opacity: 0 }}
+            animate={scrolled
+              ? { width: 'auto', opacity: 1, marginLeft: -12 }
+              : { width: 0, opacity: 0, marginLeft: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          >
+            RMERLO
+          </Rest>
+        </LogoBtn>
 
         <NavControls>
           {/* ── Enlaces principales (desktop) ── */}

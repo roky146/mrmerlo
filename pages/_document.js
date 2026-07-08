@@ -11,7 +11,7 @@ export default function Document() {
         <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://gistcdn.githack.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@300;400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@300;400;500;600;700&family=Major+Mono+Display&display=swap"
           rel="stylesheet"
         />
         <link
@@ -48,6 +48,7 @@ export default function Document() {
         <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#0D1A12" />
 
         {/* Iconos / manifest */}
+        <link rel="icon" type="image/svg+xml" href="/icon.svg" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/favicon.ico" />
         <link rel="manifest" href="/site.webmanifest" />
