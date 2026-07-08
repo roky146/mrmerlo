@@ -20,7 +20,6 @@ const Nav = styled(motion.nav)`
   padding-right: calc(4rem + var(--scrollbar-w, 0px));
   pointer-events: none;
 
-  /* Frost glass — adapts to theme via --nav-bg-rgb */
   background: rgba(var(--nav-bg-rgb, 240, 250, 244), 0.30);
   backdrop-filter: blur(20px) saturate(1.8);
   -webkit-backdrop-filter: blur(20px) saturate(1.8);
@@ -33,29 +32,84 @@ const Nav = styled(motion.nav)`
   }
 `
 
-/* Logo is now a button (scroll-to-top), not a Link */
-const LogoBtn = styled.button`
+/* ─── Logo morph: círculo con "M" ⇄ wordmark "mrmerlo" ─────── */
+
+const LogoSlot = styled.div`
   pointer-events: all;
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 42px;
   height: 42px;
-  cursor: none;
-  background: none;
-  border: none;
-  padding: 0;
+  min-width: 120px;
 `
 
-const LogoCircle = styled(motion.div)`
+const LogoCircle = styled(motion.button)`
+  pointer-events: all;
   width: 42px;
   height: 42px;
   border-radius: 50%;
   border: 2px solid var(--text-primary);
+  background: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: border-color 0.3s;
 
-  ${LogoBtn}:hover & {
-    border-color: var(--accent-dim);
+  &:hover { border-color: var(--accent-dim); }
+`
+
+const MLetter = styled(motion.span)`
+  font-family: 'Gilroy', 'Satoshi', sans-serif;
+  font-style: italic;
+  font-weight: 800;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--text-primary);
+  transform-origin: center;
+  padding-right: 1px;
+`
+
+const Wordmark = styled(motion.a)`
+  pointer-events: all;
+  font-family: 'Gilroy', 'Satoshi', sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  transition: color 0.25s;
+
+  &:hover { color: var(--accent-dim); }
+`
+
+/* ─── Floating back-to-top (aparece al hacer scroll) ───────── */
+
+const BackToTop = styled(motion.button)`
+  position: fixed;
+  bottom: 1.5rem;
+  right: calc(1.5rem + var(--scrollbar-w, 0px));
+  z-index: 95;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--text-primary);
+  background: rgba(var(--nav-bg-rgb, 240, 250, 244), 0.4);
+  backdrop-filter: blur(12px) saturate(1.6);
+  -webkit-backdrop-filter: blur(12px) saturate(1.6);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: all;
+  transition: border-color 0.25s, background 0.25s;
+
+  &:hover { border-color: var(--accent-dim); }
+  svg { width: 1.2rem; height: 1.2rem; }
+
+  @media (max-width: 768px) {
+    bottom: 1.25rem;
+    right: 1.25rem;
+    width: 46px;
+    height: 46px;
   }
 `
 
@@ -66,6 +120,54 @@ const NavControls = styled.div`
   align-items: center;
   gap: 0.6rem;
   pointer-events: all;
+`
+
+/* Enlaces principales en el header (solo desktop) */
+const DesktopLinks = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  margin-right: 0.5rem;
+
+  @media (max-width: 900px) { display: none; }
+`
+
+const DesktopLink = styled.a`
+  pointer-events: all;
+  position: relative;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 1.5px;
+    background: var(--accent-dim);
+    transform: scaleX(0);
+    transform-origin: 100% 50%;
+    transition: transform 0.3s ease;
+  }
+  &:hover {
+    color: var(--text-primary);
+    &::after { transform: scaleX(1); transform-origin: 0 50%; }
+  }
+`
+
+/* Iconos sociales visibles en el header (solo desktop) */
+const DesktopSocial = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-right: 0.2rem;
+
+  @media (max-width: 900px) { display: none; }
 `
 
 /* Shared icon button style */
@@ -91,12 +193,10 @@ const IconBtn = styled.button`
   }
 `
 
-/* Language pill wrapper (relative for dropdown positioning) */
 const LangWrapper = styled.div`
   position: relative;
 `
 
-/* Language pill button */
 const LangBtn = styled.button`
   pointer-events: all;
   display: flex;
@@ -129,7 +229,6 @@ const LangDot = styled.span`
   flex-shrink: 0;
 `
 
-/* Language dropdown bubble */
 const LangDropdown = styled(motion.div)`
   position: absolute;
   top: calc(100% + 0.5rem);
@@ -173,17 +272,18 @@ const LangOption = styled.button`
   }
 `
 
-/* ─── Hamburger (Framer Motion bars) ─────────────────────────── */
+/* ─── Hamburger (solo móvil/tablet) ──────────────────────────── */
 
 const HamburgerBtn = styled.button`
   pointer-events: all;
   position: relative;
   width: 28px;
   height: 20px;
-  cursor: pointer;
   background: none;
   border: none;
   padding: 0;
+
+  @media (min-width: 901px) { display: none; }
 `
 
 const BAR_STYLE = {
@@ -195,7 +295,7 @@ const BAR_STYLE = {
   transformOrigin: 'center center',
 }
 
-/* ─── Black curtain (appears before MenuOverlay) ───────────── */
+/* ─── Overlay (móvil) ───────────────────────────────────────── */
 
 const MenuBlack = styled(motion.div)`
   position: fixed;
@@ -204,8 +304,6 @@ const MenuBlack = styled(motion.div)`
   z-index: 98;
   pointer-events: none;
 `
-
-/* ─── Full-screen overlay ───────────────────────────────────── */
 
 const MenuOverlay = styled(motion.div)`
   position: fixed;
@@ -223,8 +321,6 @@ const MenuOverlay = styled(motion.div)`
     gap: 2rem;
   }
 `
-
-/* ─── Left: nav links ────────────────────────────────────────── */
 
 const NavLinks = styled.div`
   display: flex;
@@ -277,8 +373,6 @@ const MenuItem = styled(motion.div)`
   }
 `
 
-/* ─── Right: 2×2 social grid (Kumar-style) ──────────────────── */
-
 const SocialGrid = styled(motion.div)`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -289,8 +383,6 @@ const SocialGrid = styled(motion.div)`
 
   @media (max-width: 768px) { display: none; }
 `
-
-/* ─── Mobile: circles stacked vertically on the right ───────── */
 
 const MobileSocialStack = styled(motion.div)`
   display: none;
@@ -328,7 +420,6 @@ const MobileSocialCircle = styled.a`
   }
 `
 
-/* Each cell */
 const SocialCell = styled.a`
   position: relative;
   overflow: hidden;
@@ -340,9 +431,7 @@ const SocialCell = styled.a`
   border: 1px solid var(--border);
   color: var(--text-secondary);
   transition: color 0.35s ease;
-  cursor: pointer;
 
-  /* Background fill — expands from origin corner */
   &::before {
     content: '';
     position: absolute;
@@ -379,8 +468,6 @@ const SocialLabel = styled.span`
   font-family: 'Inter', sans-serif;
 `
 
-/* ─── Footer bar ─────────────────────────────────────────────── */
-
 const MenuFooter = styled(motion.div)`
   position: absolute;
   bottom: 2rem;
@@ -405,20 +492,22 @@ const MenuFooterText = styled.span`
 const SunIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="5"/>
-    <line x1="12" y1="1" x2="12" y2="3"/>
-    <line x1="12" y1="21" x2="12" y2="23"/>
-    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-    <line x1="1" y1="12" x2="3" y2="12"/>
-    <line x1="21" y1="12" x2="23" y2="12"/>
-    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+    <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
   </svg>
 )
 
 const MoonIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </svg>
+)
+
+const ArrowUpIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 19V5"/><path d="m5 12 7-7 7 7"/>
   </svg>
 )
 
@@ -478,8 +567,6 @@ const itemVariant = (i) => ({
   visible: { y: 0, transition: { duration: 0.65, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] } }
 })
 
-/* ─── Component ──────────────────────────────────────────────── */
-
 const LANG_OPTIONS = [
   { code: 'es', flag: '🇪🇸', label: 'Español' },
   { code: 'en', flag: '🇬🇧', label: 'English' },
@@ -488,9 +575,12 @@ const LANG_OPTIONS = [
   { code: 'pt', flag: '🇧🇷', label: 'Português' },
 ]
 
+/* ─── Component ──────────────────────────────────────────────── */
+
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [langOpen, setLangOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const langRef = useRef(null)
   const { dark, toggle: toggleTheme } = useThemeCtx()
   const { lang, t, setLang } = useLang()
@@ -502,6 +592,7 @@ export default function Navbar() {
     { label: t('nav_contact'),  href: 'mailto:iroky146@gmail.com', external: true },
   ]
 
+  /* Bloquear scroll con overlay abierto */
   useEffect(() => {
     if (open) {
       const scrollbarW = window.innerWidth - document.documentElement.clientWidth
@@ -522,13 +613,25 @@ export default function Navbar() {
     }
   }, [open])
 
-  /* Close lang dropdown on click outside */
+  /* Detectar scroll más allá del hero (funciona en cualquier página) */
+  useEffect(() => {
+    const threshold = () => Math.min(window.innerHeight * 0.85, 600)
+    const onScroll = () => setScrolled(window.scrollY > threshold())
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    const lenis = typeof window !== 'undefined' ? window.__lenis__ : null
+    lenis?.on?.('scroll', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      lenis?.off?.('scroll', onScroll)
+    }
+  }, [])
+
+  /* Cerrar dropdown de idioma al hacer click fuera */
   useEffect(() => {
     if (!langOpen) return
     const handler = (e) => {
-      if (langRef.current && !langRef.current.contains(e.target)) {
-        setLangOpen(false)
-      }
+      if (langRef.current && !langRef.current.contains(e.target)) setLangOpen(false)
     }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
@@ -552,20 +655,74 @@ export default function Navbar() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
       >
-        <LogoBtn aria-label="Volver al inicio" onClick={scrollToTop}>
-          <LogoCircle
-            whileHover={{ rotate: 90 }}
-            transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-          />
-        </LogoBtn>
+        {/* ── Logo morph: círculo con M ⇄ wordmark "mrmerlo" ── */}
+        <LogoSlot>
+          <AnimatePresence mode="wait" initial={false}>
+            {scrolled ? (
+              <Wordmark
+                key="wordmark"
+                href="/"
+                onClick={close}
+                aria-label="Ir al inicio"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+              >
+                mrmerlo
+              </Wordmark>
+            ) : (
+              <LogoCircle
+                key="logo"
+                onClick={scrollToTop}
+                aria-label="Volver arriba"
+                initial={{ scale: 0.6, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 1.6, opacity: 0 }}
+                transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
+                whileHover={{ rotate: 6 }}
+              >
+                <MLetter
+                  initial={{ scale: 0.6 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: [1.05, 0] }}
+                  transition={{ duration: 0.35, ease: 'easeInOut' }}
+                >
+                  M
+                </MLetter>
+              </LogoCircle>
+            )}
+          </AnimatePresence>
+        </LogoSlot>
 
         <NavControls>
-          {/* ── Language selector ── */}
+          {/* ── Enlaces principales (desktop) ── */}
+          <DesktopLinks>
+            <DesktopLink as={Link} href="/#projects">{t('nav_projects')}</DesktopLink>
+            <DesktopLink as={Link} href="/about">{t('nav_about')}</DesktopLink>
+            <DesktopLink href="mailto:iroky146@gmail.com">{t('nav_contact')}</DesktopLink>
+          </DesktopLinks>
+
+          {/* ── Social + CV (desktop) ── */}
+          <DesktopSocial>
+            {socialLinks.map(s => (
+              <IconBtn
+                as="a"
+                key={s.label}
+                href={s.href}
+                target={s.external ? '_blank' : undefined}
+                rel={s.external ? 'noopener noreferrer' : undefined}
+                aria-label={s.label}
+                title={s.label}
+              >
+                {s.icon}
+              </IconBtn>
+            ))}
+          </DesktopSocial>
+
+          {/* ── Selector de idioma ── */}
           <LangWrapper ref={langRef}>
-            <LangBtn
-              onClick={() => setLangOpen(v => !v)}
-              aria-label="Seleccionar idioma"
-            >
+            <LangBtn onClick={() => setLangOpen(v => !v)} aria-label="Seleccionar idioma">
               <LangDot />
               {lang.toUpperCase()}
             </LangBtn>
@@ -593,7 +750,7 @@ export default function Navbar() {
             </AnimatePresence>
           </LangWrapper>
 
-          {/* ── Dark mode toggle ── */}
+          {/* ── Toggle tema ── */}
           <IconBtn
             onClick={toggleTheme}
             aria-label={dark ? 'Activar modo claro' : 'Activar modo oscuro'}
@@ -601,17 +758,14 @@ export default function Navbar() {
             {dark ? <SunIcon /> : <MoonIcon />}
           </IconBtn>
 
-          {/* ── Hamburger ── */}
+          {/* ── Hamburguesa (solo móvil/tablet) ── */}
           <HamburgerBtn
             onClick={() => setOpen(v => !v)}
             aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
           >
             <motion.span
               style={{ ...BAR_STYLE, width: '100%' }}
-              animate={open
-                ? { top: 9, rotate: 45, width: '100%' }
-                : { top: 3, rotate: 0,  width: '100%' }
-              }
+              animate={open ? { top: 9, rotate: 45, width: '100%' } : { top: 3, rotate: 0, width: '100%' }}
               transition={{ duration: 0.45, ease: [0.76, 0, 0.24, 1] }}
             />
             <motion.span
@@ -626,6 +780,32 @@ export default function Navbar() {
         </NavControls>
       </Nav>
 
+      {/* ── Botón flotante de subir (aparece al hacer scroll) ── */}
+      <AnimatePresence>
+        {scrolled && (
+          <BackToTop
+            key="back-to-top"
+            onClick={scrollToTop}
+            aria-label="Volver arriba"
+            initial={{ scale: 1.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.5, opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
+            whileHover={{ y: -3 }}
+          >
+            <motion.span
+              style={{ display: 'flex' }}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.15, duration: 0.3, ease: 'easeOut' }}
+            >
+              <ArrowUpIcon />
+            </motion.span>
+          </BackToTop>
+        )}
+      </AnimatePresence>
+
+      {/* ── Overlay (móvil) ── */}
       <AnimatePresence>
         {open && (
           <MenuBlack
@@ -644,31 +824,19 @@ export default function Navbar() {
             exit={{    clipPath: 'inset(0 0 100% 0)' }}
             transition={{ duration: 0.55, delay: 0.1, ease: [0.76, 0, 0.24, 1] }}
           >
-            {/* ── Left: nav links ── */}
             <NavLinks>
               {menuLinks.map((link, i) => (
                 <MenuItemWrapper key={link.label}>
-                  <MenuItem
-                    variants={itemVariant(i)}
-                    initial="hidden"
-                    animate="visible"
-                    onClick={close}
-                  >
+                  <MenuItem variants={itemVariant(i)} initial="hidden" animate="visible" onClick={close}>
                     {link.external
                       ? <a href={link.href}>{link.label}</a>
-                      : <Link href={link.href}>{link.label}</Link>
-                    }
+                      : <Link href={link.href}>{link.label}</Link>}
                   </MenuItem>
                 </MenuItemWrapper>
               ))}
             </NavLinks>
 
-            {/* ── Right: 2×2 social grid (desktop) ── */}
-            <SocialGrid
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.4 }}
-            >
+            <SocialGrid initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.4 }}>
               {socialLinks.map(s => (
                 <SocialCell
                   key={s.label}
@@ -684,12 +852,7 @@ export default function Navbar() {
               ))}
             </SocialGrid>
 
-            {/* ── Right: circles stacked vertically (mobile) ── */}
-            <MobileSocialStack
-              initial={{ opacity: 0, x: 16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3, duration: 0.4 }}
-            >
+            <MobileSocialStack initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3, duration: 0.4 }}>
               {socialLinks.map(s => (
                 <MobileSocialCircle
                   key={s.label}
@@ -703,12 +866,7 @@ export default function Navbar() {
               ))}
             </MobileSocialStack>
 
-            {/* ── Footer ── */}
-            <MenuFooter
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.35 }}
-            >
+            <MenuFooter initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.35 }}>
               <MenuFooterText>mrmerlo.com</MenuFooterText>
               <MenuFooterText>{t('nav_location')}</MenuFooterText>
             </MenuFooter>

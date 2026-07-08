@@ -51,18 +51,18 @@ const GlobalStyle = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Custom cursor only on real pointer devices (mouse/trackpad, not touch) */
+  /* Cursor personalizado en punteros finos (mouse/trackpad).
+     !important para pisar cualquier cursor pointer/text de componentes,
+     que era lo que hacia reaparecer el cursor normal del SO. */
   @media (pointer: fine) {
-    body { cursor: none; }
+    *, *::before, *::after { cursor: none !important; }
   }
 
   /* ── Hide scrollbar (layout reserved via scrollbar-gutter: stable) ── */
   ::-webkit-scrollbar { display: none; }
   * { scrollbar-width: none; }
 
-  @media (pointer: fine) {
-    a, button { cursor: none; }
-  }
+  /* (cursor: none aplicado globalmente arriba con !important) */
 
   a {
     color: inherit;

@@ -18,10 +18,11 @@ const Dot = styled.div`
   /* Hide on touch/coarse-pointer devices */
   @media (pointer: coarse) { display: none; }
 
+  /* La bolita SIEMPRE persiste (antes desaparecía sobre botones). */
   &.hovering {
-    width: 0;
-    height: 0;
-    opacity: 0;
+    width: 6px;
+    height: 6px;
+    background: var(--accent-dim);
   }
 `
 
