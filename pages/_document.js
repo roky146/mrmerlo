@@ -5,6 +5,13 @@ export default function Document() {
   return (
     <Html lang="es">
       <Head>
+        {/* Tema por defecto OSCURO (respeta la preferencia guardada) — antes del primer pintado, sin flash */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: "(function(){try{var t=localStorage.getItem('theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();",
+          }}
+        />
+
         {/* Fuentes — preconnect a todos los orígenes para reducir latencia */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

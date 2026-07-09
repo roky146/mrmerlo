@@ -5,14 +5,10 @@ const ThemeCtx = createContext({ dark: false, toggle: () => {} })
 export function ThemeCtxProvider({ children }) {
   const [dark, setDark] = useState(false)
 
-  /* Init: check localStorage, fallback to system preference */
+  /* Init: preferencia guardada → si no hay, OSCURO por defecto */
   useEffect(() => {
     const stored = localStorage.getItem('theme')
-    if (stored) {
-      setDark(stored === 'dark')
-    } else {
-      setDark(window.matchMedia('(prefers-color-scheme: dark)').matches)
-    }
+    setDark(stored === 'light' ? false : true)
   }, [])
 
   /* Apply data-theme attribute to <html> whenever dark changes */
