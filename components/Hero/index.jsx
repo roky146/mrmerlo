@@ -51,6 +51,10 @@ const OrbsLayer = styled.div`
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
+  /* Mismo fundido inferior que la grilla: el verde de los orbs también
+     desaparece por completo en el borde inferior del hero. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 85%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 85%, transparent 100%);
 `
 
 const OrbBase = styled.div`

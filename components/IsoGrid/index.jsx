@@ -19,8 +19,8 @@ const Canvas = styled.canvas`
   z-index: 1;
   pointer-events: auto;
   touch-action: manipulation;
-  -webkit-mask-image: linear-gradient(to bottom, #000 50%, rgba(0, 0, 0, 0) 90%);
-  mask-image: linear-gradient(to bottom, #000 50%, rgba(0, 0, 0, 0) 90%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 85%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 85%, transparent 100%);
 `
 
 const CW = 64, CH = 32
@@ -56,6 +56,7 @@ export default function IsoGrid() {
     let pinned = false
     let target = null            // {u,v} destino activo (se dibuja fijo al 100 %)
     let burst = null             // {cx,cy,t0,peak,collapsing,collapseStart}
+    let bounceSign = 0           // detecta el "touchdown" del rebote en el sitio
 
     const cellX = (u) => originX + u * cw2
     const cellY = (v) => originY + v * ch2
@@ -221,9 +222,18 @@ export default function IsoGrid() {
           decideNext(now)
         }
       } else {
+        const sn = Math.sin(now / 220)
         ball.bx = cellX(ball.u)
-        ball.by = cellY(ball.v) - Math.abs(Math.sin(now / 220)) * BOUNCE
+        ball.by = cellY(ball.v) - Math.abs(sn) * BOUNCE
         trail.set(key(ball.u, ball.v), now)
+        // Fija rebotando en su cuadro → libera el destello en CADA toque (touchdown)
+        if (pinned && (!target || sameCell(ball, target))) {
+          const sg = sn >= 0 ? 1 : -1
+          if (sg !== bounceSign) {
+            bounceSign = sg
+            burst = { cx: cellX(ball.u), cy: cellY(ball.v), t0: now, peak: 0, collapsing: false }
+          }
+        }
         if (pinned && target && !sameCell(ball, target)) { dirToTarget(); startHop(now) }
         else if (!pinned) decideNext(now)
       }
