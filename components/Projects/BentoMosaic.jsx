@@ -85,6 +85,8 @@ const Bento = styled.div`
 
 const Tile = styled(motion.div)`
   grid-column: span ${p => p.$c};
+  /* Contenedor para escalado proporcional del icono/márgenes (cqmin) */
+  container-type: size;
   background: ${p => p.$hue}17;
   border: 1px solid ${p => p.$hue}3a;
   border-radius: 14px;
@@ -92,8 +94,8 @@ const Tile = styled(motion.div)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.55rem;
-  padding: 0.9rem 0.7rem;
+  gap: clamp(0.35rem, 7cqmin, 0.7rem);
+  padding: clamp(0.5rem, 11cqmin, 1.1rem);
   text-align: center;
   transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
 
@@ -107,41 +109,32 @@ const Tile = styled(motion.div)`
   @media (max-width: 560px) {
     grid-column: span 1;
     grid-row: span ${p => p.$rm};
-    gap: 0.4rem;
-    padding: 0.6rem 0.5rem;
   }
 `
 
-/* Icono dentro de un círculo tintado → más presencia */
+/* Icono en círculo tintado — tamaño proporcional al área de la card */
 const IconWrap = styled.div`
-  width: 48px;
-  height: 48px;
+  width: clamp(32px, 44cqmin, 60px);
+  height: clamp(32px, 44cqmin, 60px);
   border-radius: 50%;
   background: ${p => p.$hue}26;
   color: ${p => p.$hue};
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   animation: ${floaty} 3.6s ease-in-out infinite;
   animation-delay: ${p => p.$d}s;
 
-  svg { width: 1.55rem; height: 1.55rem; transition: transform 0.25s ease; }
-
-  @media (max-width: 560px) {
-    width: 40px;
-    height: 40px;
-    svg { width: 1.3rem; height: 1.3rem; }
-  }
+  svg { width: 54%; height: 54%; transition: transform 0.25s ease; }
 `
 
 const TileLabel = styled.span`
-  font-size: 0.82rem;
+  font-size: clamp(0.68rem, 13cqmin, 0.92rem);
   font-weight: 500;
   letter-spacing: 0.01em;
   line-height: 1.15;
   color: var(--text-primary);
-
-  @media (max-width: 560px) { font-size: 0.72rem; }
 `
 
 const tileVariants = {

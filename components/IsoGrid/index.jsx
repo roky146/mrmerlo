@@ -4,12 +4,11 @@ import styled from 'styled-components'
 /* ──────────────────────────────────────────────────────────────
    Grilla isométrica en Canvas 2D (fondo del hero).
    - Bola que rebota de CENTRO a CENTRO de cada rombo (paridad par).
-   - Rastro: cada rombo tocado se ilumina (acento) y se desvanece en 5 s.
-   - Wrap-around: si sale por un borde, reaparece por el opuesto.
-   - Interacción atómica: al fijar la bola y pedir nueva ruta, termina el
-     salto en curso antes de redirigir (sin resets bruscos). Click extra
-     solo actualiza el destino; se aplica al siguiente borde de salto.
-   - Máscara de fade inferior para fundir con la sección siguiente.
+   - Rastro: cada rombo tocado se ilumina y se desvanece en 5 s.
+   - Wrap-around por los bordes. Interacción atómica (termina el salto
+     antes de redirigir). Feedback: glow al fijar, target-tile fijo al
+     100 %, arrival burst (sunburst) y colapso concéntrico al interrumpir.
+   - Máscara de fade inferior fuerte para fundir con la sección siguiente.
    ────────────────────────────────────────────────────────────── */
 
 const Canvas = styled.canvas`
@@ -20,8 +19,8 @@ const Canvas = styled.canvas`
   z-index: 1;
   pointer-events: auto;
   touch-action: manipulation;
-  -webkit-mask-image: linear-gradient(to bottom, #000 76%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 76%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 50%, rgba(0, 0, 0, 0) 90%);
+  mask-image: linear-gradient(to bottom, #000 50%, rgba(0, 0, 0, 0) 90%);
 `
 
 const CW = 64, CH = 32
@@ -30,6 +29,10 @@ const TRAIL_MS = 5000
 const HOP_MS = 380
 const BOUNCE = 14
 const HIT_R = 26
+const BURST_MS = 650
+const COLLAPSE_MS = 300
+const BURST_R = 38
+const RAYS = 12
 
 export default function IsoGrid() {
   const canvasRef = useRef(null)
@@ -49,10 +52,10 @@ export default function IsoGrid() {
     const trail = new Map()
     let raf = null
 
-    /* Bola en coords de celda (u = X, v = Y). Paridad (u+v) par SIEMPRE. */
     const ball = { u: 0, v: 0, fromU: 0, fromV: 0, t0: 0, du: 1, dv: 1, moving: true, bx: 0, by: 0 }
     let pinned = false
-    let target = null
+    let target = null            // {u,v} destino activo (se dibuja fijo al 100 %)
+    let burst = null             // {cx,cy,t0,peak,collapsing,collapseStart}
 
     const cellX = (u) => originX + u * cw2
     const cellY = (v) => originY + v * ch2
@@ -66,6 +69,15 @@ export default function IsoGrid() {
       colBall = (s.getPropertyValue('--text-primary') || '#1A1A1A').trim()
     }
 
+    const diamondPath = (c, x, y) => {
+      c.beginPath()
+      c.moveTo(x, y - ch2)
+      c.lineTo(x + cw2, y)
+      c.lineTo(x, y + ch2)
+      c.lineTo(x - cw2, y)
+      c.closePath()
+    }
+
     const buildGrid = () => {
       grid.width = Math.max(1, W * dpr)
       grid.height = Math.max(1, H * dpr)
@@ -77,13 +89,7 @@ export default function IsoGrid() {
       for (let u = -Umax; u <= Umax; u++) {
         for (let v = -Vmax; v <= Vmax; v++) {
           if ((u + v) & 1) continue
-          const x = cellX(u), y = cellY(v)
-          gctx.beginPath()
-          gctx.moveTo(x, y - ch2)
-          gctx.lineTo(x + cw2, y)
-          gctx.lineTo(x, y + ch2)
-          gctx.lineTo(x - cw2, y)
-          gctx.closePath()
+          diamondPath(gctx, cellX(u), cellY(v))
           gctx.stroke()
         }
       }
@@ -106,15 +112,9 @@ export default function IsoGrid() {
     }
 
     const fillCell = (u, v, alpha) => {
-      const x = cellX(u), y = cellY(v)
       ctx.globalAlpha = alpha
       ctx.fillStyle = colAccent
-      ctx.beginPath()
-      ctx.moveTo(x, y - ch2)
-      ctx.lineTo(x + cw2, y)
-      ctx.lineTo(x, y + ch2)
-      ctx.lineTo(x - cw2, y)
-      ctx.closePath()
+      diamondPath(ctx, cellX(u), cellY(v))
       ctx.fill()
       ctx.globalAlpha = 1
     }
@@ -147,17 +147,54 @@ export default function IsoGrid() {
       ball.moving = true
     }
 
-    /* Decide el siguiente movimiento estando la bola en reposo en su celda */
     const decideNext = (now) => {
       if (!pinned) { nextDir(); startHop(now); return }
       if (target && !sameCell(ball, target)) { dirToTarget(); startHop(now) }
-      // fija sin destino (o ya en destino) → se queda rebotando en el sitio
+    }
+
+    /* Interrumpe el arrival burst: colapsa hacia el centro de la bola */
+    const collapseBurst = (now) => {
+      if (burst && !burst.collapsing) { burst.collapsing = true; burst.collapseStart = now }
+    }
+
+    const drawBurst = (now) => {
+      let cx, cy, spread, alpha
+      if (burst.collapsing) {
+        const c = (now - burst.collapseStart) / COLLAPSE_MS
+        if (c >= 1) { burst = null; return }
+        cx = ball.bx; cy = ball.by                       // retrae hacia la bola (viva)
+        spread = BURST_R * (burst.peak || 1) * (1 - c)
+        alpha = (1 - c) * 0.85
+      } else {
+        const p = (now - burst.t0) / BURST_MS
+        if (p >= 1) { burst = null; return }
+        burst.peak = p
+        cx = burst.cx; cy = burst.cy
+        spread = BURST_R * p
+        alpha = (1 - p) * 0.9
+      }
+      ctx.save()
+      ctx.strokeStyle = colAccent
+      ctx.lineWidth = 2
+      ctx.lineCap = 'round'
+      ctx.globalAlpha = alpha
+      for (let i = 0; i < RAYS; i++) {
+        const a = (i / RAYS) * Math.PI * 2
+        const dx = Math.cos(a), dy = Math.sin(a) * 0.55
+        const inner = spread * 0.42, outer = spread
+        ctx.beginPath()
+        ctx.moveTo(cx + dx * inner, cy + dy * inner)
+        ctx.lineTo(cx + dx * outer, cy + dy * outer)
+        ctx.stroke()
+      }
+      ctx.restore()
     }
 
     const draw = (now) => {
       ctx.clearRect(0, 0, W, H)
       ctx.drawImage(grid, 0, 0, W, H)
 
+      // rastro con fade
       for (const [k, t] of trail) {
         const a = 1 - (now - t) / TRAIL_MS
         if (a <= 0) { trail.delete(k); continue }
@@ -165,18 +202,25 @@ export default function IsoGrid() {
         fillCell(u, v, a * 0.55)
       }
 
+      // target activo → fijo al 100 % (sin fade hasta que la bola llegue)
+      if (pinned && target) fillCell(target.u, target.v, 1)
+
+      // movimiento de la bola (máquina de estados)
       if (ball.moving) {
         const p = Math.min(1, (now - ball.t0) / HOP_MS)
         ball.bx = cellX(ball.fromU) + (cellX(ball.u) - cellX(ball.fromU)) * p
         ball.by = cellY(ball.fromV) + (cellY(ball.v) - cellY(ball.fromV)) * p - Math.sin(p * Math.PI) * BOUNCE
         if (p >= 1) {
           ball.moving = false
-          trail.set(key(ball.u, ball.v), now)          // aterrizó en el CENTRO → ilumina
-          if (pinned && sameCell(ball, target)) target = null
-          decideNext(now)                              // atómico: recién ahora redirige
+          const hitTarget = pinned && sameCell(ball, target)
+          trail.set(key(ball.u, ball.v), now)
+          if (hitTarget) {
+            burst = { cx: cellX(ball.u), cy: cellY(ball.v), t0: now, peak: 0, collapsing: false }
+            target = null
+          }
+          decideNext(now)
         }
       } else {
-        // en reposo: solo la bola fija-en-sitio permanece aquí
         ball.bx = cellX(ball.u)
         ball.by = cellY(ball.v) - Math.abs(Math.sin(now / 220)) * BOUNCE
         trail.set(key(ball.u, ball.v), now)
@@ -184,9 +228,20 @@ export default function IsoGrid() {
         else if (!pinned) decideNext(now)
       }
 
+      if (burst) drawBurst(now)
+
+      // bola con glow (mayor al estar fija)
       ctx.save()
       ctx.shadowColor = colAccent
-      ctx.shadowBlur = 14
+      ctx.shadowBlur = pinned ? 34 : 12
+      if (pinned) {
+        ctx.globalAlpha = 0.22
+        ctx.fillStyle = colAccent
+        ctx.beginPath()
+        ctx.arc(ball.bx, ball.by, 15, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.globalAlpha = 1
+      }
       ctx.fillStyle = colBall
       ctx.beginPath()
       ctx.arc(ball.bx, ball.by, 7, 0, Math.PI * 2)
@@ -211,19 +266,27 @@ export default function IsoGrid() {
       const rect = canvas.getBoundingClientRect()
       const mx = e.clientX - rect.left
       const my = e.clientY - rect.top
+      const now = performance.now()
 
-      // ¿tocó la bola? (usa su posición dibujada real)
       if (Math.hypot(mx - ball.bx, my - ball.by) < HIT_R) {
-        pinned = !pinned
-        target = null
+        if (pinned) {                              // liberar
+          pinned = false
+          if (target) { trail.set(key(target.u, target.v), now); target = null }
+          collapseBurst(now)
+        } else {                                   // fijar
+          pinned = true
+          target = null
+        }
         return
       }
 
       const cell = pickCell(mx, my)
       if (pinned) {
-        target = cell            // solo actualiza destino; se aplica al terminar el salto (atómico + debounce)
+        if (target && !sameCell(target, cell)) trail.set(key(target.u, target.v), now) // el target anterior arranca su fade
+        target = cell
+        collapseBurst(now)                         // interrumpe el burst suavemente
       } else {
-        trail.set(key(cell.u, cell.v), performance.now())
+        trail.set(key(cell.u, cell.v), now)
       }
     }
 
@@ -231,10 +294,10 @@ export default function IsoGrid() {
     resize()
     ball.u = 0
     ball.v = Vmax - 2
-    if ((ball.u + ball.v) & 1) ball.v -= 1     // ← garantiza CENTRO de rombo (paridad par)
+    if ((ball.u + ball.v) & 1) ball.v -= 1
     ball.fromU = ball.u; ball.fromV = ball.v
     ball.du = 1; ball.dv = -1
-    ball.moving = false                         // arranca en reposo; decideNext lanza el 1er salto
+    ball.moving = false
     ball.bx = cellX(ball.u); ball.by = cellY(ball.v)
 
     const onResize = () => resize()
