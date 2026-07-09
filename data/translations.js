@@ -8,7 +8,7 @@ export const translations = {
     nav_location:  'Santo Domingo, RD',
 
     /* ── Hero ── */
-    hero_eyebrow:     'Hola, soy Marcos',
+    hero_eyebrow:     'Hola, soy',
     hero_line1:       'CONVIERTO',
     hero_line2:       'LÓGICA EN',
     hero_line3:       'SOLUCIONES',
@@ -27,7 +27,7 @@ export const translations = {
 
     /* ── Footer ── */
     footer_heading:   'Trabajemos\njuntos',
-    footer_cta:       'Escríbeme un email →',
+    footer_cta:       'Escríbeme →',
     footer_tagline:   'Disponible para proyectos freelance',
     footer_credit:    'Diseñado y desarrollado por Marcos Rodríguez — mrmerlo.com',
 
@@ -114,7 +114,7 @@ export const translations = {
     nav_location:  'Santo Domingo, DR',
 
     /* ── Hero ── */
-    hero_eyebrow:     "Hi, I'm Marcos",
+    hero_eyebrow:     "Hi, I'm",
     hero_line1:       'I TURN',
     hero_line2:       'LOGIC INTO',
     hero_line3:       'SOLUTIONS',
@@ -133,7 +133,7 @@ export const translations = {
 
     /* ── Footer ── */
     footer_heading:   "Let's work\ntogether",
-    footer_cta:       'Send me an email →',
+    footer_cta:       'Write me →',
     footer_tagline:   'Available for freelance projects',
     footer_credit:    'Designed and developed by Marcos Rodríguez — mrmerlo.com',
 
@@ -220,7 +220,7 @@ export const translations = {
     nav_location:  'Santo Domingo, RD',
 
     /* ── Hero ── */
-    hero_eyebrow:     'Ciao, sono Marcos',
+    hero_eyebrow:     'Ciao, sono',
     hero_line1:       'TRASFORMO',
     hero_line2:       'LOGICA IN',
     hero_line3:       'SOLUZIONI',
@@ -239,7 +239,7 @@ export const translations = {
 
     /* ── Footer ── */
     footer_heading:   'Lavoriamo\ninsieme',
-    footer_cta:       'Mandami un email →',
+    footer_cta:       'Scrivimi →',
     footer_tagline:   'Disponibile per progetti freelance',
     footer_credit:    'Progettato e sviluppato da Marcos Rodríguez — mrmerlo.com',
 
@@ -326,7 +326,7 @@ export const translations = {
     nav_location:  'Saint-Domingue, RD',
 
     /* ── Hero ── */
-    hero_eyebrow:     'Bonjour, je suis Marcos',
+    hero_eyebrow:     'Bonjour, je suis',
     hero_line1:       'JE TRADUIS',
     hero_line2:       'LA LOGIQUE',
     hero_line3:       'EN SOLUTIONS',
@@ -345,7 +345,7 @@ export const translations = {
 
     /* ── Footer ── */
     footer_heading:   'Travaillons\nensemble',
-    footer_cta:       'Envoyez-moi un email →',
+    footer_cta:       'Écrivez-moi →',
     footer_tagline:   'Disponible pour des projets freelance',
     footer_credit:    'Conçu et développé par Marcos Rodríguez — mrmerlo.com',
 
@@ -432,7 +432,7 @@ export const translations = {
     nav_location:  'Santo Domingo, RD',
 
     /* ── Hero ── */
-    hero_eyebrow:     'Olá, sou Marcos',
+    hero_eyebrow:     'Olá, sou',
     hero_line1:       'CONVERTO',
     hero_line2:       'LÓGICA EM',
     hero_line3:       'SOLUÇÕES',
@@ -451,7 +451,7 @@ export const translations = {
 
     /* ── Footer ── */
     footer_heading:   'Vamos trabalhar\njuntos',
-    footer_cta:       'Envie-me um email →',
+    footer_cta:       'Escreve-me →',
     footer_tagline:   'Disponível para projetos freelance',
     footer_credit:    'Desenhado e desenvolvido por Marcos Rodríguez — mrmerlo.com',
 

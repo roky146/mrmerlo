@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Link from 'next/link'
-import ParticleNet from '../ParticleNet'
+import IsoGrid from '../IsoGrid'
 import { useLang } from '../../contexts/LanguageContext'
 import { useContact } from '../../contexts/ContactContext'
 
@@ -23,7 +23,8 @@ const HeroSection = styled.section`
 
   @media (max-width: 768px) {
     padding: 0 1.5rem;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
   }
 `
 
@@ -151,17 +152,37 @@ const Eyebrow = styled(motion.p)`
     background: var(--text-secondary);
     flex-shrink: 0;
   }
+
+  @media (max-width: 768px) {
+    justify-content: center;
+    font-size: clamp(1.05rem, 4.5vw, 1.4rem);
+  }
+`
+
+/* "Marcos" → enlace a /about (subrayado para indicar que es clicable) */
+const NameLink = styled(Link)`
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--accent-dim);
+  transition: color 0.2s, text-decoration-color 0.2s;
+
+  &:hover { color: var(--accent-dim); }
 `
 
 const Headline = styled.h1`
   font-family: 'Gilroy', 'Satoshi', sans-serif;
-  font-size: clamp(2rem, 5.5vw, 3rem);
-  font-weight: 450;
-  font-variation-settings: "wdth" 100, "wght" 450;
-  line-height: 0.95;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.6rem, 7vw, 4.8rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
   color: var(--text-primary);
   margin-bottom: clamp(0.8rem, 2vh, 1.5rem);
+
+  @media (max-width: 768px) {
+    font-size: clamp(2.8rem, 12vw, 4rem);
+  }
 `
 
 const HeadlineLine = styled.span`
@@ -185,6 +206,11 @@ const Description = styled(motion.p)`
     color: var(--text-primary);
     font-weight: 500;
   }
+
+  @media (max-width: 768px) {
+    margin-left: auto;
+    margin-right: auto;
+  }
 `
 
 const CTARow = styled(motion.div)`
@@ -192,6 +218,10 @@ const CTARow = styled(motion.div)`
   align-items: center;
   gap: 1.5rem;
   flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
 `
 
 const CTAButton = styled(Link)`
@@ -366,7 +396,7 @@ export default function Hero() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.05 }}
         >
-          {t('hero_eyebrow')}
+          <span>{t('hero_eyebrow')} <NameLink href="/about">Marcos</NameLink></span>
         </Eyebrow>
 
         <div ref={headlineRef}>
@@ -419,7 +449,7 @@ export default function Hero() {
 
       </HeroContent>
 
-      <ParticleNet />
+      <IsoGrid />
 
     </HeroSection>
   )

@@ -542,7 +542,7 @@ export default function About() {
             </div>
             <PhotoCol>
               <Photo
-                src="/headshot.png"
+                src="/headshot.webp"
                 alt="Marcos Rodríguez Merlo"
                 width="180"
                 height="180"

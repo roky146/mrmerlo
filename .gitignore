@@ -10,3 +10,6 @@ graphify-out/
 
 # referencia (bundles minificados de otros sitios, no parte del portafolio)
 EXAMPLES/
+
+# foto fuente (se sirve la webp optimizada)
+Headshot.png

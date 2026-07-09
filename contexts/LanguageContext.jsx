@@ -8,10 +8,16 @@ const LangCtx = createContext({ lang: 'es', t: (k) => k, setLang: () => {} })
 export function LanguageProvider({ children }) {
   const [lang, setLangState] = useState('es')
 
-  /* Init: check localStorage */
+  /* Init: preferencia guardada → si no, idioma del sistema/navegador → fallback es */
   useEffect(() => {
     const stored = localStorage.getItem('lang')
-    if (VALID_LANGS.includes(stored)) setLangState(stored)
+    if (VALID_LANGS.includes(stored)) { setLangState(stored); return }
+
+    const candidates = navigator.languages || [navigator.language || 'es']
+    for (const l of candidates) {
+      const code = (l || '').slice(0, 2).toLowerCase()
+      if (VALID_LANGS.includes(code)) { setLangState(code); break }
+    }
   }, [])
 
   const setLang = (code) => {

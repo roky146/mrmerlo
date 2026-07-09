@@ -23,8 +23,8 @@ const Nav = styled(motion.nav)`
   pointer-events: none;
 
   background: rgba(var(--nav-bg-rgb, 240, 250, 244), 0.30);
-  backdrop-filter: blur(20px) saturate(1.8);
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  backdrop-filter: blur(4px) saturate(1.8);
+  -webkit-backdrop-filter: blur(4px) saturate(1.8);
   border-bottom: 1px solid var(--border);
   transition: background 0.3s, border-color 0.3s;
 
@@ -64,7 +64,9 @@ const Circle = styled(motion.span)`
   border: 2px solid var(--text-primary);
   transition: border-color 0.3s;
 
-  ${LogoBtn}:hover & { border-color: var(--accent-dim); }
+  @media (hover: hover) {
+    ${LogoBtn}:hover & { border-color: var(--accent-dim); }
+  }
 `
 
 /* La "M" persiste siempre (Major Mono Display = fuente de branding) */
@@ -77,7 +79,9 @@ const MGlyph = styled(motion.span)`
   transition: color 0.25s;
   z-index: 1;
 
-  ${LogoBtn}:hover & { color: var(--accent-dim); }
+  @media (hover: hover) {
+    ${LogoBtn}:hover & { color: var(--accent-dim); }
+  }
 `
 
 /* "RMERLO" — aparece junto a la M para completar MRMERLO */
@@ -91,7 +95,9 @@ const Rest = styled(motion.span)`
   display: inline-block;
   transition: color 0.25s;
 
-  ${LogoBtn}:hover & { color: var(--accent-dim); }
+  @media (hover: hover) {
+    ${LogoBtn}:hover & { color: var(--accent-dim); }
+  }
 `
 
 /* ─── Floating back-to-top (aparece al hacer scroll) ───────── */
@@ -106,8 +112,8 @@ const BackToTop = styled(motion.button)`
   border-radius: 50%;
   border: 2px solid var(--text-primary);
   background: rgba(var(--nav-bg-rgb, 240, 250, 244), 0.4);
-  backdrop-filter: blur(12px) saturate(1.6);
-  -webkit-backdrop-filter: blur(12px) saturate(1.6);
+  backdrop-filter: blur(4px) saturate(1.6);
+  -webkit-backdrop-filter: blur(4px) saturate(1.6);
   color: var(--text-primary);
   display: flex;
   align-items: center;
@@ -581,12 +587,37 @@ const itemVariant = (i) => ({
 })
 
 const LANG_OPTIONS = [
-  { code: 'es', flag: '🇪🇸', label: 'Español' },
-  { code: 'en', flag: '🇬🇧', label: 'English' },
-  { code: 'it', flag: '🇮🇹', label: 'Italiano' },
-  { code: 'fr', flag: '🇫🇷', label: 'Français' },
-  { code: 'pt', flag: '🇧🇷', label: 'Português' },
+  { code: 'es', label: 'Español' },
+  { code: 'en', label: 'English' },
+  { code: 'it', label: 'Italiano' },
+  { code: 'fr', label: 'Français' },
+  { code: 'pt', label: 'Português' },
 ]
+
+/* ── Banderas SVG (los emojis de bandera no renderizan en Windows) ── */
+const FlagWrap = styled.span`
+  display: inline-block;
+  width: 20px;
+  height: 14px;
+  border-radius: 3px;
+  overflow: hidden;
+  flex-shrink: 0;
+  line-height: 0;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+  svg { display: block; width: 100%; height: 100%; }
+`
+
+const FLAGS = {
+  es: <svg viewBox="0 0 20 14"><rect width="20" height="14" fill="#c60b1e"/><rect y="3.5" width="20" height="7" fill="#ffc400"/></svg>,
+  en: <svg viewBox="0 0 20 14"><rect width="20" height="14" fill="#012169"/><path d="M0 0 20 14M20 0 0 14" stroke="#fff" strokeWidth="2.6"/><path d="M0 0 20 14M20 0 0 14" stroke="#C8102E" strokeWidth="1.2"/><rect x="8" width="4" height="14" fill="#fff"/><rect y="5" width="20" height="4" fill="#fff"/><rect x="8.75" width="2.5" height="14" fill="#C8102E"/><rect y="5.75" width="20" height="2.5" fill="#C8102E"/></svg>,
+  it: <svg viewBox="0 0 20 14"><rect width="20" height="14" fill="#fff"/><rect width="6.67" height="14" fill="#008C45"/><rect x="13.33" width="6.67" height="14" fill="#CD212A"/></svg>,
+  fr: <svg viewBox="0 0 20 14"><rect width="20" height="14" fill="#fff"/><rect width="6.67" height="14" fill="#0055A4"/><rect x="13.33" width="6.67" height="14" fill="#EF4135"/></svg>,
+  pt: <svg viewBox="0 0 20 14"><rect width="20" height="14" fill="#009B3A"/><path d="M10 1.5 18.5 7 10 12.5 1.5 7Z" fill="#FEDF00"/><circle cx="10" cy="7" r="3" fill="#002776"/></svg>,
+}
+
+function Flag({ code }) {
+  return <FlagWrap aria-hidden="true">{FLAGS[code] || null}</FlagWrap>
+}
 
 /* ─── Component ──────────────────────────────────────────────── */
 
@@ -599,7 +630,6 @@ export default function Navbar() {
   const { dark, toggle: toggleTheme } = useThemeCtx()
   const { lang, t, setLang } = useLang()
   const { open: openContact } = useContact()
-  const currentFlag = LANG_OPTIONS.find(o => o.code === lang)?.flag
 
   const menuLinks = [
     { label: t('nav_home'),     href: '/' },
@@ -668,9 +698,9 @@ export default function Navbar() {
      En la home siempre sube; en subpáginas navega a "/" (transición seamless). */
   const onLogoClick = useCallback(() => {
     close()
-    if (scrolled && router.pathname !== '/') router.push('/')
+    if (router.pathname !== '/') router.push('/')  // el logo SIEMPRE lleva al inicio
     else scrollToTop()
-  }, [scrolled, router, scrollToTop])
+  }, [router, scrollToTop])
 
   return (
     <>
@@ -734,7 +764,7 @@ export default function Navbar() {
           {/* ── Selector de idioma ── */}
           <LangWrapper ref={langRef}>
             <LangBtn onClick={() => setLangOpen(v => !v)} aria-label="Seleccionar idioma">
-              <span aria-hidden="true" style={{ fontSize: '0.95rem', lineHeight: 1 }}>{currentFlag}</span>
+              <Flag code={lang} />
               {lang.toUpperCase()}
             </LangBtn>
 
@@ -752,7 +782,7 @@ export default function Navbar() {
                       $active={lang === opt.code}
                       onClick={() => { setLang(opt.code); setLangOpen(false) }}
                     >
-                      <span>{opt.flag}</span>
+                      <Flag code={opt.code} />
                       {opt.label}
                     </LangOption>
                   ))}
