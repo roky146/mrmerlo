@@ -52,7 +52,7 @@ export default function IsoGrid() {
     const trail = new Map()
     let raf = null
 
-    const ball = { u: 0, v: 0, fromU: 0, fromV: 0, t0: 0, du: 1, dv: 1, moving: true, bx: 0, by: 0 }
+    const ball = { u: 0, v: 0, fromU: 0, fromV: 0, t0: 0, restT0: 0, du: 1, dv: 1, moving: true, bx: 0, by: 0 }
     let pinned = false
     let target = null            // {u,v} destino activo (se dibuja fijo al 100 %)
     let burst = null             // {cx,cy,t0,peak,collapsing,collapseStart}
@@ -213,29 +213,34 @@ export default function IsoGrid() {
         ball.by = cellY(ball.fromV) + (cellY(ball.v) - cellY(ball.fromV)) * p - Math.sin(p * Math.PI) * BOUNCE
         if (p >= 1) {
           ball.moving = false
+          ball.restT0 = ball.t0 + HOP_MS          // la fase del rebote en el sitio arranca EN EL SUELO
+          bounceSign = 0
           const hitTarget = pinned && sameCell(ball, target)
           trail.set(key(ball.u, ball.v), now)
           if (hitTarget) {
             burst = { cx: cellX(ball.u), cy: cellY(ball.v), t0: now, peak: 0, collapsing: false }
             target = null
           }
-          decideNext(now)
+          if (!pinned) decideNext(now)            // autónomo: nuevo salto arranca desde el suelo
         }
       } else {
-        const sn = Math.sin(now / 220)
+        // rebote en el sitio con la MISMA fase/frecuencia del salto (empieza en el suelo)
+        const phase = (now - ball.restT0) * Math.PI / HOP_MS
+        const sn = Math.sin(phase)
         ball.bx = cellX(ball.u)
         ball.by = cellY(ball.v) - Math.abs(sn) * BOUNCE
         trail.set(key(ball.u, ball.v), now)
-        // Fija rebotando en su cuadro → libera el destello en CADA toque (touchdown)
-        if (pinned && (!target || sameCell(ball, target))) {
-          const sg = sn >= 0 ? 1 : -1
-          if (sg !== bounceSign) {
-            bounceSign = sg
-            burst = { cx: cellX(ball.u), cy: cellY(ball.v), t0: now, peak: 0, collapsing: false }
+        const sg = sn >= 0 ? 1 : -1
+        if (sg !== bounceSign) {                  // TOUCHDOWN (offset Y = 0): sólo aquí cambia de estado
+          bounceSign = sg
+          if (!pinned) {
+            decideNext(now)                        // reanuda autónomo desde el suelo
+          } else if (target && !sameCell(ball, target)) {
+            dirToTarget(); startHop(now)           // salto dirigido arranca desde el suelo
+          } else {
+            burst = { cx: cellX(ball.u), cy: cellY(ball.v), t0: now, peak: 0, collapsing: false } // destello por rebote
           }
         }
-        if (pinned && target && !sameCell(ball, target)) { dirToTarget(); startHop(now) }
-        else if (!pinned) decideNext(now)
       }
 
       if (burst) drawBurst(now)
@@ -308,6 +313,8 @@ export default function IsoGrid() {
     ball.fromU = ball.u; ball.fromV = ball.v
     ball.du = 1; ball.dv = -1
     ball.moving = false
+    ball.restT0 = performance.now()
+    bounceSign = 0
     ball.bx = cellX(ball.u); ball.by = cellY(ball.v)
 
     const onResize = () => resize()
