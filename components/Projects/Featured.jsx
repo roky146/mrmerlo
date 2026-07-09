@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { featuredProjects, localize } from '../../data/projects'
 import { useLang } from '../../contexts/LanguageContext'
+import { useContact } from '../../contexts/ContactContext'
 import BentoMosaic from './BentoMosaic'
 
 const Section = styled.section`
@@ -126,6 +127,7 @@ const ExploreBtn = styled(Link)`
 
 export default function FeaturedProjects() {
   const { lang, t } = useLang()
+  const { open: openContact } = useContact()
 
   return (
     <Section id="projects" aria-labelledby="projects-heading">
@@ -159,7 +161,7 @@ export default function FeaturedProjects() {
                 {project.tags.map((tag) => <Tag key={tag}>{tag}</Tag>)}
               </Tags>
               {project.capability ? (
-                <ExploreBtn as="a" href={project.cta}>{t('project_cta_talk')}</ExploreBtn>
+                <ExploreBtn as="button" type="button" onClick={openContact}>{t('project_cta_talk')}</ExploreBtn>
               ) : (
                 <ExploreBtn href={`/projects/${project.slug}`}>{t('project_cta')}</ExploreBtn>
               )}

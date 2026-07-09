@@ -12,7 +12,7 @@ export const translations = {
     hero_line1:       'CONVIERTO',
     hero_line2:       'LÓGICA EN',
     hero_line3:       'SOLUCIONES',
-    hero_desc:        'Trabajo en producción TI y estudio Ingeniería en Ciberseguridad. Construyo herramientas reales — sistemas POS, automatización empresarial y apps de seguridad.',
+    hero_desc:        'Creo experiencias digitales interactivas, limpias y adaptables. ¿Necesitas una página web, app o alguna automatización para tu negocio? Escríbeme.',
     hero_cta_primary: 'Ver proyectos →',
     hero_cta_secondary: 'Contacto',
     hero_scroll:      'desliza',
@@ -35,13 +35,13 @@ export const translations = {
     about_eyebrow:    'Sobre mí',
     about_title1:     'Marcos',
     about_title2:     'Rodríguez Merlo.',
-    about_lead:       'Desarrollador y <strong>Ingeniero de Producción TI</strong>, estudiante de <strong>Ingeniería en Ciberseguridad</strong>. Construyo herramientas que funcionan — desde aplicaciones empresariales hasta scripts de automatización.',
+    about_lead:       'Soy desarrollador y diseñador web con sede en <strong>Santo Domingo, República Dominicana</strong>. Estudio <strong>Ingeniería en Ciberseguridad</strong> y trabajo en Producción TI; en paralelo, en el increíble mundo del desarrollo web frontend.',
 
     /* ── About — Bio ── */
     about_who_label:  'Quién soy',
     about_photo_placeholder: 'Tu foto aquí',
-    about_bio1:       'Crecí rodeado de tecnología y desde temprano empecé a desmenuzar cómo funcionan los sistemas — redes, software, seguridad. Hoy trabajo en producción TI gestionando infraestructura crítica y desarrollando herramientas internas en el sector financiero de <strong>República Dominicana</strong>.',
-    about_bio2:       'Paralelamente, estudio <strong>Ingeniería en Ciberseguridad</strong> porque entiendo que construir bien implica también proteger bien. Me interesa el lado ofensivo — no para hacer daño, sino para pensar como atacante y diseñar mejor.',
+    about_bio1:       'Pienso que las experiencias digitales interactivas, limpias y adaptables son esenciales para conectar tu negocio con tus clientes. Me gusta usar mis habilidades para ayudar a las personas a alcanzar sus objetivos mediante soluciones bien diseñadas.',
+    about_bio2:       'Mi enfoque de desarrollo se centra en el <strong>rendimiento</strong>, la <strong>accesibilidad</strong> y las interacciones atractivas. Creo experiencias web rápidas y eficientes con arquitectura Jamstack, apoyándome en <strong>Next.js</strong>.',
     about_bio3:       'Fuera del trabajo: código personal, automatización de lo que sea automatizable, y el intento continuo de que las cosas sean más simples de lo que parecen.',
 
     /* ── About — Skills ── */
@@ -53,6 +53,23 @@ export const translations = {
     /* ── About — Experience ── */
     exp_label:        'Experiencia & Formación',
     faq_label:        'Preguntas frecuentes',
+    services_label:   'Servicios que ofrezco',
+    tech_label:       'Tecnologías y herramientas',
+    tech_frontend:    'Frontend y desarrollo',
+    tech_tools:       'Herramientas de trabajo',
+    heroes_label:     'Héroes e inspiración',
+    heroes_dev:       'Desarrollo',
+    heroes_design:    'Diseño',
+    favorites_label:  'Favoritos e intereses',
+    fonts_label:      'Fuentes favoritas',
+    ui_inspiration:   'Inspiración para interfaces',
+    design_principles:'Principios de diseño',
+    contact_title:    'Contacto',
+    contact_lead:     '¿Empezamos algo juntos? Escríbeme.',
+    contact_write_mail:'Escribir un mail',
+    contact_copy:     'Copiar correo',
+    contact_copied:   '¡Copiado!',
+    contact_call:     'Llamar',
 
     /* ── About — Currently ── */
     currently_label:  'Actualmente',
@@ -101,7 +118,7 @@ export const translations = {
     hero_line1:       'I TURN',
     hero_line2:       'LOGIC INTO',
     hero_line3:       'SOLUTIONS',
-    hero_desc:        'IT Production Engineer and Cybersecurity Engineering student. I build real tools — POS systems, enterprise automation and security apps.',
+    hero_desc:        'I craft interactive, clean and adaptable digital experiences. Need a website, app or some automation for your business? Write me.',
     hero_cta_primary: 'See projects →',
     hero_cta_secondary: 'Contact',
     hero_scroll:      'scroll',
@@ -124,13 +141,13 @@ export const translations = {
     about_eyebrow:    'About me',
     about_title1:     'Marcos',
     about_title2:     'Rodríguez Merlo.',
-    about_lead:       'Developer and <strong>IT Production Engineer</strong>, studying <strong>Cybersecurity Engineering</strong>. I build tools that work — from enterprise applications to automation scripts.',
+    about_lead:       'I am a web developer and designer based in <strong>Santo Domingo, Dominican Republic</strong>. I study <strong>Cybersecurity Engineering</strong> and work in IT Production; in parallel, in the amazing world of frontend web development.',
 
     /* ── About — Bio ── */
     about_who_label:  'Who I am',
     about_photo_placeholder: 'Your photo here',
-    about_bio1:       'I grew up surrounded by technology and early on started taking apart how systems work — networks, software, security. Today I work in IT production managing critical infrastructure and building internal tools in the financial sector of <strong>the Dominican Republic</strong>.',
-    about_bio2:       'In parallel, I study <strong>Cybersecurity Engineering</strong> because I understand that building well also means protecting well. I am interested in the offensive side — not to cause harm, but to think like an attacker and design better.',
+    about_bio1:       'I believe interactive, clean and adaptable digital experiences are essential to connect your business with your customers. I like using my skills to help people reach their goals through well-designed solutions.',
+    about_bio2:       'My development approach focuses on <strong>performance</strong>, <strong>accessibility</strong> and engaging interactions. I build fast, efficient web experiences with the Jamstack architecture, powered by <strong>Next.js</strong>.',
     about_bio3:       'Outside of work: personal code, automating whatever can be automated, and the ongoing attempt to make things simpler than they seem.',
 
     /* ── About — Skills ── */
@@ -142,6 +159,23 @@ export const translations = {
     /* ── About — Experience ── */
     exp_label:        'Experience & Education',
     faq_label:        'FAQ',
+    services_label:   'Services I offer',
+    tech_label:       'Technologies & tools',
+    tech_frontend:    'Frontend & development',
+    tech_tools:       'Workflow tools',
+    heroes_label:     'Heroes & inspiration',
+    heroes_dev:       'Development',
+    heroes_design:    'Design',
+    favorites_label:  'Favorites & interests',
+    fonts_label:      'Favorite fonts',
+    ui_inspiration:   'UI inspiration',
+    design_principles:'Design principles',
+    contact_title:    'Contact',
+    contact_lead:     'Want to start something together? Write me.',
+    contact_write_mail:'Write an email',
+    contact_copy:     'Copy email',
+    contact_copied:   'Copied!',
+    contact_call:     'Call',
 
     /* ── About — Currently ── */
     currently_label:  'Currently',
@@ -190,7 +224,7 @@ export const translations = {
     hero_line1:       'TRASFORMO',
     hero_line2:       'LOGICA IN',
     hero_line3:       'SOLUZIONI',
-    hero_desc:        'Ingegnere di Produzione IT e studente di Ingegneria della Cybersecurity. Costruisco strumenti reali — sistemi POS, automazione aziendale e app di sicurezza.',
+    hero_desc:        "Creo esperienze digitali interattive, pulite e adattabili. Ti serve un sito web, un'app o un'automazione per la tua attività? Scrivimi.",
     hero_cta_primary: 'Vedi progetti →',
     hero_cta_secondary: 'Contatto',
     hero_scroll:      'scorri',
@@ -213,13 +247,13 @@ export const translations = {
     about_eyebrow:    'Chi sono',
     about_title1:     'Marcos',
     about_title2:     'Rodríguez Merlo.',
-    about_lead:       'Sviluppatore e <strong>Ingegnere di Produzione IT</strong>, studente di <strong>Ingegneria della Cybersecurity</strong>. Costruisco strumenti che funzionano — dalle applicazioni aziendali agli script di automazione.',
+    about_lead:       "Sono uno sviluppatore e web designer con sede a <strong>Santo Domingo, Repubblica Dominicana</strong>. Studio <strong>Ingegneria della Cybersecurity</strong> e lavoro in Produzione IT; in parallelo, nell'incredibile mondo dello sviluppo web frontend.",
 
     /* ── About — Bio ── */
     about_who_label:  'Chi sono',
     about_photo_placeholder: 'La tua foto qui',
-    about_bio1:       'Sono cresciuto circondato dalla tecnologia e presto ho iniziato a smontare il funzionamento dei sistemi — reti, software, sicurezza. Oggi lavoro in produzione IT gestendo infrastrutture critiche e sviluppando strumenti interni nel settore finanziario della <strong>Repubblica Dominicana</strong>.',
-    about_bio2:       'Parallelamente, studio <strong>Ingegneria della Cybersecurity</strong> perché capisco che costruire bene significa anche proteggere bene. Mi interessa il lato offensivo — non per fare danni, ma per pensare come un attaccante e progettare meglio.',
+    about_bio1:       'Credo che le esperienze digitali interattive, pulite e adattabili siano essenziali per collegare la tua attività ai tuoi clienti. Mi piace usare le mie competenze per aiutare le persone a raggiungere i loro obiettivi con soluzioni ben progettate.',
+    about_bio2:       "Il mio approccio allo sviluppo è incentrato su <strong>performance</strong>, <strong>accessibilità</strong> e interazioni coinvolgenti. Creo esperienze web veloci ed efficienti con l'architettura Jamstack, grazie a <strong>Next.js</strong>.",
     about_bio3:       'Fuori dal lavoro: codice personale, automazione di tutto ciò che è automatizzabile, e il continuo tentativo di rendere le cose più semplici di quanto sembrino.',
 
     /* ── About — Skills ── */
@@ -231,6 +265,23 @@ export const translations = {
     /* ── About — Experience ── */
     exp_label:        'Esperienza & Formazione',
     faq_label:        'Domande frequenti',
+    services_label:   'Servizi che offro',
+    tech_label:       'Tecnologie e strumenti',
+    tech_frontend:    'Frontend e sviluppo',
+    tech_tools:       'Strumenti di lavoro',
+    heroes_label:     'Eroi e ispirazione',
+    heroes_dev:       'Sviluppo',
+    heroes_design:    'Design',
+    favorites_label:  'Preferiti e interessi',
+    fonts_label:      'Font preferiti',
+    ui_inspiration:   'Ispirazione UI',
+    design_principles:'Principi di design',
+    contact_title:    'Contatto',
+    contact_lead:     'Iniziamo qualcosa insieme? Scrivimi.',
+    contact_write_mail:'Scrivi una mail',
+    contact_copy:     'Copia email',
+    contact_copied:   'Copiato!',
+    contact_call:     'Chiama',
 
     /* ── About — Currently ── */
     currently_label:  'Attualmente',
@@ -279,7 +330,7 @@ export const translations = {
     hero_line1:       'JE TRADUIS',
     hero_line2:       'LA LOGIQUE',
     hero_line3:       'EN SOLUTIONS',
-    hero_desc:        "Ingénieur de Production IT et étudiant en Ingénierie de la Cybersécurité. Je construis des outils réels — systèmes POS, automatisation d'entreprise et apps de sécurité.",
+    hero_desc:        "Je crée des expériences numériques interactives, épurées et adaptables. Besoin d'un site web, d'une app ou d'une automatisation pour votre entreprise ? Écrivez-moi.",
     hero_cta_primary: 'Voir les projets →',
     hero_cta_secondary: 'Contact',
     hero_scroll:      'défiler',
@@ -302,13 +353,13 @@ export const translations = {
     about_eyebrow:    'À propos',
     about_title1:     'Marcos',
     about_title2:     'Rodríguez Merlo.',
-    about_lead:       "Développeur et <strong>Ingénieur de Production IT</strong>, étudiant en <strong>Ingénierie de la Cybersécurité</strong>. Je construis des outils qui fonctionnent — des applications d'entreprise aux scripts d'automatisation.",
+    about_lead:       "Je suis développeur et web designer basé à <strong>Saint-Domingue, République dominicaine</strong>. J'étudie l'<strong>Ingénierie de la Cybersécurité</strong> et je travaille en Production IT ; en parallèle, dans l'incroyable monde du développement web frontend.",
 
     /* ── About — Bio ── */
     about_who_label:  'Qui je suis',
     about_photo_placeholder: 'Votre photo ici',
-    about_bio1:       "J'ai grandi entouré de technologie et très tôt j'ai commencé à décomposer le fonctionnement des systèmes — réseaux, logiciels, sécurité. Aujourd'hui je travaille en production IT gérant des infrastructures critiques et développant des outils internes dans le secteur financier de la <strong>République Dominicaine</strong>.",
-    about_bio2:       "En parallèle, j'étudie l'<strong>Ingénierie de la Cybersécurité</strong> car je comprends que bien construire implique aussi bien protéger. Je m'intéresse au côté offensif — non pas pour causer du tort, mais pour penser comme un attaquant et mieux concevoir.",
+    about_bio1:       "Je crois que des expériences numériques interactives, épurées et adaptables sont essentielles pour connecter votre entreprise à vos clients. J'aime utiliser mes compétences pour aider les gens à atteindre leurs objectifs grâce à des solutions bien conçues.",
+    about_bio2:       "Mon approche du développement est axée sur la <strong>performance</strong>, l'<strong>accessibilité</strong> et des interactions engageantes. Je crée des expériences web rapides et efficaces avec l'architecture Jamstack, propulsées par <strong>Next.js</strong>.",
     about_bio3:       "En dehors du travail : code personnel, automatisation de tout ce qui peut l'être, et la tentative continue de rendre les choses plus simples qu'elles ne semblent.",
 
     /* ── About — Skills ── */
@@ -320,6 +371,23 @@ export const translations = {
     /* ── About — Experience ── */
     exp_label:        'Expérience & Formation',
     faq_label:        'Questions fréquentes',
+    services_label:   'Services que je propose',
+    tech_label:       'Technologies & outils',
+    tech_frontend:    'Frontend & développement',
+    tech_tools:       'Outils de travail',
+    heroes_label:     'Héros & inspiration',
+    heroes_dev:       'Développement',
+    heroes_design:    'Design',
+    favorites_label:  'Favoris & intérêts',
+    fonts_label:      'Polices favorites',
+    ui_inspiration:   'Inspiration UI',
+    design_principles:'Principes de design',
+    contact_title:    'Contact',
+    contact_lead:     'On commence quelque chose ensemble ? Écrivez-moi.',
+    contact_write_mail:'Écrire un mail',
+    contact_copy:     "Copier l'email",
+    contact_copied:   'Copié !',
+    contact_call:     'Appeler',
 
     /* ── About — Currently ── */
     currently_label:  'Actuellement',
@@ -368,7 +436,7 @@ export const translations = {
     hero_line1:       'CONVERTO',
     hero_line2:       'LÓGICA EM',
     hero_line3:       'SOLUÇÕES',
-    hero_desc:        'Engenheiro de Produção TI e estudante de Engenharia em Cibersegurança. Construo ferramentas reais — sistemas POS, automação empresarial e apps de segurança.',
+    hero_desc:        'Crio experiências digitais interativas, limpas e adaptáveis. Precisa de um site, app ou alguma automação para o seu negócio? Escreva-me.',
     hero_cta_primary: 'Ver projetos →',
     hero_cta_secondary: 'Contato',
     hero_scroll:      'rolar',
@@ -391,13 +459,13 @@ export const translations = {
     about_eyebrow:    'Sobre mim',
     about_title1:     'Marcos',
     about_title2:     'Rodríguez Merlo.',
-    about_lead:       'Desenvolvedor e <strong>Engenheiro de Produção TI</strong>, estudante de <strong>Engenharia em Cibersegurança</strong>. Construo ferramentas que funcionam — desde aplicações empresariais até scripts de automação.',
+    about_lead:       'Sou desenvolvedor e web designer com sede em <strong>Santo Domingo, República Dominicana</strong>. Estudo <strong>Engenharia em Cibersegurança</strong> e trabalho em Produção TI; em paralelo, no incrível mundo do desenvolvimento web frontend.',
 
     /* ── About — Bio ── */
     about_who_label:  'Quem sou',
     about_photo_placeholder: 'Sua foto aqui',
-    about_bio1:       'Cresci rodeado de tecnologia e cedo comecei a desmontar como os sistemas funcionam — redes, software, segurança. Hoje trabalho em produção TI gerenciando infraestruturas críticas e desenvolvendo ferramentas internas no setor financeiro da <strong>República Dominicana</strong>.',
-    about_bio2:       'Paralelamente, estudo <strong>Engenharia em Cibersegurança</strong> porque entendo que construir bem implica também proteger bem. Me interessa o lado ofensivo — não para causar dano, mas para pensar como atacante e projetar melhor.',
+    about_bio1:       'Acredito que experiências digitais interativas, limpas e adaptáveis são essenciais para conectar o seu negócio com os seus clientes. Gosto de usar as minhas habilidades para ajudar as pessoas a alcançar os seus objetivos com soluções bem desenhadas.',
+    about_bio2:       'A minha abordagem de desenvolvimento foca-se no <strong>desempenho</strong>, na <strong>acessibilidade</strong> e em interações atrativas. Crio experiências web rápidas e eficientes com a arquitetura Jamstack, apoiada em <strong>Next.js</strong>.',
     about_bio3:       'Fora do trabalho: código pessoal, automação do que for automatizável, e a tentativa contínua de tornar as coisas mais simples do que parecem.',
 
     /* ── About — Skills ── */
@@ -409,6 +477,23 @@ export const translations = {
     /* ── About — Experience ── */
     exp_label:        'Experiência & Formação',
     faq_label:        'Perguntas frequentes',
+    services_label:   'Serviços que ofereço',
+    tech_label:       'Tecnologias e ferramentas',
+    tech_frontend:    'Frontend e desenvolvimento',
+    tech_tools:       'Ferramentas de trabalho',
+    heroes_label:     'Heróis e inspiração',
+    heroes_dev:       'Desenvolvimento',
+    heroes_design:    'Design',
+    favorites_label:  'Favoritos e interesses',
+    fonts_label:      'Fontes favoritas',
+    ui_inspiration:   'Inspiração para interfaces',
+    design_principles:'Princípios de design',
+    contact_title:    'Contacto',
+    contact_lead:     'Vamos começar algo juntos? Escreva-me.',
+    contact_write_mail:'Escrever um email',
+    contact_copy:     'Copiar email',
+    contact_copied:   'Copiado!',
+    contact_call:     'Ligar',
 
     /* ── About — Currently ── */
     currently_label:  'Atualmente',

@@ -7,6 +7,7 @@ import Cursor from '../components/Cursor'
 import PageIntro from '../components/PageIntro'
 import { ThemeCtxProvider } from '../contexts/ThemeContext'
 import { LanguageProvider } from '../contexts/LanguageContext'
+import { ContactProvider } from '../contexts/ContactContext'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -55,11 +56,13 @@ export default function App({ Component, pageProps }) {
     <ThemeCtxProvider>
       <LanguageProvider>
         <ThemeProvider theme={theme}>
-          <GlobalStyle />
-          <PageIntro />
-          <Cursor />
-          <Navbar />
-          <Component {...pageProps} />
+          <ContactProvider>
+            <GlobalStyle />
+            <PageIntro />
+            <Cursor />
+            <Navbar />
+            <Component {...pageProps} />
+          </ContactProvider>
         </ThemeProvider>
       </LanguageProvider>
     </ThemeCtxProvider>

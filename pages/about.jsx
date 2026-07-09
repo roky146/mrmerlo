@@ -272,21 +272,72 @@ const TimelineDesc = styled.p`
   line-height: 1.7;
 `
 
+/* ─── Foto de perfil ─────────────────────────────────────── */
+const Photo = styled(motion.img)`
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+`
+
+/* ─── Chips reutilizables (servicios, tecnologías, héroes…) ── */
+const SubLabel = styled.h3`
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-dim);
+  margin: 1.75rem 0 0.85rem;
+
+  &:first-of-type { margin-top: 0.5rem; }
+`
+
+const Chips = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+`
+
+const Chip = styled(motion.span)`
+  padding: 0.42rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  transition: border-color 0.2s, color 0.2s;
+
+  &:hover { border-color: var(--accent-dim); color: var(--text-primary); }
+`
+
 /* ─── Static data (BHD only appears here, in experience) ── */
 
-const skills = {
-  languages:  ['Python', 'C#  /.NET', 'Dart / Flutter', 'TypeScript', 'HTML · CSS · JS'],
-  platforms:  ['Layer7 API Gateway', 'REST API / GraphQL', 'Graphman · RESTMAN', 'Chrome Extensions'],
-  security:   ['Análisis de amenazas', 'Detección de phishing', 'Reducción de superficie', 'Seguridad en redes'],
-  tools:      ['Git / GitHub', 'Android Studio', 'VS Code', 'Jupyter Notebooks'],
-}
+/* Servicios (localizados) */
+const services = [
+  { es: 'Diseño UI/UX',                 en: 'UI/UX design',                it: 'Design UI/UX',                 fr: 'Design UI/UX',                  pt: 'Design UI/UX' },
+  { es: 'Desarrollo frontend web',      en: 'Frontend web development',    it: 'Sviluppo web frontend',        fr: 'Développement web frontend',    pt: 'Desenvolvimento web frontend' },
+  { es: 'Desarrollo móvil',             en: 'Mobile development',          it: 'Sviluppo mobile',              fr: 'Développement mobile',          pt: 'Desenvolvimento móvel' },
+  { es: 'APIs e integraciones',         en: 'APIs & integrations',         it: 'API e integrazioni',           fr: 'API & intégrations',            pt: 'APIs e integrações' },
+  { es: 'Automatización de procesos',   en: 'Process automation',          it: 'Automazione dei processi',     fr: 'Automatisation des processus',  pt: 'Automação de processos' },
+]
+
+/* Tecnologías y herramientas (nombres propios, sin traducir) */
+const techFrontend = ['HTML', 'CSS · SASS', 'Bootstrap', 'Tailwind CSS', 'JavaScript (ES6)', 'Ruby on Rails', 'TypeScript', 'React.js', 'Next.js', 'Astro', 'React Query', 'SWR', 'Styled Components']
+const techTools = ['Git', 'Framer Motion', 'GSAP', 'Figma', 'Photoshop', 'Illustrator']
+
+/* Héroes e inspiración + favoritos (condensado) */
+const heroesDev = ['Brad Traversy — Traversy Media', 'Kevin Powell', 'Simo Edwin — Dev Ed', 'Nicu Barbaros — Web Unlocked', 'Kyle Cook — Web Dev Simplified', 'Shaun — The Net Ninja', 'Maximilian Schwarzmüller — Academind']
+const heroesDesign = ['Chris Do — The Futur', 'Gary Simon — Design Course', 'Akram Khalid — Wrong Akram']
+const favFonts = ['TT Commons Pro', 'Manrope', 'Satoshi', 'Inter', 'Gilroy']
+const uiInspiration = ['Awwwards', 'Behance', 'Dribbble']
+const designPrinciples = ['Laws of UX', 'Design de Spotify', 'Material Design']
 
 const experience = [
   {
-    period: '2023 → presente',
+    period: '2025 → presente',
     title: 'Ingeniero de Producción TI',
     org: 'Banco BHD — Santo Domingo, RD',
-    desc: 'Administración y soporte de infraestructura TI en producción. Gestión de servicios en Layer7 API Gateway, automatización de inventarios y mantenimiento de plataformas críticas del banco.',
+    desc: 'Administración y soporte de infraestructura TI en producción: gestión de servicios de Broadcom API Gateway y AS400, monitoreo de servicios con Zabbix, gestión de incidentes, automatización de inventarios y mantenimiento de plataformas críticas del banco.',
   },
   {
     period: '2022 → presente',
@@ -319,20 +370,20 @@ const FAQS = [
       pt: 'Quem é Marcos Rodríguez Merlo?',
     },
     a: {
-      es: 'Marcos Rodríguez Merlo (Marcos Merlo) es Ingeniero de Producción TI y estudiante de Ingeniería en Ciberseguridad en Santo Domingo, República Dominicana. Construye herramientas empresariales, automatización y aplicaciones full-stack.',
-      en: 'Marcos Rodríguez Merlo (Marcos Merlo) is an IT Production Engineer and Cybersecurity Engineering student in Santo Domingo, Dominican Republic. He builds enterprise tools, automation and full-stack applications.',
-      it: 'Marcos Rodríguez Merlo (Marcos Merlo) è un Ingegnere di Produzione IT e studente di Ingegneria della Cybersecurity a Santo Domingo, Repubblica Dominicana. Costruisce strumenti aziendali, automazione e applicazioni full-stack.',
-      fr: "Marcos Rodríguez Merlo (Marcos Merlo) est ingénieur de production IT et étudiant en ingénierie de la cybersécurité à Saint-Domingue, République dominicaine. Il construit des outils d'entreprise, de l'automatisation et des applications full-stack.",
-      pt: 'Marcos Rodríguez Merlo (Marcos Merlo) é Engenheiro de Produção TI e estudante de Engenharia em Cibersegurança em Santo Domingo, República Dominicana. Constrói ferramentas empresariais, automação e aplicações full-stack.',
+      es: 'Marcos Rodríguez Merlo es Ingeniero de Producción TI y estudiante de Ingeniería en Ciberseguridad en Santo Domingo, República Dominicana. Construye herramientas empresariales, automatización y aplicaciones full-stack.',
+      en: 'Marcos Rodríguez Merlo is an IT Production Engineer and Cybersecurity Engineering student in Santo Domingo, Dominican Republic. He builds enterprise tools, automation and full-stack applications.',
+      it: 'Marcos Rodríguez Merlo è un Ingegnere di Produzione IT e studente di Ingegneria della Cybersecurity a Santo Domingo, Repubblica Dominicana. Costruisce strumenti aziendali, automazione e applicazioni full-stack.',
+      fr: "Marcos Rodríguez Merlo est ingénieur de production IT et étudiant en ingénierie de la cybersécurité à Saint-Domingue, République dominicaine. Il construit des outils d'entreprise, de l'automatisation et des applications full-stack.",
+      pt: 'Marcos Rodríguez Merlo é Engenheiro de Produção TI e estudante de Engenharia em Cibersegurança em Santo Domingo, República Dominicana. Constrói ferramentas empresariais, automação e aplicações full-stack.',
     },
   },
   {
     q: {
-      es: '¿En qué se especializa Marcos Merlo?',
-      en: 'What does Marcos Merlo specialize in?',
-      it: 'In cosa è specializzato Marcos Merlo?',
-      fr: 'Dans quoi Marcos Merlo est-il spécialisé ?',
-      pt: 'Em que se especializa Marcos Merlo?',
+      es: '¿En qué se especializa Marcos?',
+      en: 'What does Marcos specialize in?',
+      it: 'In cosa è specializzato Marcos?',
+      fr: 'Dans quoi Marcos est-il spécialisé ?',
+      pt: 'Em que se especializa Marcos?',
     },
     a: {
       es: 'En infraestructura TI y operaciones en producción, ciberseguridad y desarrollo de software full-stack. Trabaja con Kubernetes, Go, Flutter, React, Node.js y Layer7 API Gateway.',
@@ -344,11 +395,11 @@ const FAQS = [
   },
   {
     q: {
-      es: '¿Marcos Merlo trabaja con Kubernetes?',
-      en: 'Does Marcos Merlo work with Kubernetes?',
-      it: 'Marcos Merlo lavora con Kubernetes?',
-      fr: 'Marcos Merlo travaille-t-il avec Kubernetes ?',
-      pt: 'Marcos Merlo trabalha com Kubernetes?',
+      es: '¿Marcos trabaja con Kubernetes?',
+      en: 'Does Marcos work with Kubernetes?',
+      it: 'Marcos lavora con Kubernetes?',
+      fr: 'Marcos travaille-t-il avec Kubernetes ?',
+      pt: 'Marcos trabalha com Kubernetes?',
     },
     a: {
       es: 'Sí. Desarrolló Reccon, un agente de observabilidad cloud-native en Go que monitorea miles de microservicios en Kubernetes y envía métricas y alertas a Zabbix.',
@@ -383,11 +434,11 @@ const FAQS = [
       pt: 'Desenvolve sistemas POS e aplicações web?',
     },
     a: {
-      es: 'Sí. Desarrolla aplicaciones web y de escritorio a medida —incluidos sistemas POS, paneles de administración y APIs— con React, Node.js, TypeScript y Flutter.',
-      en: 'Yes. He builds custom web and desktop applications —including POS systems, admin panels and APIs— with React, Node.js, TypeScript and Flutter.',
-      it: 'Sì. Sviluppa applicazioni web e desktop su misura —inclusi sistemi POS, pannelli di amministrazione e API— con React, Node.js, TypeScript e Flutter.',
-      fr: "Oui. Il développe des applications web et de bureau sur mesure —y compris des systèmes POS, des panneaux d'administration et des API— avec React, Node.js, TypeScript et Flutter.",
-      pt: 'Sim. Desenvolve aplicações web e de desktop à medida —incluindo sistemas POS, painéis de administração e APIs— com React, Node.js, TypeScript e Flutter.',
+      es: 'Sí, desarrolla aplicaciones y páginas web y de escritorio a medida, como por ejemplo desarrollo de sistemas POS o sistemas de automatización de tareas.',
+      en: 'Yes, he builds custom apps and websites — and desktop apps — such as POS systems or task-automation systems.',
+      it: 'Sì, sviluppa applicazioni e siti web e desktop su misura, come ad esempio sistemi POS o sistemi di automazione delle attività.',
+      fr: "Oui, il développe des applications et des sites web et de bureau sur mesure, comme par exemple des systèmes POS ou des systèmes d'automatisation de tâches.",
+      pt: 'Sim, desenvolve aplicações e páginas web e de desktop à medida, como por exemplo sistemas POS ou sistemas de automação de tarefas.',
     },
   },
   {
@@ -399,11 +450,11 @@ const FAQS = [
       pt: 'Está disponível para projetos freelance ou consultoria?',
     },
     a: {
-      es: 'Sí. Está disponible para proyectos freelance y consultoría tecnológica —desarrollo web y de apps, automatización e infraestructura— desde República Dominicana. Escríbele a iroky146@gmail.com.',
-      en: 'Yes. He is available for freelance projects and technology consulting —web and app development, automation and infrastructure— from the Dominican Republic. Reach him at iroky146@gmail.com.',
-      it: 'Sì. È disponibile per progetti freelance e consulenza tecnologica —sviluppo web e app, automazione e infrastruttura— dalla Repubblica Dominicana. Scrivi a iroky146@gmail.com.',
-      fr: "Oui. Il est disponible pour des projets freelance et du conseil technologique —développement web et apps, automatisation et infrastructure— depuis la République dominicaine. Contactez-le à iroky146@gmail.com.",
-      pt: 'Sim. Está disponível para projetos freelance e consultoria tecnológica —desenvolvimento web e apps, automação e infraestrutura— a partir da República Dominicana. Contacte iroky146@gmail.com.',
+      es: 'Sí. Está disponible para proyectos freelance y consultoría tecnológica —desarrollo web y de apps, automatización e infraestructura— desde República Dominicana. Escríbele a marcosrodriguezmerlo@gmail.com.',
+      en: 'Yes. He is available for freelance projects and technology consulting —web and app development, automation and infrastructure— from the Dominican Republic. Reach him at marcosrodriguezmerlo@gmail.com.',
+      it: 'Sì. È disponibile per progetti freelance e consulenza tecnologica —sviluppo web e app, automazione e infrastruttura— dalla Repubblica Dominicana. Scrivi a marcosrodriguezmerlo@gmail.com.',
+      fr: "Oui. Il est disponible pour des projets freelance et du conseil technologique —développement web et apps, automatisation et infrastructure— depuis la République dominicaine. Contactez-le à marcosrodriguezmerlo@gmail.com.",
+      pt: 'Sim. Está disponível para projetos freelance e consultoria tecnológica —desenvolvimento web e apps, automação e infraestrutura— a partir da República Dominicana. Contacte marcosrodriguezmerlo@gmail.com.',
     },
   },
 ]
@@ -420,19 +471,12 @@ export default function About() {
   const { t, lang } = useLang()
   const loc = (o) => o[lang] ?? o.es
 
-  const skillGroups = [
-    { key: 'languages', items: skills.languages },
-    { key: 'platforms', items: skills.platforms },
-    { key: 'security',  items: skills.security  },
-    { key: 'tools',     items: skills.tools     },
-  ]
-
   const currently = [
     { label: t('currently_working'),  value: t('currently_work_val')  },
     { label: t('currently_studying'), value: t('currently_study_val') },
     { label: t('currently_building'), value: t('currently_build_val') },
     { label: t('currently_location'), value: t('currently_loc_val')   },
-    { label: t('currently_contact'),  value: 'iroky146@gmail.com'      },
+    { label: t('currently_contact'),  value: 'marcosrodriguezmerlo@gmail.com'      },
   ]
 
   return (
@@ -480,13 +524,12 @@ export default function About() {
           />
         </PageHero>
 
-        {/* ── Bio + Photo + Skills ── */}
+        {/* ── Bio + Foto ── */}
         <Section>
           <SectionLabel>{t('about_who_label')}</SectionLabel>
           <TwoCol>
-            {/* Left: bio text */}
             <div>
-              {['about_bio1', 'about_bio2', 'about_bio3'].map((key, i) => (
+              {['about_bio1', 'about_bio2'].map((key, i) => (
                 <BioText
                   key={key}
                   initial={{ opacity: 0, y: 16 }}
@@ -497,42 +540,51 @@ export default function About() {
                 />
               ))}
             </div>
-
-            {/* Right: photo placeholder + skills */}
             <PhotoCol>
-              {/* ── Circular photo placeholder — replace src with your photo ── */}
-              <PhotoPlaceholder
-                initial={{ opacity: 0, scale: 0.9 }}
+              <Photo
+                src="/headshot.png"
+                alt="Marcos Rodríguez Merlo"
+                width="180"
+                height="180"
+                loading="lazy"
+                initial={{ opacity: 0, scale: 0.92 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
-              >
-                <PhotoIcon>👤</PhotoIcon>
-                <PhotoLabel>{t('about_photo_placeholder')}</PhotoLabel>
-              </PhotoPlaceholder>
-
-              <SkillsGrid>
-                {skillGroups.map(({ key, items }, gi) => (
-                  <SkillGroup key={key}>
-                    <SkillGroupTitle>{t(`skill_${key}`)}</SkillGroupTitle>
-                    <SkillList>
-                      {items.map((skill, i) => (
-                        <SkillItem
-                          key={skill}
-                          initial={{ opacity: 0, x: -8 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: gi * 0.05 + i * 0.04 }}
-                        >
-                          {skill}
-                        </SkillItem>
-                      ))}
-                    </SkillList>
-                  </SkillGroup>
-                ))}
-              </SkillsGrid>
+              />
             </PhotoCol>
           </TwoCol>
+        </Section>
+
+        {/* ── Servicios que ofrezco ── */}
+        <Section>
+          <SectionLabel>{t('services_label')}</SectionLabel>
+          <Chips>
+            {services.map((s, i) => (
+              <Chip
+                key={i}
+                initial={{ opacity: 0, y: 8 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+              >
+                {loc(s)}
+              </Chip>
+            ))}
+          </Chips>
+        </Section>
+
+        {/* ── Tecnologías y herramientas ── */}
+        <Section>
+          <SectionLabel>{t('tech_label')}</SectionLabel>
+          <SubLabel>{t('tech_frontend')}</SubLabel>
+          <Chips>
+            {techFrontend.map((x) => <Chip key={x}>{x}</Chip>)}
+          </Chips>
+          <SubLabel>{t('tech_tools')}</SubLabel>
+          <Chips>
+            {techTools.map((x) => <Chip key={x}>{x}</Chip>)}
+          </Chips>
         </Section>
 
         {/* ── Experience & Education ── */}
@@ -556,6 +608,26 @@ export default function About() {
               </TimelineRow>
             ))}
           </Timeline>
+        </Section>
+
+        {/* ── Héroes e inspiración ── */}
+        <Section>
+          <SectionLabel>{t('heroes_label')}</SectionLabel>
+          <SubLabel>{t('heroes_dev')}</SubLabel>
+          <Chips>{heroesDev.map((x) => <Chip key={x}>{x}</Chip>)}</Chips>
+          <SubLabel>{t('heroes_design')}</SubLabel>
+          <Chips>{heroesDesign.map((x) => <Chip key={x}>{x}</Chip>)}</Chips>
+        </Section>
+
+        {/* ── Favoritos e intereses ── */}
+        <Section>
+          <SectionLabel>{t('favorites_label')}</SectionLabel>
+          <SubLabel>{t('fonts_label')}</SubLabel>
+          <Chips>{favFonts.map((x) => <Chip key={x}>{x}</Chip>)}</Chips>
+          <SubLabel>{t('ui_inspiration')}</SubLabel>
+          <Chips>{uiInspiration.map((x) => <Chip key={x}>{x}</Chip>)}</Chips>
+          <SubLabel>{t('design_principles')}</SubLabel>
+          <Chips>{designPrinciples.map((x) => <Chip key={x}>{x}</Chip>)}</Chips>
         </Section>
 
         {/* ── Currently ── */}

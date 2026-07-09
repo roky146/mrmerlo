@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import { useLang } from '../../contexts/LanguageContext'
+import { useContact } from '../../contexts/ContactContext'
 
 const FooterSection = styled.footer`
   padding: 4rem 4rem 2.5rem;
@@ -72,6 +73,7 @@ const BottomText = styled.span`
 
 export default function Footer() {
   const { t } = useLang()
+  const { open: openContact } = useContact()
 
   return (
     <FooterSection>
@@ -85,7 +87,9 @@ export default function Footer() {
           {t('footer_heading')}
         </WorkTogether>
         <EmailBtn
-          href="mailto:iroky146@gmail.com"
+          as="button"
+          type="button"
+          onClick={openContact}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

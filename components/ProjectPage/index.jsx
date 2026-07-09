@@ -304,16 +304,6 @@ export default function ProjectPage({ project: raw }) {
           {project.technologies.map(tech => <TechTag key={tech}>{tech}</TechTag>)}
         </TechStack>
 
-        <SectionLabel>{t('proj_palette')}</SectionLabel>
-        <Palette>
-          {project.palette.map(color => (
-            <Swatch key={color}>
-              <SwatchColor $color={color} />
-              <SwatchHex>{color}</SwatchHex>
-            </Swatch>
-          ))}
-        </Palette>
-
         <SectionLabel>{t('proj_typography')}</SectionLabel>
         <TechStack>
           {project.typography.map(tp => <TechTag key={tp}>{tp}</TechTag>)}

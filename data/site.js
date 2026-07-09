@@ -8,18 +8,18 @@ export const SITE = {
   url: 'https://mrmerlo.com',
   name: 'mrmerlo.com',
   authorName: 'Marcos Rodríguez Merlo',
-  authorAlias: 'Marcos Merlo',
-  email: 'iroky146@gmail.com',
+  email: 'marcosrodriguezmerlo@gmail.com',
   twitter: '@roky146',
   locale: 'es_DO',
   lang: 'es',
   // Descripción canónica reutilizada en meta + schema
   description:
-    'Marcos Rodríguez Merlo — Ingeniero de Producción TI y estudiante de Ingeniería en Ciberseguridad en Santo Domingo, República Dominicana. Construye herramientas empresariales, automatización y aplicaciones full-stack (Kubernetes, Go, Flutter, React, Node.js).',
+    'Marcos Rodríguez Merlo — Ingeniero de Producción TI, estudiante de Ciberseguridad y desarrollador con sede en Santo Domingo, RD.',
   image: 'https://mrmerlo.com/og-image.svg',
   sameAs: [
     'https://github.com/roky146',
     'https://x.com/roky146',
+    'https://www.linkedin.com/in/marcos-rodríguez-merlo-367569224',
   ],
   // Áreas de conocimiento — alimentan Person.knowsAbout (clave para GEO/LLMO)
   knowsAbout: [
@@ -41,6 +41,15 @@ export const SITE = {
   ],
 }
 
+/* Datos de contacto (fuente única) */
+export const CONTACT = {
+  email: 'marcosrodriguezmerlo@gmail.com',
+  mailto: 'mailto:marcosrodriguezmerlo@gmail.com',
+  phone: '+1 829 587 0648',
+  tel: 'tel:+18295870648',
+  whatsapp: 'https://wa.me/18295870648',
+}
+
 const abs = (path = '/') => (path === '/' ? SITE.url : `${SITE.url}${path}`)
 
 /* ── Person (identidad canónica — referenciada por @id en todo el grafo) ── */
@@ -49,7 +58,7 @@ export function personSchema() {
     '@type': 'Person',
     '@id': `${SITE.url}/#person`,
     name: SITE.authorName,
-    alternateName: [SITE.authorAlias, 'Marcos Rodríguez'],
+    alternateName: 'Marcos Rodríguez',
     url: SITE.url,
     image: SITE.image,
     email: `mailto:${SITE.email}`,

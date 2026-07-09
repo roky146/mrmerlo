@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useThemeCtx } from '../../contexts/ThemeContext'
 import { useLang } from '../../contexts/LanguageContext'
+import { useContact } from '../../contexts/ContactContext'
 
 /* ─── Nav shell ─────────────────────────────────────────────── */
 
@@ -550,7 +551,7 @@ const socialLinks = [
   },
   {
     label: 'Email',
-    href: 'mailto:iroky146@gmail.com',
+    href: 'mailto:marcosrodriguezmerlo@gmail.com',
     origin: 'bottom left',
     external: false,
     icon: (
@@ -597,12 +598,14 @@ export default function Navbar() {
   const router = useRouter()
   const { dark, toggle: toggleTheme } = useThemeCtx()
   const { lang, t, setLang } = useLang()
+  const { open: openContact } = useContact()
+  const currentFlag = LANG_OPTIONS.find(o => o.code === lang)?.flag
 
   const menuLinks = [
     { label: t('nav_home'),     href: '/' },
     { label: t('nav_projects'), href: '/#projects' },
     { label: t('nav_about'),    href: '/about' },
-    { label: t('nav_contact'),  href: 'mailto:iroky146@gmail.com', external: true },
+    { label: t('nav_contact'),  contact: true },
   ]
 
   /* Bloquear scroll con overlay abierto */
@@ -708,7 +711,7 @@ export default function Navbar() {
           <DesktopLinks>
             <DesktopLink as={Link} href="/#projects">{t('nav_projects')}</DesktopLink>
             <DesktopLink as={Link} href="/about">{t('nav_about')}</DesktopLink>
-            <DesktopLink href="mailto:iroky146@gmail.com">{t('nav_contact')}</DesktopLink>
+            <DesktopLink as="button" type="button" onClick={openContact}>{t('nav_contact')}</DesktopLink>
           </DesktopLinks>
 
           {/* ── Social + CV (desktop) ── */}
@@ -731,7 +734,7 @@ export default function Navbar() {
           {/* ── Selector de idioma ── */}
           <LangWrapper ref={langRef}>
             <LangBtn onClick={() => setLangOpen(v => !v)} aria-label="Seleccionar idioma">
-              <LangDot />
+              <span aria-hidden="true" style={{ fontSize: '0.95rem', lineHeight: 1 }}>{currentFlag}</span>
               {lang.toUpperCase()}
             </LangBtn>
 
@@ -836,9 +839,11 @@ export default function Navbar() {
               {menuLinks.map((link, i) => (
                 <MenuItemWrapper key={link.label}>
                   <MenuItem variants={itemVariant(i)} initial="hidden" animate="visible" onClick={close}>
-                    {link.external
-                      ? <a href={link.href}>{link.label}</a>
-                      : <Link href={link.href}>{link.label}</Link>}
+                    {link.contact
+                      ? <a role="button" tabIndex={0} onClick={openContact}>{link.label}</a>
+                      : link.external
+                        ? <a href={link.href}>{link.label}</a>
+                        : <Link href={link.href}>{link.label}</Link>}
                   </MenuItem>
                 </MenuItemWrapper>
               ))}

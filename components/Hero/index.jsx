@@ -6,6 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Link from 'next/link'
 import ParticleNet from '../ParticleNet'
 import { useLang } from '../../contexts/LanguageContext'
+import { useContact } from '../../contexts/ContactContext'
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger)
@@ -298,6 +299,7 @@ export default function Hero() {
   const headlineRef = useRef(null)
   const ctaRef      = useRef(null)
   const { t } = useLang()
+  const { open: openContact } = useContact()
 
   const [indicatorTop, setIndicatorTop] = useState(null)
   const [faded, setFaded] = useState(false)
@@ -399,8 +401,8 @@ export default function Hero() {
         >
           {/* Primary: Ver proyectos */}
           <CTAButton href="/#projects">{t('hero_cta_primary')}</CTAButton>
-          {/* Secondary: Contacto directo */}
-          <CTASecondary href="mailto:iroky146@gmail.com">{t('hero_cta_secondary')}</CTASecondary>
+          {/* Secondary: abre el modal de contacto */}
+          <CTASecondary as="button" type="button" onClick={openContact}>{t('hero_cta_secondary')}</CTASecondary>
 
           {indicatorTop !== null && (
             <FixedScrollWrap

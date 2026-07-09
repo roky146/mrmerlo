@@ -49,8 +49,7 @@ export default function Document() {
 
         {/* Iconos / manifest */}
         <link rel="icon" type="image/svg+xml" href="/icon.svg" />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/icon.svg" />
         <link rel="manifest" href="/site.webmanifest" />
 
         {/* Datos estructurados globales: Person + WebSite (identidad canónica para SEO/GEO/LLMO) */}

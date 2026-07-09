@@ -3,10 +3,11 @@ import { SITE } from '../data/site'
 
 /* SEO por página: title, description, canonical y overrides de OG/Twitter.
    Los metadatos globales (og:type, image, twitter:card, etc.) viven en _document. */
-export default function Seo({ title, description, path = '/', noindex = false }) {
+export default function Seo({ title, rawTitle, description, path = '/', noindex = false }) {
   const canonical = path === '/' ? SITE.url : `${SITE.url}${path}`
   const desc = description || SITE.description
-  const fullTitle = title ? `${title} — ${SITE.name}` : `${SITE.authorName} — ${SITE.name}`
+  const fullTitle = rawTitle
+    || (title ? `${title} — ${SITE.name}` : `${SITE.authorName} — ${SITE.name}`)
 
   return (
     <Head>
