@@ -131,6 +131,9 @@ const HeroContent = styled.div`
   max-width: 820px;
   padding-top: clamp(5rem, 9vh, 7rem);
   padding-bottom: clamp(1rem, 2vh, 2.5rem);
+  /* Deja pasar toques/clics al canvas detrás; los elementos interactivos
+     (enlace "Marcos" y CTAs) reactivan pointer-events abajo. */
+  pointer-events: none;
 `
 
 const Eyebrow = styled(motion.p)`
@@ -167,6 +170,8 @@ const NameLink = styled(Link)`
   text-underline-offset: 3px;
   text-decoration-color: var(--accent-dim);
   transition: color 0.2s, text-decoration-color 0.2s;
+
+  pointer-events: auto;
 
   &:hover { color: var(--accent-dim); }
 `
@@ -225,6 +230,7 @@ const CTARow = styled(motion.div)`
 `
 
 const CTAButton = styled(Link)`
+  pointer-events: auto;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -245,6 +251,7 @@ const CTAButton = styled(Link)`
 `
 
 const CTASecondary = styled.a`
+  pointer-events: auto;
   display: inline-flex;
   align-items: center;
   font-size: 0.78rem;
