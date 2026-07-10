@@ -332,30 +332,55 @@ const favFonts = ['TT Commons Pro', 'Manrope', 'Satoshi', 'Inter', 'Gilroy']
 const uiInspiration = ['Awwwards', 'Behance', 'Dribbble']
 const designPrinciples = ['Laws of UX', 'Design de Spotify', 'Material Design']
 
+/* Experiencia & formación (localizada; period/org/title/desc como objetos) */
 const experience = [
   {
-    period: '2025 → presente',
-    title: 'Ingeniero de Producción TI',
-    org: 'Banco BHD — Santo Domingo, RD',
-    desc: 'Administración y soporte de infraestructura TI en producción: gestión de servicios de Broadcom API Gateway y AS400, monitoreo de servicios con Zabbix, gestión de incidentes, automatización de inventarios y mantenimiento de plataformas críticas del banco.',
+    period: { es: '2025 → presente', en: '2025 → present', it: '2025 → presente', fr: '2025 → présent', pt: '2025 → presente' },
+    title: { es: 'Ingeniero de Producción TI', en: 'IT Production Engineer', it: 'Ingegnere di Produzione IT', fr: 'Ingénieur de Production IT', pt: 'Engenheiro de Produção TI' },
+    org: { es: 'Banco BHD — Santo Domingo, RD', en: 'Banco BHD — Santo Domingo, DR', it: 'Banco BHD — Santo Domingo, RD', fr: 'Banco BHD — Saint-Domingue, RD', pt: 'Banco BHD — Santo Domingo, RD' },
+    desc: {
+      es: 'Administración y soporte de infraestructura TI en producción: gestión de servicios de Broadcom API Gateway y AS400, monitoreo de servicios con Zabbix, gestión de incidentes, automatización de inventarios y mantenimiento de plataformas críticas del banco.',
+      en: "Administration and support of production IT infrastructure: managing Broadcom API Gateway and AS400 services, service monitoring with Zabbix, incident management, inventory automation and maintenance of the bank's critical platforms.",
+      it: "Amministrazione e supporto dell'infrastruttura IT in produzione: gestione dei servizi Broadcom API Gateway e AS400, monitoraggio dei servizi con Zabbix, gestione degli incidenti, automazione degli inventari e manutenzione delle piattaforme critiche della banca.",
+      fr: "Administration et support de l'infrastructure IT en production : gestion des services Broadcom API Gateway et AS400, supervision des services avec Zabbix, gestion des incidents, automatisation des inventaires et maintenance des plateformes critiques de la banque.",
+      pt: 'Administração e suporte de infraestrutura TI em produção: gestão de serviços de Broadcom API Gateway e AS400, monitoramento de serviços com Zabbix, gestão de incidentes, automação de inventários e manutenção de plataformas críticas do banco.',
+    },
   },
   {
-    period: '2022 → presente',
-    title: 'Ingeniería en Ciberseguridad',
-    org: 'Universidad del Caribe — Santo Domingo, RD',
-    desc: 'Carrera de grado enfocada en seguridad de sistemas, criptografía, ethical hacking, redes seguras y gestión de incidentes.',
+    period: { es: '2022 → presente', en: '2022 → present', it: '2022 → presente', fr: '2022 → présent', pt: '2022 → presente' },
+    title: { es: 'Ingeniería en Ciberseguridad', en: 'Cybersecurity Engineering', it: 'Ingegneria della Cybersecurity', fr: 'Ingénierie de la Cybersécurité', pt: 'Engenharia em Cibersegurança' },
+    org: { es: 'Universidad del Caribe — Santo Domingo, RD', en: 'Universidad del Caribe — Santo Domingo, DR', it: 'Universidad del Caribe — Santo Domingo, RD', fr: 'Universidad del Caribe — Saint-Domingue, RD', pt: 'Universidad del Caribe — Santo Domingo, RD' },
+    desc: {
+      es: 'Carrera de grado enfocada en seguridad de sistemas, criptografía, ethical hacking, redes seguras y gestión de incidentes.',
+      en: "Bachelor's degree focused on systems security, cryptography, ethical hacking, secure networks and incident management.",
+      it: 'Laurea focalizzata su sicurezza dei sistemi, crittografia, ethical hacking, reti sicure e gestione degli incidenti.',
+      fr: "Licence axée sur la sécurité des systèmes, la cryptographie, l'ethical hacking, les réseaux sécurisés et la gestion des incidents.",
+      pt: 'Curso de graduação focado em segurança de sistemas, criptografia, ethical hacking, redes seguras e gestão de incidentes.',
+    },
   },
   {
     period: '2024',
-    title: 'Tecnicatura en Ciberseguridad',
-    org: 'INFOTEP / MACROSeguridad — 310 horas',
-    desc: 'Programa técnico intensivo en fundamentos de ciberseguridad, análisis de vulnerabilidades, hardening de sistemas y respuesta a incidentes.',
+    title: { es: 'Tecnicatura en Ciberseguridad', en: 'Technical Degree in Cybersecurity', it: 'Diploma tecnico in Cybersecurity', fr: 'Diplôme technique en Cybersécurité', pt: 'Tecnólogo em Cibersegurança' },
+    org: { es: 'INFOTEP / MACROSeguridad — 310 horas', en: 'INFOTEP / MACROSeguridad — 310 hours', it: 'INFOTEP / MACROSeguridad — 310 ore', fr: 'INFOTEP / MACROSeguridad — 310 heures', pt: 'INFOTEP / MACROSeguridad — 310 horas' },
+    desc: {
+      es: 'Programa técnico intensivo en fundamentos de ciberseguridad, análisis de vulnerabilidades, hardening de sistemas y respuesta a incidentes.',
+      en: 'Intensive technical program in cybersecurity fundamentals, vulnerability analysis, systems hardening and incident response.',
+      it: 'Programma tecnico intensivo su fondamenti di cybersecurity, analisi delle vulnerabilità, hardening dei sistemi e risposta agli incidenti.',
+      fr: "Programme technique intensif sur les fondamentaux de la cybersécurité, l'analyse des vulnérabilités, le durcissement des systèmes et la réponse aux incidents.",
+      pt: 'Programa técnico intensivo em fundamentos de cibersegurança, análise de vulnerabilidades, hardening de sistemas e resposta a incidentes.',
+    },
   },
   {
     period: '2024',
-    title: 'Desarrollo de Aplicaciones',
+    title: { es: 'Desarrollo de Aplicaciones', en: 'Application Development', it: 'Sviluppo di Applicazioni', fr: "Développement d'Applications", pt: 'Desenvolvimento de Aplicações' },
     org: 'INFOTEP / TEOREMA',
-    desc: 'Formación en desarrollo web (HTML, CSS, JS) y programación orientada a objetos. Backend y frontend aplicados a proyectos reales.',
+    desc: {
+      es: 'Formación en desarrollo web (HTML, CSS, JS) y programación orientada a objetos. Backend y frontend aplicados a proyectos reales.',
+      en: 'Training in web development (HTML, CSS, JS) and object-oriented programming. Backend and frontend applied to real projects.',
+      it: 'Formazione in sviluppo web (HTML, CSS, JS) e programmazione orientata agli oggetti. Backend e frontend applicati a progetti reali.',
+      fr: "Formation en développement web (HTML, CSS, JS) et programmation orientée objet. Backend et frontend appliqués à des projets réels.",
+      pt: 'Formação em desenvolvimento web (HTML, CSS, JS) e programação orientada a objetos. Backend e frontend aplicados a projetos reais.',
+    },
   },
 ]
 
@@ -469,7 +494,7 @@ const LINE_VARIANTS = {
 
 export default function About() {
   const { t, lang } = useLang()
-  const loc = (o) => o[lang] ?? o.es
+  const loc = (o) => (o && typeof o === 'object' && !Array.isArray(o)) ? (o[lang] ?? o.es) : o
 
   const currently = [
     { label: t('currently_working'),  value: t('currently_work_val')  },
@@ -593,17 +618,17 @@ export default function About() {
           <Timeline>
             {experience.map((item, i) => (
               <TimelineRow
-                key={item.title}
+                key={i}
                 initial={{ opacity: 0, y: 14 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: i * 0.08 }}
               >
-                <TimelineYear>{item.period}</TimelineYear>
+                <TimelineYear>{loc(item.period)}</TimelineYear>
                 <TimelineContent>
-                  <TimelineTitle>{item.title}</TimelineTitle>
-                  <TimelineOrg>{item.org}</TimelineOrg>
-                  <TimelineDesc>{item.desc}</TimelineDesc>
+                  <TimelineTitle>{loc(item.title)}</TimelineTitle>
+                  <TimelineOrg>{loc(item.org)}</TimelineOrg>
+                  <TimelineDesc>{loc(item.desc)}</TimelineDesc>
                 </TimelineContent>
               </TimelineRow>
             ))}
