@@ -70,6 +70,7 @@ export const translations = {
     contact_copy:     'Copiar correo',
     contact_copied:   '¡Copiado!',
     contact_call:     'Llamar',
+    grid_hint:        'Toca la grilla ✦ juega con la bola',
 
     /* ── About — Currently ── */
     currently_label:  'Actualmente',
@@ -176,6 +177,7 @@ export const translations = {
     contact_copy:     'Copy email',
     contact_copied:   'Copied!',
     contact_call:     'Call',
+    grid_hint:        'Tap the grid ✦ play with the ball',
 
     /* ── About — Currently ── */
     currently_label:  'Currently',
@@ -282,6 +284,7 @@ export const translations = {
     contact_copy:     'Copia email',
     contact_copied:   'Copiato!',
     contact_call:     'Chiama',
+    grid_hint:        'Tocca la griglia ✦ gioca con la pallina',
 
     /* ── About — Currently ── */
     currently_label:  'Attualmente',
@@ -388,6 +391,7 @@ export const translations = {
     contact_copy:     "Copier l'email",
     contact_copied:   'Copié !',
     contact_call:     'Appeler',
+    grid_hint:        'Touchez la grille ✦ jouez avec la balle',
 
     /* ── About — Currently ── */
     currently_label:  'Actuellement',
@@ -494,6 +498,7 @@ export const translations = {
     contact_copy:     'Copiar email',
     contact_copied:   'Copiado!',
     contact_call:     'Ligar',
+    grid_hint:        'Toque na grade ✦ brinque com a bola',
 
     /* ── About — Currently ── */
     currently_label:  'Atualmente',
