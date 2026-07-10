@@ -65,8 +65,10 @@ const BURST_MS = 650
 const COLLAPSE_MS = 300
 const BURST_R = 38
 const RAYS = 12
-const RING_MS = 55       // retardo entre anillos del ripple
-const MAX_RINGS = 4      // alcance del ripple (distancia en celdas)
+const RIPPLE_MS_PER_RING = 70   // ms que tarda el frente de onda en avanzar 1 celda
+const RIPPLE_SIGMA = 0.9        // grosor del anillo brillante (en celdas)
+const RIPPLE_PEAK = 0.6         // opacidad máxima del frente
+const RIPPLE_MAX = 5            // alcance de la onda (celdas)
 
 export default function IsoGrid() {
   const canvasRef = useRef(null)
@@ -185,25 +187,36 @@ export default function IsoGrid() {
       ctx.globalAlpha = 1
     }
 
-    /* Ripple: onda que se propaga en anillos a los vecinos y luego se desvanece */
-    const lightRing = (cu, cv, r, now) => {
-      if (r === 0) { trail.set(key(cu, cv), now); return }
-      for (let du = -r; du <= r; du++) {
-        for (let dv = -r; dv <= r; dv++) {
-          if (Math.max(Math.abs(du), Math.abs(dv)) !== r) continue
+    /* Ripple como ONDA física: un anillo brillante (gaussiana centrada en el
+       frente que se aleja con el tiempo) cuyo interior se apaga al pasar el
+       frente. Se calcula la opacidad de cada celda por frame; independiente
+       del rastro de la bola (fade rápido, no ensucia). */
+    const eachRingCell = (cu, cv, d, cb) => {
+      if (d === 0) { cb(cu, cv); return }
+      for (let du = -d; du <= d; du++) {
+        for (let dv = -d; dv <= d; dv++) {
+          if (Math.max(Math.abs(du), Math.abs(dv)) !== d) continue
           if ((du + dv) & 1) continue
-          trail.set(key(cu + du, cv + dv), now)
+          cb(cu + du, cv + dv)
         }
       }
     }
-    const spawnRipple = (cu, cv, now) => { ripples.push({ cu, cv, t0: now, lastRing: -1 }) }
-    const processRipples = (now) => {
+    const spawnRipple = (cu, cv, now) => { ripples.push({ cu, cv, t0: now }) }
+    const drawRipples = (now) => {
       for (let i = ripples.length - 1; i >= 0; i--) {
         const rp = ripples[i]
-        const upto = Math.min(Math.floor((now - rp.t0) / RING_MS), MAX_RINGS)
-        for (let r = rp.lastRing + 1; r <= upto; r++) lightRing(rp.cu, rp.cv, r, now)
-        rp.lastRing = upto
-        if (rp.lastRing >= MAX_RINGS) ripples.splice(i, 1)
+        const front = (now - rp.t0) / RIPPLE_MS_PER_RING          // radio del frente (celdas)
+        if (front > RIPPLE_MAX + 2.5) { ripples.splice(i, 1); continue }
+        const energy = Math.max(0, 1 - front / (RIPPLE_MAX + 1))  // la onda pierde energía al expandirse
+        const lo = Math.max(0, Math.floor(front - 2))
+        const hi = Math.min(RIPPLE_MAX, Math.ceil(front + 2))
+        for (let d = lo; d <= hi; d++) {
+          const off = d - front
+          const g = Math.exp(-(off * off) / (2 * RIPPLE_SIGMA * RIPPLE_SIGMA)) // pico en el frente
+          const alpha = g * energy * RIPPLE_PEAK
+          if (alpha < 0.02) continue
+          eachRingCell(rp.cu, rp.cv, d, (u, v) => fillCell(u, v, alpha))
+        }
       }
     }
 
@@ -285,9 +298,6 @@ export default function IsoGrid() {
       // glow suave en la celda bajo el cursor
       if (hover) fillCell(hover.u, hover.v, 0.16)
 
-      // ripples activos → encienden anillos hacia los vecinos
-      processRipples(now)
-
       // rastro con fade
       for (const [k, tt] of trail) {
         const a = 1 - (now - tt) / TRAIL_MS
@@ -298,6 +308,9 @@ export default function IsoGrid() {
 
       // target activo fijo al 100 %
       if (pinned && target) fillCell(target.u, target.v, 1)
+
+      // ondas (ripples) del click — anillo brillante que viaja y se disipa
+      drawRipples(now)
 
       if (ball.moving) {
         const p = Math.min(1, (now - ball.t0) / HOP_MS)
