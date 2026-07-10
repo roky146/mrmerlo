@@ -65,6 +65,8 @@ const BURST_MS = 650
 const COLLAPSE_MS = 300
 const BURST_R = 38
 const RAYS = 12
+const RING_MS = 55       // retardo entre anillos del ripple
+const MAX_RINGS = 4      // alcance del ripple (distancia en celdas)
 
 export default function IsoGrid() {
   const canvasRef = useRef(null)
@@ -105,6 +107,7 @@ export default function IsoGrid() {
     const grid = document.createElement('canvas')
     const gctx = grid.getContext('2d')
     const trail = new Map()
+    const ripples = []
 
     const ball = { u: 0, v: 0, fromU: 0, fromV: 0, t0: 0, restT0: 0, du: 1, dv: 1, moving: true, bx: 0, by: 0, h: 0 }
     let pinned = false
@@ -180,6 +183,28 @@ export default function IsoGrid() {
       diamondPath(ctx, cellX(u), cellY(v))
       ctx.fill()
       ctx.globalAlpha = 1
+    }
+
+    /* Ripple: onda que se propaga en anillos a los vecinos y luego se desvanece */
+    const lightRing = (cu, cv, r, now) => {
+      if (r === 0) { trail.set(key(cu, cv), now); return }
+      for (let du = -r; du <= r; du++) {
+        for (let dv = -r; dv <= r; dv++) {
+          if (Math.max(Math.abs(du), Math.abs(dv)) !== r) continue
+          if ((du + dv) & 1) continue
+          trail.set(key(cu + du, cv + dv), now)
+        }
+      }
+    }
+    const spawnRipple = (cu, cv, now) => { ripples.push({ cu, cv, t0: now, lastRing: -1 }) }
+    const processRipples = (now) => {
+      for (let i = ripples.length - 1; i >= 0; i--) {
+        const rp = ripples[i]
+        const upto = Math.min(Math.floor((now - rp.t0) / RING_MS), MAX_RINGS)
+        for (let r = rp.lastRing + 1; r <= upto; r++) lightRing(rp.cu, rp.cv, r, now)
+        rp.lastRing = upto
+        if (rp.lastRing >= MAX_RINGS) ripples.splice(i, 1)
+      }
     }
 
     const nextDir = () => {
@@ -259,6 +284,9 @@ export default function IsoGrid() {
 
       // glow suave en la celda bajo el cursor
       if (hover) fillCell(hover.u, hover.v, 0.16)
+
+      // ripples activos → encienden anillos hacia los vecinos
+      processRipples(now)
 
       // rastro con fade
       for (const [k, tt] of trail) {
@@ -381,7 +409,7 @@ export default function IsoGrid() {
         target = cell
         collapseBurst(now)
       } else {
-        trail.set(key(cell.u, cell.v), now)
+        spawnRipple(cell.u, cell.v, now)   // onda expansiva desde la celda tocada
       }
     }
 
