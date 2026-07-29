@@ -4,12 +4,12 @@ import { useLang } from '../../contexts/LanguageContext'
 
 /* ──────────────────────────────────────────────────────────────
    Grilla isométrica en Canvas 2D (fondo del hero).
-   Bola que rebota de centro a centro con rastro, wrap-around,
-   pathfinding y destello (sunburst). Plus:
-   - Pausa el rAF fuera del viewport / con la pestaña oculta (rendimiento).
-   - Glow en la celda bajo el cursor (hover, en dispositivos con hover).
-   - Hint de primera visita (pulso en la bola + chip) que se descarta al 1er toque.
-   - Squash & stretch de la bola al rebotar.
+   - 3 bolas que rebotan de centro a centro con rastro y wrap-around.
+   - Movimiento autónomo sesgado al centro (zona visible; bordes raros).
+   - Celdas encendidas se ELEVAN (tile 3D: cara superior + laterales).
+   - Ripple al click = onda física (anillo brillante que viaja y sube tiles).
+   - Interacción por bola: fijar, pathfinding, destello (sunburst).
+   - Pausa fuera del viewport / pestaña oculta. Hover glow. Hint 1ª visita.
    ────────────────────────────────────────────────────────────── */
 
 const Canvas = styled.canvas`
@@ -44,14 +44,8 @@ const Hint = styled.div`
   letter-spacing: 0.05em;
   animation: gridHintPulse 2.4s ease-in-out infinite, gridHintIn 0.5s ease-out;
 
-  @keyframes gridHintPulse {
-    0%, 100% { opacity: 0.7; }
-    50% { opacity: 1; }
-  }
-  @keyframes gridHintIn {
-    from { opacity: 0; transform: translate(-50%, 6px); }
-    to   { opacity: 0.85; transform: translate(-50%, 0); }
-  }
+  @keyframes gridHintPulse { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+  @keyframes gridHintIn { from { opacity: 0; transform: translate(-50%, 6px); } to { opacity: 0.85; transform: translate(-50%, 0); } }
   @media (max-width: 480px) { font-size: 0.66rem; bottom: 12%; }
 `
 
@@ -65,10 +59,14 @@ const BURST_MS = 650
 const COLLAPSE_MS = 300
 const BURST_R = 38
 const RAYS = 12
-const RIPPLE_MS_PER_RING = 70   // ms que tarda el frente de onda en avanzar 1 celda
-const RIPPLE_SIGMA = 0.9        // grosor del anillo brillante (en celdas)
-const RIPPLE_PEAK = 0.6         // opacidad máxima del frente
-const RIPPLE_MAX = 5            // alcance de la onda (celdas)
+const RIPPLE_MS_PER_RING = 70
+const RIPPLE_SIGMA = 0.9
+const RIPPLE_PEAK = 0.6
+const RIPPLE_MAX = 5
+const TILE_LIFT = 9      // elevación del tile del rastro/bola
+const RIPPLE_LIFT = 13   // elevación del frente de la onda
+const TARGET_LIFT = 11   // elevación del tile destino
+const EDGE_BIAS = 0.5    // a partir de qué fracción del borde la bola vuelve al centro
 
 export default function IsoGrid() {
   const canvasRef = useRef(null)
@@ -79,7 +77,6 @@ export default function IsoGrid() {
 
   useEffect(() => { hintRef.current = hintOn }, [hintOn])
 
-  /* Hint de primera visita */
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const dismiss = () => {
@@ -110,19 +107,16 @@ export default function IsoGrid() {
     const gctx = grid.getContext('2d')
     const trail = new Map()
     const ripples = []
-
-    const ball = { u: 0, v: 0, fromU: 0, fromV: 0, t0: 0, restT0: 0, du: 1, dv: 1, moving: true, bx: 0, by: 0, h: 0 }
-    let pinned = false
-    let target = null
-    let burst = null
-    let bounceSign = 0
     let hover = null
 
-    /* Reloj con compensación de pausa (mantiene continuidad al reanudar) */
-    let totalPaused = 0
-    let pauseStart = 0
-    let running = false
-    let raf = null
+    const makeBall = (u, v, du, dv) => ({
+      u, v, fromU: u, fromV: v, t0: 0, restT0: 0, du, dv, moving: false,
+      bx: 0, by: 0, h: 0, pinned: false, target: null, bounceSign: 0, burst: null,
+    })
+    const balls = []
+
+    /* Reloj con compensación de pausa */
+    let totalPaused = 0, pauseStart = 0, running = false, raf = null
     const clock = () => performance.now() - totalPaused
 
     const cellX = (u) => originX + u * cw2
@@ -139,16 +133,12 @@ export default function IsoGrid() {
 
     const diamondPath = (c, x, y) => {
       c.beginPath()
-      c.moveTo(x, y - ch2)
-      c.lineTo(x + cw2, y)
-      c.lineTo(x, y + ch2)
-      c.lineTo(x - cw2, y)
+      c.moveTo(x, y - ch2); c.lineTo(x + cw2, y); c.lineTo(x, y + ch2); c.lineTo(x - cw2, y)
       c.closePath()
     }
 
     const buildGrid = () => {
-      grid.width = Math.max(1, W * dpr)
-      grid.height = Math.max(1, H * dpr)
+      grid.width = Math.max(1, W * dpr); grid.height = Math.max(1, H * dpr)
       gctx.setTransform(dpr, 0, 0, dpr, 0, 0)
       gctx.clearRect(0, 0, W, H)
       gctx.strokeStyle = colBorder
@@ -168,17 +158,15 @@ export default function IsoGrid() {
       W = canvas.clientWidth || window.innerWidth
       H = canvas.clientHeight || window.innerHeight
       dpr = Math.min(window.devicePixelRatio || 1, 2)
-      canvas.width = Math.max(1, W * dpr)
-      canvas.height = Math.max(1, H * dpr)
+      canvas.width = Math.max(1, W * dpr); canvas.height = Math.max(1, H * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      originX = W / 2
-      originY = H / 2
+      originX = W / 2; originY = H / 2
       Umax = Math.ceil((W / 2) / cw2) + 2
       Vmax = Math.ceil((H / 2) / ch2) + 2
-      readColors()
-      buildGrid()
+      readColors(); buildGrid()
     }
 
+    /* rombo plano (hover) */
     const fillCell = (u, v, alpha) => {
       ctx.globalAlpha = alpha
       ctx.fillStyle = colAccent
@@ -187,10 +175,35 @@ export default function IsoGrid() {
       ctx.globalAlpha = 1
     }
 
-    /* Ripple como ONDA física: un anillo brillante (gaussiana centrada en el
-       frente que se aleja con el tiempo) cuyo interior se apaga al pasar el
-       frente. Se calcula la opacidad de cada celda por frame; independiente
-       del rastro de la bola (fade rápido, no ensucia). */
+    /* tile ELEVADO: cara superior (rombo subido e) + 2 caras laterales sombreadas */
+    const fillRaised = (u, v, opacity, e) => {
+      const x = cellX(u), y = cellY(v)
+      ctx.fillStyle = colAccent
+      // cara izquierda (sombra)
+      ctx.globalAlpha = opacity * 0.36
+      ctx.beginPath()
+      ctx.moveTo(x - cw2, y); ctx.lineTo(x, y + ch2); ctx.lineTo(x, y + ch2 - e); ctx.lineTo(x - cw2, y - e); ctx.closePath(); ctx.fill()
+      // cara derecha
+      ctx.globalAlpha = opacity * 0.6
+      ctx.beginPath()
+      ctx.moveTo(x + cw2, y); ctx.lineTo(x, y + ch2); ctx.lineTo(x, y + ch2 - e); ctx.lineTo(x + cw2, y - e); ctx.closePath(); ctx.fill()
+      // cara superior
+      ctx.globalAlpha = opacity
+      ctx.beginPath()
+      ctx.moveTo(x, y - e - ch2); ctx.lineTo(x + cw2, y - e); ctx.lineTo(x, y - e + ch2); ctx.lineTo(x - cw2, y - e); ctx.closePath(); ctx.fill()
+      ctx.globalAlpha = 1
+    }
+
+    /* elevación viva de una celda del rastro (para que la bola monte su tile) */
+    const elevAt = (u, v, now) => {
+      const tt = trail.get(key(u, v))
+      if (tt === undefined) return 0
+      const a = 1 - (now - tt) / TRAIL_MS
+      return a > 0 ? TILE_LIFT * a : 0
+    }
+    const ground = (u, v, now) => cellY(v) - elevAt(u, v, now)
+
+    /* ── Ripple (onda física) ── */
     const eachRingCell = (cu, cv, d, cb) => {
       if (d === 0) { cb(cu, cv); return }
       for (let du = -d; du <= d; du++) {
@@ -205,177 +218,169 @@ export default function IsoGrid() {
     const drawRipples = (now) => {
       for (let i = ripples.length - 1; i >= 0; i--) {
         const rp = ripples[i]
-        const front = (now - rp.t0) / RIPPLE_MS_PER_RING          // radio del frente (celdas)
+        const front = (now - rp.t0) / RIPPLE_MS_PER_RING
         if (front > RIPPLE_MAX + 2.5) { ripples.splice(i, 1); continue }
-        const energy = Math.max(0, 1 - front / (RIPPLE_MAX + 1))  // la onda pierde energía al expandirse
+        const energy = Math.max(0, 1 - front / (RIPPLE_MAX + 1))
         const lo = Math.max(0, Math.floor(front - 2))
         const hi = Math.min(RIPPLE_MAX, Math.ceil(front + 2))
         for (let d = lo; d <= hi; d++) {
           const off = d - front
-          const g = Math.exp(-(off * off) / (2 * RIPPLE_SIGMA * RIPPLE_SIGMA)) // pico en el frente
-          const alpha = g * energy * RIPPLE_PEAK
+          const g = Math.exp(-(off * off) / (2 * RIPPLE_SIGMA * RIPPLE_SIGMA))
+          const intensity = g * energy
+          const alpha = intensity * RIPPLE_PEAK
           if (alpha < 0.02) continue
-          eachRingCell(rp.cu, rp.cv, d, (u, v) => fillCell(u, v, alpha))
+          eachRingCell(rp.cu, rp.cv, d, (u, v) => fillRaised(u, v, alpha, RIPPLE_LIFT * intensity))
         }
       }
     }
 
-    const nextDir = () => {
-      if (Math.random() < 0.28) {
-        if (Math.random() < 0.5) ball.du = -ball.du
-        else ball.dv = -ball.dv
+    /* ── Lógica de una bola ── */
+    const nextDir = (b) => {
+      let biased = false
+      if (Math.abs(b.u) > Umax * EDGE_BIAS && Math.random() < 0.7) { b.du = b.u > 0 ? -1 : 1; biased = true }
+      if (Math.abs(b.v) > Vmax * EDGE_BIAS && Math.random() < 0.7) { b.dv = b.v > 0 ? -1 : 1; biased = true }
+      if (!biased && Math.random() < 0.28) {
+        if (Math.random() < 0.5) b.du = -b.du
+        else b.dv = -b.dv
+      }
+    }
+    const dirToTarget = (b) => {
+      const du = b.target.u - b.u, dv = b.target.v - b.v
+      b.du = du > 0 ? 1 : du < 0 ? -1 : (b.u >= Umax ? -1 : 1)
+      b.dv = dv > 0 ? 1 : dv < 0 ? -1 : (b.v >= Vmax ? -1 : 1)
+    }
+    const startHop = (b, now) => {
+      b.fromU = b.u; b.fromV = b.v
+      let nu = b.u + b.du, nv = b.v + b.dv, ou = 0, ov = 0
+      if (nu > Umax) ou = -2 * Umax; else if (nu < -Umax) ou = 2 * Umax
+      if (nv > Vmax) ov = -2 * Vmax; else if (nv < -Vmax) ov = 2 * Vmax
+      if (ou || ov) { b.fromU += ou; b.fromV += ov; nu += ou; nv += ov }
+      b.u = nu; b.v = nv; b.t0 = now; b.moving = true
+    }
+    const decideNext = (b, now) => {
+      if (!b.pinned) { nextDir(b); startHop(b, now); return }
+      if (b.target && !sameCell(b, b.target)) { dirToTarget(b); startHop(b, now) }
+    }
+    const collapseBurst = (b, now) => {
+      if (b.burst && !b.burst.collapsing) { b.burst.collapsing = true; b.burst.collapseStart = now }
+    }
+
+    const updateBall = (b, now) => {
+      if (b.moving) {
+        const p = Math.min(1, (now - b.t0) / HOP_MS)
+        b.h = Math.sin(p * Math.PI)
+        b.bx = cellX(b.fromU) + (cellX(b.u) - cellX(b.fromU)) * p
+        const gy = ground(b.fromU, b.fromV, now) + (ground(b.u, b.v, now) - ground(b.fromU, b.fromV, now)) * p
+        b.by = gy - b.h * BOUNCE
+        if (p >= 1) {
+          b.moving = false; b.restT0 = b.t0 + HOP_MS; b.bounceSign = 0
+          const hitTarget = b.pinned && sameCell(b, b.target)
+          trail.set(key(b.u, b.v), now)
+          if (hitTarget) { b.burst = { cx: cellX(b.u), cy: cellY(b.v), t0: now, peak: 0, collapsing: false }; b.target = null }
+          if (!b.pinned) decideNext(b, now)
+        }
+      } else {
+        const phase = (now - b.restT0) * Math.PI / HOP_MS
+        const sn = Math.sin(phase)
+        b.h = Math.abs(sn)
+        trail.set(key(b.u, b.v), now)
+        b.bx = cellX(b.u)
+        b.by = ground(b.u, b.v, now) - b.h * BOUNCE
+        const sg = sn >= 0 ? 1 : -1
+        if (sg !== b.bounceSign) {
+          b.bounceSign = sg
+          if (!b.pinned) decideNext(b, now)
+          else if (b.target && !sameCell(b, b.target)) { dirToTarget(b); startHop(b, now) }
+          else b.burst = { cx: cellX(b.u), cy: cellY(b.v), t0: now, peak: 0, collapsing: false }
+        }
       }
     }
 
-    const dirToTarget = () => {
-      const du = target.u - ball.u
-      const dv = target.v - ball.v
-      ball.du = du > 0 ? 1 : du < 0 ? -1 : (ball.u >= Umax ? -1 : 1)
-      ball.dv = dv > 0 ? 1 : dv < 0 ? -1 : (ball.v >= Vmax ? -1 : 1)
-    }
-
-    const startHop = (now) => {
-      ball.fromU = ball.u
-      ball.fromV = ball.v
-      let nu = ball.u + ball.du
-      let nv = ball.v + ball.dv
-      let ou = 0, ov = 0
-      if (nu > Umax) ou = -2 * Umax; else if (nu < -Umax) ou = 2 * Umax
-      if (nv > Vmax) ov = -2 * Vmax; else if (nv < -Vmax) ov = 2 * Vmax
-      if (ou || ov) { ball.fromU += ou; ball.fromV += ov; nu += ou; nv += ov }
-      ball.u = nu; ball.v = nv
-      ball.t0 = now
-      ball.moving = true
-    }
-
-    const decideNext = (now) => {
-      if (!pinned) { nextDir(); startHop(now); return }
-      if (target && !sameCell(ball, target)) { dirToTarget(); startHop(now) }
-    }
-
-    const collapseBurst = (now) => {
-      if (burst && !burst.collapsing) { burst.collapsing = true; burst.collapseStart = now }
-    }
-
-    const drawBurst = (now) => {
+    const drawBurst = (b, now) => {
+      const bu = b.burst
       let cx, cy, spread, alpha
-      if (burst.collapsing) {
-        const c = (now - burst.collapseStart) / COLLAPSE_MS
-        if (c >= 1) { burst = null; return }
-        cx = ball.bx; cy = ball.by
-        spread = BURST_R * (burst.peak || 1) * (1 - c)
+      if (bu.collapsing) {
+        const c = (now - bu.collapseStart) / COLLAPSE_MS
+        if (c >= 1) { b.burst = null; return }
+        cx = b.bx; cy = b.by
+        spread = BURST_R * (bu.peak || 1) * (1 - c)
         alpha = (1 - c) * 0.85
       } else {
-        const p = (now - burst.t0) / BURST_MS
-        if (p >= 1) { burst = null; return }
-        burst.peak = p
-        cx = burst.cx; cy = burst.cy
+        const p = (now - bu.t0) / BURST_MS
+        if (p >= 1) { b.burst = null; return }
+        bu.peak = p; cx = bu.cx; cy = bu.cy
         spread = BURST_R * p
         alpha = (1 - p) * 0.9
       }
       ctx.save()
-      ctx.strokeStyle = colAccent
-      ctx.lineWidth = 2
-      ctx.lineCap = 'round'
-      ctx.globalAlpha = alpha
+      ctx.strokeStyle = colAccent; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.globalAlpha = alpha
       for (let i = 0; i < RAYS; i++) {
         const a = (i / RAYS) * Math.PI * 2
         const dx = Math.cos(a), dy = Math.sin(a) * 0.55
-        const inner = spread * 0.42, outer = spread
         ctx.beginPath()
-        ctx.moveTo(cx + dx * inner, cy + dy * inner)
-        ctx.lineTo(cx + dx * outer, cy + dy * outer)
+        ctx.moveTo(cx + dx * spread * 0.42, cy + dy * spread * 0.42)
+        ctx.lineTo(cx + dx * spread, cy + dy * spread)
         ctx.stroke()
       }
+      ctx.restore()
+    }
+
+    const drawBall = (b) => {
+      const sx = 1.28 - 0.38 * b.h
+      const sy = 0.72 + 0.40 * b.h
+      ctx.save()
+      ctx.shadowColor = colAccent
+      ctx.shadowBlur = b.pinned ? 34 : 12
+      if (b.pinned) {
+        ctx.globalAlpha = 0.22; ctx.fillStyle = colAccent
+        ctx.beginPath(); ctx.arc(b.bx, b.by, 15, 0, Math.PI * 2); ctx.fill()
+        ctx.globalAlpha = 1
+      }
+      ctx.fillStyle = colBall
+      ctx.beginPath(); ctx.ellipse(b.bx, b.by, 7 * sx, 7 * sy, 0, 0, Math.PI * 2); ctx.fill()
       ctx.restore()
     }
 
     const draw = () => {
       const now = clock()
+
+      // 1) actualizar estado de cada bola
+      for (const b of balls) updateBall(b, now)
+
+      // 2) render
       ctx.clearRect(0, 0, W, H)
       ctx.drawImage(grid, 0, 0, W, H)
 
-      // glow suave en la celda bajo el cursor
       if (hover) fillCell(hover.u, hover.v, 0.16)
 
-      // rastro con fade
+      // rastro (tiles elevados)
       for (const [k, tt] of trail) {
         const a = 1 - (now - tt) / TRAIL_MS
         if (a <= 0) { trail.delete(k); continue }
         const [u, v] = k.split(',').map(Number)
-        fillCell(u, v, a * 0.55)
+        fillRaised(u, v, a * 0.55, TILE_LIFT * a)
       }
 
-      // target activo fijo al 100 %
-      if (pinned && target) fillCell(target.u, target.v, 1)
-
-      // ondas (ripples) del click — anillo brillante que viaja y se disipa
+      // ondas del click
       drawRipples(now)
 
-      if (ball.moving) {
-        const p = Math.min(1, (now - ball.t0) / HOP_MS)
-        ball.h = Math.sin(p * Math.PI)
-        ball.bx = cellX(ball.fromU) + (cellX(ball.u) - cellX(ball.fromU)) * p
-        ball.by = cellY(ball.fromV) + (cellY(ball.v) - cellY(ball.fromV)) * p - ball.h * BOUNCE
-        if (p >= 1) {
-          ball.moving = false
-          ball.restT0 = ball.t0 + HOP_MS
-          bounceSign = 0
-          const hitTarget = pinned && sameCell(ball, target)
-          trail.set(key(ball.u, ball.v), now)
-          if (hitTarget) { burst = { cx: cellX(ball.u), cy: cellY(ball.v), t0: now, peak: 0, collapsing: false }; target = null }
-          if (!pinned) decideNext(now)
-        }
-      } else {
-        const phase = (now - ball.restT0) * Math.PI / HOP_MS
-        const sn = Math.sin(phase)
-        ball.h = Math.abs(sn)
-        ball.bx = cellX(ball.u)
-        ball.by = cellY(ball.v) - ball.h * BOUNCE
-        trail.set(key(ball.u, ball.v), now)
-        const sg = sn >= 0 ? 1 : -1
-        if (sg !== bounceSign) {
-          bounceSign = sg
-          if (!pinned) decideNext(now)
-          else if (target && !sameCell(ball, target)) { dirToTarget(); startHop(now) }
-          else burst = { cx: cellX(ball.u), cy: cellY(ball.v), t0: now, peak: 0, collapsing: false }
-        }
-      }
+      // tiles destino (fijos al 100 %, elevados)
+      for (const b of balls) if (b.pinned && b.target) fillRaised(b.target.u, b.target.v, 1, TARGET_LIFT)
 
-      if (burst) drawBurst(now)
+      // bursts
+      for (const b of balls) if (b.burst) drawBurst(b, now)
 
-      // pulso del hint alrededor de la bola
+      // pulso del hint alrededor de cada bola
       if (hintRef.current) {
         const hp = (now % 1500) / 1500
         ctx.save()
-        ctx.strokeStyle = colAccent
-        ctx.globalAlpha = (1 - hp) * 0.7
-        ctx.lineWidth = 2
-        ctx.beginPath()
-        ctx.arc(ball.bx, ball.by, 9 + hp * 20, 0, Math.PI * 2)
-        ctx.stroke()
+        ctx.strokeStyle = colAccent; ctx.globalAlpha = (1 - hp) * 0.6; ctx.lineWidth = 2
+        for (const b of balls) { ctx.beginPath(); ctx.arc(b.bx, b.by, 9 + hp * 20, 0, Math.PI * 2); ctx.stroke() }
         ctx.restore()
       }
 
-      // bola con squash & stretch + glow
-      const sx = 1.28 - 0.38 * ball.h
-      const sy = 0.72 + 0.40 * ball.h
-      ctx.save()
-      ctx.shadowColor = colAccent
-      ctx.shadowBlur = pinned ? 34 : 12
-      if (pinned) {
-        ctx.globalAlpha = 0.22
-        ctx.fillStyle = colAccent
-        ctx.beginPath()
-        ctx.arc(ball.bx, ball.by, 15, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.globalAlpha = 1
-      }
-      ctx.fillStyle = colBall
-      ctx.beginPath()
-      ctx.ellipse(ball.bx, ball.by, 7 * sx, 7 * sy, 0, 0, Math.PI * 2)
-      ctx.fill()
-      ctx.restore()
+      // bolas
+      for (const b of balls) drawBall(b)
 
       raf = requestAnimationFrame(draw)
     }
@@ -395,8 +400,7 @@ export default function IsoGrid() {
     }
 
     const pickCell = (mx, my) => {
-      const uf = (mx - originX) / cw2
-      const vf = (my - originY) / ch2
+      const uf = (mx - originX) / cw2, vf = (my - originY) / ch2
       let u = Math.round(uf), v = Math.round(vf)
       if ((u + v) & 1) {
         if (Math.abs(uf - u) > Math.abs(vf - v)) u += uf > u ? 1 : -1
@@ -408,21 +412,34 @@ export default function IsoGrid() {
     const onPointerDown = (e) => {
       if (hintRef.current) dismissRef.current()
       const rect = canvas.getBoundingClientRect()
-      const mx = e.clientX - rect.left
-      const my = e.clientY - rect.top
+      const mx = e.clientX - rect.left, my = e.clientY - rect.top
       const now = clock()
-      if (Math.hypot(mx - ball.bx, my - ball.by) < HIT_R) {
-        if (pinned) { pinned = false; if (target) { trail.set(key(target.u, target.v), now); target = null } collapseBurst(now) }
-        else { pinned = true; target = null }
+
+      // ¿tocó alguna bola? (la más cercana dentro del radio)
+      let hit = null, hd = HIT_R
+      for (const b of balls) {
+        const d = Math.hypot(mx - b.bx, my - b.by)
+        if (d < hd) { hd = d; hit = b }
+      }
+      if (hit) {
+        if (hit.pinned) {
+          hit.pinned = false
+          if (hit.target) { trail.set(key(hit.target.u, hit.target.v), now); hit.target = null }
+          collapseBurst(hit, now)
+        } else { hit.pinned = true; hit.target = null }
         return
       }
+
       const cell = pickCell(mx, my)
-      if (pinned) {
-        if (target && !sameCell(target, cell)) trail.set(key(target.u, target.v), now)
-        target = cell
-        collapseBurst(now)
+      const pinnedBalls = balls.filter(b => b.pinned)
+      if (pinnedBalls.length) {
+        for (const b of pinnedBalls) {
+          if (b.target && !sameCell(b.target, cell)) trail.set(key(b.target.u, b.target.v), now)
+          b.target = { u: cell.u, v: cell.v }
+          collapseBurst(b, now)
+        }
       } else {
-        spawnRipple(cell.u, cell.v, now)   // onda expansiva desde la celda tocada
+        spawnRipple(cell.u, cell.v, now)
       }
     }
 
@@ -434,15 +451,18 @@ export default function IsoGrid() {
 
     /* init */
     resize()
-    ball.u = 0
-    ball.v = Vmax - 2
-    if ((ball.u + ball.v) & 1) ball.v -= 1
-    ball.fromU = ball.u; ball.fromV = ball.v
-    ball.du = 1; ball.dv = -1
-    ball.moving = false
-    ball.restT0 = clock()
-    bounceSign = 0
-    ball.bx = cellX(ball.u); ball.by = cellY(ball.v)
+    const spawns = [
+      { u: -Math.round(Umax * 0.30), v: -Math.round(Vmax * 0.14), du: 1, dv: 1 },
+      { u: Math.round(Umax * 0.16), v: Math.round(Vmax * 0.24), du: -1, dv: 1 },
+      { u: Math.round(Umax * 0.04), v: -Math.round(Vmax * 0.30), du: 1, dv: -1 },
+    ]
+    for (const s of spawns) {
+      let { u, v } = s
+      if ((u + v) & 1) v += 1
+      const b = makeBall(u, v, s.du, s.dv)
+      b.restT0 = clock(); b.bx = cellX(u); b.by = cellY(v)
+      balls.push(b)
+    }
 
     const onResize = () => resize()
     window.addEventListener('resize', onResize)
@@ -455,7 +475,6 @@ export default function IsoGrid() {
     const themeObs = new MutationObserver(() => { readColors(); buildGrid() })
     themeObs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 
-    // Pausa fuera del viewport / con la pestaña oculta
     let inView = true
     const decide = () => { if (inView && !document.hidden) start(); else stop() }
     const io = new IntersectionObserver((entries) => { inView = entries[0].isIntersecting; decide() }, { threshold: 0 })
@@ -466,9 +485,7 @@ export default function IsoGrid() {
       ctx.clearRect(0, 0, W, H)
       ctx.drawImage(grid, 0, 0, W, H)
       ctx.fillStyle = colBall
-      ctx.beginPath()
-      ctx.arc(cellX(ball.u), cellY(ball.v), 7, 0, Math.PI * 2)
-      ctx.fill()
+      for (const b of balls) { ctx.beginPath(); ctx.arc(cellX(b.u), cellY(b.v), 7, 0, Math.PI * 2); ctx.fill() }
     } else {
       start()
     }
