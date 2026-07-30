@@ -66,7 +66,10 @@ const RIPPLE_MAX = 5
 const TILE_LIFT = 9      // elevación del tile del rastro/bola
 const RIPPLE_LIFT = 13   // elevación del frente de la onda
 const TARGET_LIFT = 11   // elevación del tile destino
-const EDGE_BIAS = 0.5    // a partir de qué fracción del borde la bola vuelve al centro
+const EDGE_BIAS = 0.5    // los objetivos se ubican dentro de esta zona central (visible)
+const GOAL_MIN_DIST = 6  // distancia mínima (celdas) al elegir un nuevo objetivo
+const HOLD_MS = 700      // celebración al alcanzar el objetivo antes de ir al siguiente
+const ACH_MS = 550       // duración del ✓ de "objetivo cumplido"
 
 export default function IsoGrid() {
   const canvasRef = useRef(null)
@@ -107,11 +110,13 @@ export default function IsoGrid() {
     const gctx = grid.getContext('2d')
     const trail = new Map()
     const ripples = []
+    const flashes = []
     let hover = null
 
     const makeBall = (u, v, du, dv) => ({
       u, v, fromU: u, fromV: v, t0: 0, restT0: 0, du, dv, moving: false,
       bx: 0, by: 0, h: 0, pinned: false, target: null, bounceSign: 0, burst: null,
+      goal: null, holdUntil: 0,
     })
     const balls = []
 
@@ -235,19 +240,28 @@ export default function IsoGrid() {
     }
 
     /* ── Lógica de una bola ── */
-    const nextDir = (b) => {
-      let biased = false
-      if (Math.abs(b.u) > Umax * EDGE_BIAS && Math.random() < 0.7) { b.du = b.u > 0 ? -1 : 1; biased = true }
-      if (Math.abs(b.v) > Vmax * EDGE_BIAS && Math.random() < 0.7) { b.dv = b.v > 0 ? -1 : 1; biased = true }
-      if (!biased && Math.random() < 0.28) {
-        if (Math.random() < 0.5) b.du = -b.du
-        else b.dv = -b.dv
-      }
-    }
-    const dirToTarget = (b) => {
-      const du = b.target.u - b.u, dv = b.target.v - b.v
+    const dirToward = (b, cell) => {
+      const du = cell.u - b.u, dv = cell.v - b.v
       b.du = du > 0 ? 1 : du < 0 ? -1 : (b.u >= Umax ? -1 : 1)
       b.dv = dv > 0 ? 1 : dv < 0 ? -1 : (b.v >= Vmax ? -1 : 1)
+    }
+    /* Elige un objetivo dentro de la zona central visible, a cierta distancia */
+    const pickGoal = (b) => {
+      const uC = Math.max(2, Math.floor(Umax * EDGE_BIAS))
+      const vC = Math.max(2, Math.floor(Vmax * EDGE_BIAS))
+      let gu = b.u, gv = b.v
+      for (let k = 0; k < 14; k++) {
+        gu = Math.round((Math.random() * 2 - 1) * uC)
+        gv = Math.round((Math.random() * 2 - 1) * vC)
+        if ((gu + gv) & 1) gv += gv < vC ? 1 : -1
+        if (Math.max(Math.abs(gu - b.u), Math.abs(gv - b.v)) >= GOAL_MIN_DIST) break
+      }
+      b.goal = { u: gu, v: gv }
+    }
+    /* Objetivo alcanzado → celebración: sunburst + ✓ */
+    const achieve = (b, now) => {
+      b.burst = { cx: cellX(b.u), cy: cellY(b.v), t0: now, peak: 0, collapsing: false }
+      flashes.push({ cx: cellX(b.u), cy: cellY(b.v) - TILE_LIFT, t0: now })
     }
     const startHop = (b, now) => {
       b.fromU = b.u; b.fromV = b.v
@@ -258,8 +272,13 @@ export default function IsoGrid() {
       b.u = nu; b.v = nv; b.t0 = now; b.moving = true
     }
     const decideNext = (b, now) => {
-      if (!b.pinned) { nextDir(b); startHop(b, now); return }
-      if (b.target && !sameCell(b, b.target)) { dirToTarget(b); startHop(b, now) }
+      if (b.pinned) {
+        if (b.target && !sameCell(b, b.target)) { dirToward(b, b.target); startHop(b, now) }
+        return
+      }
+      if (!b.goal) pickGoal(b)          // autónomo: siempre persigue un objetivo
+      dirToward(b, b.goal)
+      startHop(b, now)
     }
     const collapseBurst = (b, now) => {
       if (b.burst && !b.burst.collapsing) { b.burst.collapsing = true; b.burst.collapseStart = now }
@@ -274,10 +293,14 @@ export default function IsoGrid() {
         b.by = gy - b.h * BOUNCE
         if (p >= 1) {
           b.moving = false; b.restT0 = b.t0 + HOP_MS; b.bounceSign = 0
-          const hitTarget = b.pinned && sameCell(b, b.target)
           trail.set(key(b.u, b.v), now)
-          if (hitTarget) { b.burst = { cx: cellX(b.u), cy: cellY(b.v), t0: now, peak: 0, collapsing: false }; b.target = null }
-          if (!b.pinned) decideNext(b, now)
+          if (b.pinned) {
+            if (sameCell(b, b.target)) { achieve(b, now); b.target = null }
+          } else if (b.goal && sameCell(b, b.goal)) {
+            achieve(b, now); b.goal = null; b.holdUntil = now + HOLD_MS   // ¡objetivo alcanzado! celebra
+          } else {
+            decideNext(b, now)                                            // sigue hacia el objetivo
+          }
         }
       } else {
         const phase = (now - b.restT0) * Math.PI / HOP_MS
@@ -289,9 +312,13 @@ export default function IsoGrid() {
         const sg = sn >= 0 ? 1 : -1
         if (sg !== b.bounceSign) {
           b.bounceSign = sg
-          if (!b.pinned) decideNext(b, now)
-          else if (b.target && !sameCell(b, b.target)) { dirToTarget(b); startHop(b, now) }
-          else b.burst = { cx: cellX(b.u), cy: cellY(b.v), t0: now, peak: 0, collapsing: false }
+          if (b.pinned) {
+            if (b.target && !sameCell(b, b.target)) { dirToward(b, b.target); startHop(b, now) }
+            else b.burst = { cx: cellX(b.u), cy: cellY(b.v), t0: now, peak: 0, collapsing: false }
+          } else if (now >= b.holdUntil) {
+            decideNext(b, now)   // terminó de celebrar → siguiente objetivo
+          }
+          // autónomo en celebración (hold): sigue rebotando en el sitio
         }
       }
     }
@@ -323,6 +350,43 @@ export default function IsoGrid() {
         ctx.stroke()
       }
       ctx.restore()
+    }
+
+    /* Beacon del objetivo: reticle pulsante isométrico */
+    const drawGoal = (g, now) => {
+      const x = cellX(g.u), y = cellY(g.v) - 5
+      const pr = (now % 1400) / 1400
+      ctx.save()
+      ctx.strokeStyle = colAccent
+      ctx.lineWidth = 1.5
+      ctx.globalAlpha = 0.28 + (1 - pr) * 0.4
+      const rx = 7 + pr * 7
+      ctx.beginPath(); ctx.ellipse(x, y, rx, rx * 0.5, 0, 0, Math.PI * 2); ctx.stroke()
+      ctx.globalAlpha = 0.7
+      ctx.fillStyle = colAccent
+      ctx.beginPath(); ctx.ellipse(x, y, 2.4, 1.3, 0, 0, Math.PI * 2); ctx.fill()
+      ctx.restore()
+    }
+
+    /* ✓ de "objetivo cumplido" (aparece al alcanzar y se desvanece) */
+    const drawFlashes = (now) => {
+      for (let i = flashes.length - 1; i >= 0; i--) {
+        const f = flashes[i]
+        const p = (now - f.t0) / ACH_MS
+        if (p >= 1) { flashes.splice(i, 1); continue }
+        const s = 0.6 + p * 0.7
+        ctx.save()
+        ctx.strokeStyle = colAccent
+        ctx.lineWidth = 2.4
+        ctx.lineCap = 'round'; ctx.lineJoin = 'round'
+        ctx.globalAlpha = 1 - p
+        ctx.beginPath()
+        ctx.moveTo(f.cx - 5 * s, f.cy)
+        ctx.lineTo(f.cx - 1.5 * s, f.cy + 4 * s)
+        ctx.lineTo(f.cx + 6 * s, f.cy - 5 * s)
+        ctx.stroke()
+        ctx.restore()
+      }
     }
 
     const drawBall = (b) => {
@@ -364,11 +428,15 @@ export default function IsoGrid() {
       // ondas del click
       drawRipples(now)
 
-      // tiles destino (fijos al 100 %, elevados)
+      // objetivos autónomos (beacon)
+      for (const b of balls) if (!b.pinned && b.goal) drawGoal(b.goal, now)
+
+      // tiles destino del usuario (fijos al 100 %, elevados)
       for (const b of balls) if (b.pinned && b.target) fillRaised(b.target.u, b.target.v, 1, TARGET_LIFT)
 
-      // bursts
+      // bursts + ✓ de logro
       for (const b of balls) if (b.burst) drawBurst(b, now)
+      drawFlashes(now)
 
       // pulso del hint alrededor de cada bola
       if (hintRef.current) {
