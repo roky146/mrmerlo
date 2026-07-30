@@ -68,8 +68,11 @@ const RIPPLE_LIFT = 13   // elevación del frente de la onda
 const TARGET_LIFT = 11   // elevación del tile destino
 const EDGE_BIAS = 0.5    // los objetivos se ubican dentro de esta zona central (visible)
 const GOAL_MIN_DIST = 6  // distancia mínima (celdas) al elegir un nuevo objetivo
-const HOLD_MS = 700      // celebración al alcanzar el objetivo antes de ir al siguiente
-const ACH_MS = 550       // duración del ✓ de "objetivo cumplido"
+const HOLD_MS = 950      // celebración al alcanzar el objetivo antes de ir al siguiente
+const ACH_MS = 850       // duración del badge ✓ de "objetivo cumplido"
+const PIN_R = 8          // radio de la cabeza del pin
+const PIN_H = 22         // altura del pin (punta → centro de la cabeza)
+const SPARKS = 10        // partículas de celebración
 
 export default function IsoGrid() {
   const canvasRef = useRef(null)
@@ -104,13 +107,14 @@ export default function IsoGrid() {
 
     let W = 0, H = 0, dpr = 1
     let originX = 0, originY = 0, Umax = 0, Vmax = 0
-    let colAccent = '#A8E6C1', colBorder = '#D0E8DA', colBall = '#1A1A1A'
+    let colAccent = '#A8E6C1', colBorder = '#D0E8DA', colBall = '#1A1A1A', colBg = '#0D1A12'
 
     const grid = document.createElement('canvas')
     const gctx = grid.getContext('2d')
     const trail = new Map()
     const ripples = []
     const flashes = []
+    const sparks = []
     let hover = null
 
     const makeBall = (u, v, du, dv) => ({
@@ -134,6 +138,7 @@ export default function IsoGrid() {
       colAccent = (s.getPropertyValue('--accent') || '#A8E6C1').trim()
       colBorder = (s.getPropertyValue('--border') || '#D0E8DA').trim()
       colBall = (s.getPropertyValue('--text-primary') || '#1A1A1A').trim()
+      colBg = (s.getPropertyValue('--bg') || '#0D1A12').trim()
     }
 
     const diamondPath = (c, x, y) => {
@@ -258,10 +263,19 @@ export default function IsoGrid() {
       }
       b.goal = { u: gu, v: gv }
     }
-    /* Objetivo alcanzado → celebración: sunburst + ✓ */
+    /* Chispas de celebración (salen hacia arriba y caen) */
+    const spawnSparks = (x, y, now) => {
+      for (let i = 0; i < SPARKS; i++) {
+        const a = -Math.PI / 2 + (Math.random() - 0.5) * 2.2
+        const sp = 130 + Math.random() * 120
+        sparks.push({ x0: x, y0: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, t0: now, life: 560 + Math.random() * 320 })
+      }
+    }
+    /* Objetivo alcanzado → badge ✓ sobre la bola + chispas */
     const achieve = (b, now) => {
-      b.burst = { cx: cellX(b.u), cy: cellY(b.v), t0: now, peak: 0, collapsing: false }
-      flashes.push({ cx: cellX(b.u), cy: cellY(b.v) - TILE_LIFT, t0: now })
+      const x = cellX(b.u), y = cellY(b.v) - TILE_LIFT
+      flashes.push({ cx: x, cy: y - 26, t0: now })
+      spawnSparks(x, y, now)
     }
     const startHop = (b, now) => {
       b.fromU = b.u; b.fromV = b.v
@@ -303,12 +317,15 @@ export default function IsoGrid() {
           }
         }
       } else {
-        const phase = (now - b.restT0) * Math.PI / HOP_MS
+        const celebrating = !b.pinned && now < b.holdUntil       // salto de celebración (más alto/rápido)
+        const freq = celebrating ? 1.9 : 1
+        const amp = celebrating ? BOUNCE * 1.7 : BOUNCE
+        const phase = (now - b.restT0) * Math.PI / HOP_MS * freq
         const sn = Math.sin(phase)
         b.h = Math.abs(sn)
         trail.set(key(b.u, b.v), now)
         b.bx = cellX(b.u)
-        b.by = ground(b.u, b.v, now) - b.h * BOUNCE
+        b.by = ground(b.u, b.v, now) - b.h * amp
         const sg = sn >= 0 ? 1 : -1
         if (sg !== b.bounceSign) {
           b.bounceSign = sg
@@ -352,41 +369,86 @@ export default function IsoGrid() {
       ctx.restore()
     }
 
-    /* Beacon del objetivo: reticle pulsante isométrico */
-    const drawGoal = (g, now) => {
-      const x = cellX(g.u), y = cellY(g.v) - 5
-      const pr = (now % 1400) / 1400
+    /* Objetivo = Pin (marcador de mapa) plantado en el cuadro, con flotación */
+    const drawPin = (g, now) => {
+      const x = cellX(g.u), y = cellY(g.v)
+      const bob = (Math.sin(now / 380) + 1) * 3          // 0..6 px de flotación
+      const tipY = y - 2 - bob
+      const hy = tipY - PIN_H                            // centro de la cabeza
+      // sombra en el suelo (se achica al flotar más alto)
       ctx.save()
-      ctx.strokeStyle = colAccent
-      ctx.lineWidth = 1.5
-      ctx.globalAlpha = 0.28 + (1 - pr) * 0.4
-      const rx = 7 + pr * 7
-      ctx.beginPath(); ctx.ellipse(x, y, rx, rx * 0.5, 0, 0, Math.PI * 2); ctx.stroke()
-      ctx.globalAlpha = 0.7
-      ctx.fillStyle = colAccent
-      ctx.beginPath(); ctx.ellipse(x, y, 2.4, 1.3, 0, 0, Math.PI * 2); ctx.fill()
+      ctx.globalAlpha = 0.16
+      ctx.fillStyle = colBall
+      ctx.beginPath(); ctx.ellipse(x, y + 1, 7 - bob * 0.5, 3, 0, 0, Math.PI * 2); ctx.fill()
       ctx.restore()
+      // cuerpo + cabeza (con glow)
+      ctx.save()
+      ctx.shadowColor = colAccent
+      ctx.shadowBlur = 12
+      ctx.fillStyle = colAccent
+      ctx.beginPath()
+      ctx.moveTo(x, tipY)
+      ctx.lineTo(x - PIN_R * 0.82, hy + PIN_R * 0.55)
+      ctx.lineTo(x + PIN_R * 0.82, hy + PIN_R * 0.55)
+      ctx.closePath(); ctx.fill()
+      ctx.beginPath(); ctx.arc(x, hy, PIN_R, 0, Math.PI * 2); ctx.fill()
+      ctx.restore()
+      // hueco interior (color de fondo)
+      ctx.fillStyle = colBg
+      ctx.beginPath(); ctx.arc(x, hy, PIN_R * 0.42, 0, Math.PI * 2); ctx.fill()
     }
 
-    /* ✓ de "objetivo cumplido" (aparece al alcanzar y se desvanece) */
+    /* Badge ✓ de "objetivo cumplido": pop (easeOutBack) + anillo de confirmación */
     const drawFlashes = (now) => {
+      const c1 = 1.70158, c3 = c1 + 1
       for (let i = flashes.length - 1; i >= 0; i--) {
         const f = flashes[i]
         const p = (now - f.t0) / ACH_MS
         if (p >= 1) { flashes.splice(i, 1); continue }
-        const s = 0.6 + p * 0.7
+        const bp = Math.min(1, p / 0.32)
+        const s = 1 + c3 * Math.pow(bp - 1, 3) + c1 * Math.pow(bp - 1, 2)   // easeOutBack
+        const alpha = p < 0.72 ? 1 : Math.max(0, 1 - (p - 0.72) / 0.28)
+        const R = 13 * s
         ctx.save()
+        // anillo de confirmación que se expande
+        const rp = Math.min(1, p / 0.55)
         ctx.strokeStyle = colAccent
-        ctx.lineWidth = 2.4
+        ctx.globalAlpha = (1 - rp) * 0.7
+        ctx.lineWidth = 2.5
+        ctx.beginPath(); ctx.arc(f.cx, f.cy, 12 + rp * 26, 0, Math.PI * 2); ctx.stroke()
+        // badge circular
+        ctx.globalAlpha = alpha
+        ctx.shadowColor = colAccent; ctx.shadowBlur = 14
+        ctx.fillStyle = colAccent
+        ctx.beginPath(); ctx.arc(f.cx, f.cy, R, 0, Math.PI * 2); ctx.fill()
+        ctx.shadowBlur = 0
+        // ✓ recortado (color de fondo)
+        ctx.strokeStyle = colBg
+        ctx.lineWidth = 3
         ctx.lineCap = 'round'; ctx.lineJoin = 'round'
-        ctx.globalAlpha = 1 - p
         ctx.beginPath()
-        ctx.moveTo(f.cx - 5 * s, f.cy)
+        ctx.moveTo(f.cx - 5 * s, f.cy + 0.5 * s)
         ctx.lineTo(f.cx - 1.5 * s, f.cy + 4 * s)
-        ctx.lineTo(f.cx + 6 * s, f.cy - 5 * s)
+        ctx.lineTo(f.cx + 6 * s, f.cy - 4.5 * s)
         ctx.stroke()
         ctx.restore()
       }
+    }
+
+    /* Chispas de celebración (gravedad + fade) */
+    const drawSparks = (now) => {
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const sk = sparks[i]
+        const age = now - sk.t0
+        if (age >= sk.life) { sparks.splice(i, 1); continue }
+        const tt = age / 1000
+        const x = sk.x0 + sk.vx * tt
+        const y = sk.y0 + sk.vy * tt + 340 * tt * tt
+        ctx.globalAlpha = (1 - age / sk.life) * 0.9
+        ctx.fillStyle = colAccent
+        ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI * 2); ctx.fill()
+      }
+      ctx.globalAlpha = 1
     }
 
     const drawBall = (b) => {
@@ -428,15 +490,17 @@ export default function IsoGrid() {
       // ondas del click
       drawRipples(now)
 
-      // objetivos autónomos (beacon)
-      for (const b of balls) if (!b.pinned && b.goal) drawGoal(b.goal, now)
+      // objetivo (pin) del recorrido autónomo
+      for (const b of balls) if (!b.pinned && b.goal) drawPin(b.goal, now)
 
       // tiles destino del usuario (fijos al 100 %, elevados)
       for (const b of balls) if (b.pinned && b.target) fillRaised(b.target.u, b.target.v, 1, TARGET_LIFT)
 
-      // bursts + ✓ de logro
+      // sunburst del pulso (bola fija en su sitio, sin destino)
       for (const b of balls) if (b.burst) drawBurst(b, now)
-      drawFlashes(now)
+
+      // chispas de celebración
+      drawSparks(now)
 
       // pulso del hint alrededor de cada bola
       if (hintRef.current) {
@@ -449,6 +513,9 @@ export default function IsoGrid() {
 
       // bolas
       for (const b of balls) drawBall(b)
+
+      // badge ✓ de "objetivo cumplido" (encima de todo)
+      drawFlashes(now)
 
       raf = requestAnimationFrame(draw)
     }
