@@ -520,9 +520,7 @@ export default function IsoGrid() {
     /* init */
     resize()
     const spawns = [
-      { u: -Math.round(Umax * 0.30), v: -Math.round(Vmax * 0.14), du: 1, dv: 1 },
-      { u: Math.round(Umax * 0.16), v: Math.round(Vmax * 0.24), du: -1, dv: 1 },
-      { u: Math.round(Umax * 0.04), v: -Math.round(Vmax * 0.30), du: 1, dv: -1 },
+      { u: -Math.round(Umax * 0.10), v: -Math.round(Vmax * 0.10), du: 1, dv: 1 },
     ]
     for (const s of spawns) {
       let { u, v } = s
