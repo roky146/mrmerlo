@@ -68,8 +68,8 @@ const RIPPLE_LIFT = 13   // elevación del frente de la onda
 const TARGET_LIFT = 11   // elevación del tile destino
 const EDGE_BIAS = 0.5    // los objetivos se ubican dentro de esta zona central (visible)
 const GOAL_MIN_DIST = 6  // distancia mínima (celdas) al elegir un nuevo objetivo
-const HOLD_MS = 950      // celebración al alcanzar el objetivo antes de ir al siguiente
 const ACH_MS = 850       // duración del badge ✓ de "objetivo cumplido"
+const LEAP_AMP = 1.7     // multiplicador del "brinco" alto al alcanzar un objetivo
 const PIN_R = 8          // radio de la cabeza del pin
 const PIN_H = 22         // altura del pin (punta → centro de la cabeza)
 const SPARKS = 10        // partículas de celebración
@@ -120,7 +120,7 @@ export default function IsoGrid() {
     const makeBall = (u, v, du, dv) => ({
       u, v, fromU: u, fromV: v, t0: 0, restT0: 0, du, dv, moving: false,
       bx: 0, by: 0, h: 0, pinned: false, target: null, bounceSign: 0, burst: null,
-      goal: null, holdUntil: 0,
+      goal: null, leap: false, hopAmp: BOUNCE,
     })
     const balls = []
 
@@ -284,6 +284,8 @@ export default function IsoGrid() {
       if (nv > Vmax) ov = -2 * Vmax; else if (nv < -Vmax) ov = 2 * Vmax
       if (ou || ov) { b.fromU += ou; b.fromV += ov; nu += ou; nv += ov }
       b.u = nu; b.v = nv; b.t0 = now; b.moving = true
+      b.hopAmp = b.leap ? BOUNCE * LEAP_AMP : BOUNCE   // un único salto alto tras un logro
+      b.leap = false
     }
     const decideNext = (b, now) => {
       if (b.pinned) {
@@ -304,38 +306,33 @@ export default function IsoGrid() {
         b.h = Math.sin(p * Math.PI)
         b.bx = cellX(b.fromU) + (cellX(b.u) - cellX(b.fromU)) * p
         const gy = ground(b.fromU, b.fromV, now) + (ground(b.u, b.v, now) - ground(b.fromU, b.fromV, now)) * p
-        b.by = gy - b.h * BOUNCE
+        b.by = gy - b.h * b.hopAmp
         if (p >= 1) {
           b.moving = false; b.restT0 = b.t0 + HOP_MS; b.bounceSign = 0
           trail.set(key(b.u, b.v), now)
           if (b.pinned) {
             if (sameCell(b, b.target)) { achieve(b, now); b.target = null }
-          } else if (b.goal && sameCell(b, b.goal)) {
-            achieve(b, now); b.goal = null; b.holdUntil = now + HOLD_MS   // ¡objetivo alcanzado! celebra
           } else {
-            decideNext(b, now)                                            // sigue hacia el objetivo
+            if (b.goal && sameCell(b, b.goal)) { achieve(b, now); b.goal = null; b.leap = true }  // ¡logrado! brinco alto al salir
+            decideNext(b, now)                                                                    // va al siguiente objetivo
           }
         }
       } else {
-        const celebrating = !b.pinned && now < b.holdUntil       // salto de celebración (más alto/rápido)
-        const freq = celebrating ? 1.9 : 1
-        const amp = celebrating ? BOUNCE * 1.7 : BOUNCE
-        const phase = (now - b.restT0) * Math.PI / HOP_MS * freq
+        const phase = (now - b.restT0) * Math.PI / HOP_MS
         const sn = Math.sin(phase)
         b.h = Math.abs(sn)
         trail.set(key(b.u, b.v), now)
         b.bx = cellX(b.u)
-        b.by = ground(b.u, b.v, now) - b.h * amp
+        b.by = ground(b.u, b.v, now) - b.h * BOUNCE
         const sg = sn >= 0 ? 1 : -1
         if (sg !== b.bounceSign) {
           b.bounceSign = sg
           if (b.pinned) {
             if (b.target && !sameCell(b, b.target)) { dirToward(b, b.target); startHop(b, now) }
             else b.burst = { cx: cellX(b.u), cy: cellY(b.v), t0: now, peak: 0, collapsing: false }
-          } else if (now >= b.holdUntil) {
-            decideNext(b, now)   // terminó de celebrar → siguiente objetivo
+          } else {
+            decideNext(b, now)   // autónomo no debe quedar en reposo
           }
-          // autónomo en celebración (hold): sigue rebotando en el sitio
         }
       }
     }
@@ -490,11 +487,11 @@ export default function IsoGrid() {
       // ondas del click
       drawRipples(now)
 
-      // objetivo (pin) del recorrido autónomo
-      for (const b of balls) if (!b.pinned && b.goal) drawPin(b.goal, now)
-
-      // tiles destino del usuario (fijos al 100 %, elevados)
-      for (const b of balls) if (b.pinned && b.target) fillRaised(b.target.u, b.target.v, 1, TARGET_LIFT)
+      // pin de destino: objetivo autónomo (b.goal) o el cuadro elegido por el usuario (b.target)
+      for (const b of balls) {
+        const dest = b.pinned ? b.target : b.goal
+        if (dest) drawPin(dest, now)
+      }
 
       // sunburst del pulso (bola fija en su sitio, sin destino)
       for (const b of balls) if (b.burst) drawBurst(b, now)
