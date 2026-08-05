@@ -55,10 +55,11 @@ const ProjectInfo = styled.div`
   }
 `
 
-const ProjectNumber = styled.span`
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  color: var(--text-secondary);
+const ProjectKind = styled.span`
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-dim);
   display: block;
   margin-bottom: 1rem;
 `
@@ -146,7 +147,7 @@ export default function FeaturedProjects() {
         return (
           <ProjectBlock as="article" key={project.id} className={idx % 2 === 1 ? 'reversed' : ''}>
             <ProjectInfo>
-              <ProjectNumber>0{idx + 1}</ProjectNumber>
+              <ProjectKind>{project.kind}</ProjectKind>
               <ProjectTitle
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -26,107 +26,6 @@ const HeroSection = styled.section`
     align-items: center;
     text-align: center;
   }
-`
-
-/* ── Orb keyframes ──────────────────────────────────────────── */
-const float1 = keyframes`
-  0%,100% { transform: translate(0px,   0px)   scale(1);    }
-  30%      { transform: translate(-28px, 40px)  scale(1.06); }
-  60%      { transform: translate(20px, -25px)  scale(0.94); }
-`
-const float2 = keyframes`
-  0%,100% { transform: translate(0px,  0px)   scale(1);    }
-  35%     { transform: translate(35px, -30px)  scale(1.08); }
-  70%     { transform: translate(-18px, 22px)  scale(0.96); }
-`
-const float3 = keyframes`
-  0%,100% { transform: translate(0px,  0px)   scale(1);    }
-  40%     { transform: translate(-22px, 28px)  scale(1.04); }
-  75%     { transform: translate(14px, -18px)  scale(0.97); }
-`
-
-const OrbsLayer = styled.div`
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
-  /* Mismo fundido inferior que la grilla: el verde de los orbs también
-     desaparece por completo en el borde inferior del hero. */
-  -webkit-mask-image: linear-gradient(to bottom, #000 85%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 85%, transparent 100%);
-`
-
-const OrbBase = styled.div`
-  position: absolute;
-  border-radius: 50%;
-  will-change: transform;
-`
-
-const Orb1 = styled(OrbBase)`
-  width:  clamp(320px, 42vw, 620px);
-  height: clamp(320px, 42vw, 620px);
-  background: radial-gradient(circle, var(--accent) 0%, transparent 68%);
-  opacity: 0.35;
-  right: -8%;
-  bottom: 5%;
-  filter: blur(90px);
-  animation: ${float1} 20s ease-in-out infinite;
-
-  @media (max-width: 768px) {
-    filter: blur(50px);
-    opacity: 0.18;
-  }
-`
-
-const Orb2 = styled(OrbBase)`
-  width:  clamp(220px, 32vw, 480px);
-  height: clamp(220px, 32vw, 480px);
-  background: radial-gradient(circle, var(--accent-dim) 0%, transparent 68%);
-  opacity: 0.22;
-  left: 38%;
-  top: -8%;
-  filter: blur(90px);
-  animation: ${float2} 26s ease-in-out infinite;
-
-  @media (max-width: 768px) {
-    filter: blur(50px);
-    opacity: 0.12;
-  }
-`
-
-const Orb3 = styled(OrbBase)`
-  width:  clamp(180px, 22vw, 320px);
-  height: clamp(180px, 22vw, 320px);
-  background: radial-gradient(circle, var(--circles) 0%, transparent 68%);
-  opacity: 0.45;
-  left: -4%;
-  top: 18%;
-  filter: blur(90px);
-  animation: ${float3} 30s ease-in-out infinite;
-
-  @media (max-width: 768px) {
-    filter: blur(50px);
-    opacity: 0.22;
-  }
-`
-
-/* ── Scan lines overlay ──────────────────────────────────────── */
-const ScanLines = styled.div`
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 2;
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 3px,
-    rgba(128, 128, 128, 0.03) 3px,
-    rgba(128, 128, 128, 0.03) 4px
-  );
-  background-size: 100% 4px;
-
-  @media (max-width: 768px) { opacity: 0.6; }
 `
 
 const HeroContent = styled.div`
@@ -389,16 +288,6 @@ export default function Hero() {
 
   return (
     <HeroSection ref={sectionRef}>
-
-      {/* ── Background: gradient orbs ── */}
-      <OrbsLayer>
-        <Orb1 />
-        <Orb2 />
-        <Orb3 />
-      </OrbsLayer>
-
-      {/* ── Scan lines texture ── */}
-      <ScanLines />
 
       <HeroContent>
 
