@@ -51,8 +51,8 @@ export default function Document() {
         <meta name="twitter:image"   content={SITE.image} />
 
         {/* Theme (claro/oscuro) */}
-        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F0FAF4" />
-        <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#0D1A12" />
+        <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F9FA" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#0B0F13" />
 
         {/* Iconos / manifest */}
         <link rel="icon" type="image/svg+xml" href="/icon.svg" />

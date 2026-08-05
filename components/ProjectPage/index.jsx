@@ -52,7 +52,8 @@ const MetaItem = styled.div``
 
 const MetaLabel = styled.span`
   display: block;
-  font-size: 0.75rem;
+  font-family: var(--font-brand);
+  font-size: 0.74rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-secondary);
@@ -66,8 +67,9 @@ const MetaValue = styled.span`
 `
 
 const SectionLabel = styled.h2`
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
+  font-family: var(--font-brand);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-secondary);
   margin-bottom: 1rem;

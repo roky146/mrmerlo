@@ -60,7 +60,8 @@ function pickIcon(label) {
   return IconSpark
 }
 
-const HUES = ['#10B981', '#6366F1', '#F59E0B', '#0EA5E9', '#8B5CF6', '#F43F5E']
+/* Los dos primeros = señales del sistema (accent verde + signal ámbar) */
+const HUES = ['#35D69A', '#F2B441', '#6366F1', '#0EA5E9', '#8B5CF6', '#F43F5E']
 const COLSPAN = [2, 1, 1, 1, 1, 2]   // desktop (4 columnas)
 const ROWSPAN_M = [2, 1, 1, 2, 1, 1] // móvil (2 columnas, alturas variadas)
 

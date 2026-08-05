@@ -4,8 +4,8 @@
   "description": "Portafolio de Marcos Rodríguez Merlo — Ingeniero de Producción TI, ciberseguridad y desarrollo full-stack.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F0FAF4",
-  "theme_color": "#F0FAF4",
+  "background_color": "#0B0F13",
+  "theme_color": "#0B0F13",
   "lang": "es",
   "icons": [
     { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }

@@ -15,10 +15,9 @@ const Section = styled.section`
 `
 
 const SectionHeading = styled(motion.h2)`
-  font-family: 'Gilroy', 'Satoshi', sans-serif;
+  font-family: var(--font-brand);
   font-size: clamp(0.8rem, 1.5vw, 1rem);
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-secondary);
   margin-bottom: 5rem;
@@ -56,10 +55,11 @@ const ProjectInfo = styled.div`
 `
 
 const ProjectKind = styled.span`
-  font-size: 0.72rem;
-  letter-spacing: 0.16em;
+  font-family: var(--font-brand);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent-dim);
+  color: var(--accent);
   display: block;
   margin-bottom: 1rem;
 `

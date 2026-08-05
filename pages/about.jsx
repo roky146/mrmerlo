@@ -76,8 +76,9 @@ const Section = styled.div`
 `
 
 const SectionLabel = styled.h2`
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
+  font-family: var(--font-brand);
+  font-size: 0.76rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-secondary);
   margin-bottom: 2rem;
@@ -284,10 +285,11 @@ const Photo = styled(motion.img)`
 
 /* ─── Chips reutilizables (servicios, tecnologías, héroes…) ── */
 const SubLabel = styled.h3`
-  font-size: 0.7rem;
+  font-family: var(--font-brand);
+  font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--accent-dim);
+  color: var(--accent);
   margin: 1.75rem 0 0.85rem;
 
   &:first-of-type { margin-top: 0.5rem; }

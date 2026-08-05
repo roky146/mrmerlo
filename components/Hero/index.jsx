@@ -218,9 +218,9 @@ const ScrollPill = styled.div`
 `
 
 const ScrollLabel = styled.span`
-  font-family: 'Inter', sans-serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
+  font-family: var(--font-brand);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-primary);
   line-height: 1;

@@ -7,32 +7,43 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
+  /* ── Sistema de color ───────────────────────────────────────────
+     Fondo en tinta neutra fría (no tintado de verde) para que el verde
+     funcione como SEÑAL —como un LED de estado en un panel de operaciones—
+     en vez de ahogarse en su propia familia. --signal es el secundario
+     (ámbar) para el segundo nivel de información.
+     ─────────────────────────────────────────────────────────────── */
   :root,
   [data-theme="light"] {
-    --bg: #F0FAF4;
-    --bg-secondary: #E4F5EB;
-    --circles: #B8DFC8;
-    --text-primary: #1A1A1A;
-    --text-secondary: #666666;
-    --btn-primary: #1A1A1A;
-    --accent: #A8E6C1;
-    --accent-dim: #7ACD9F;
-    --border: #D0E8DA;
-    --nav-bg-rgb: 240, 250, 244;
+    --bg: #F7F9FA;
+    --bg-secondary: #EDF1F4;
+    --circles: #DCE3E9;
+    --text-primary: #12181E;
+    --text-secondary: #5A6874;
+    --btn-primary: #12181E;
+    --accent: #0A7F58;     /* 4.75:1 sobre --bg → AA en labels pequeños */
+    --accent-dim: #076646;
+    --signal: #B4791A;
+    --border: #DCE3E9;
+    --nav-bg-rgb: 247, 249, 250;
   }
 
   [data-theme="dark"] {
-    --bg: #0D1A12;
-    --bg-secondary: #121F17;
-    --circles: #1B3325;
-    --text-primary: #EDF7F1;
-    --text-secondary: #7A9E8A;
-    --btn-primary: #EDF7F1;
-    --accent: #52B788;
-    --accent-dim: #40916C;
-    --border: #2E523E;
-    --nav-bg-rgb: 13, 26, 18;
+    --bg: #0B0F13;
+    --bg-secondary: #10161D;
+    --circles: #16212B;
+    --text-primary: #E9EEF3;
+    --text-secondary: #8FA0AF;
+    --btn-primary: #E9EEF3;
+    --accent: #35D69A;
+    --accent-dim: #23A97A;
+    --signal: #F2B441;
+    --border: #1F2A33;
+    --nav-bg-rgb: 11, 15, 19;
   }
+
+  /* Cara utility/marca: Major Mono Display (la voz del logo) */
+  :root { --font-brand: 'Major Mono Display', ui-monospace, monospace; }
 
   html {
     scroll-behavior: auto;

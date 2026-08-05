@@ -107,7 +107,7 @@ export default function IsoGrid() {
 
     let W = 0, H = 0, dpr = 1
     let originX = 0, originY = 0, Umax = 0, Vmax = 0
-    let colAccent = '#A8E6C1', colBorder = '#D0E8DA', colBall = '#1A1A1A', colBg = '#0D1A12'
+    let colAccent = '#35D69A', colBorder = '#1F2A33', colBall = '#E9EEF3', colBg = '#0B0F13'
 
     const grid = document.createElement('canvas')
     const gctx = grid.getContext('2d')
@@ -135,10 +135,10 @@ export default function IsoGrid() {
 
     const readColors = () => {
       const s = getComputedStyle(document.documentElement)
-      colAccent = (s.getPropertyValue('--accent') || '#A8E6C1').trim()
+      colAccent = (s.getPropertyValue('--accent') || '#35D69A').trim()
       colBorder = (s.getPropertyValue('--border') || '#D0E8DA').trim()
       colBall = (s.getPropertyValue('--text-primary') || '#1A1A1A').trim()
-      colBg = (s.getPropertyValue('--bg') || '#0D1A12').trim()
+      colBg = (s.getPropertyValue('--bg') || '#0B0F13').trim()
     }
 
     const diamondPath = (c, x, y) => {
