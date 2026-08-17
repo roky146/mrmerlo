@@ -43,7 +43,7 @@ const ICON = {
   'kubernetes': IconK8s, 'informers': IconWatch, 'sharding': IconShard,
   'zabbix': IconGauge, 'opentelemetry': IconSignal, 'distroless': IconBox,
   'react': IconAtom, 'node.js': IconServer, 'typescript': IconTs,
-  'flutter': IconFlutter, 'sistemas pos': IconReceipt,
+  'flutter': IconFlutter, 'next.js': IconBox, 'sistemas pos': IconReceipt,
   'automatización': IconBolt, 'automatizacion': IconBolt,
 }
 
@@ -76,8 +76,8 @@ const U = (id) => `url("https://images.unsplash.com/${id}?auto=format&fit=crop&w
 const SETS = {
   god: [
     U('photo-1658479657379-e0adb7cb91e8'), // terminal en pantalla — Xavier Cee
-    U('photo-1618329027137-a520b57c6606'), // monitor con software — Onur Binay
-    U('photo-1761446812468-d88eef0d01da'), // puesto de trabajo con monitor — Clevenider Petit
+    U('photo-1774901128276-1eab48f1fb9c'), // código y salida de terminal — Bernd Dittrich
+    U('photo-1614064641938-3bbee52942c7'), // candado sobre teclado (mTLS) — FlyD
   ],
   reccon: [
     U('photo-1526628953301-3e589a6a8b74'), // pantalla de monitoreo — Stephen Dawson

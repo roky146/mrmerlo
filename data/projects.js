@@ -173,7 +173,7 @@ export const featuredProjects = [
     kind: { es: 'Servicio', en: 'Service', it: 'Servizio', fr: 'Service', pt: 'Serviço' },
     color: '#F2B441',
     colorDark: '#B4791A',
-    highlights: ['React', 'Node.js', 'TypeScript', 'Flutter', 'Sistemas POS', 'Automatización', 'APIs', 'Paneles admin'],
+    highlights: ['React', 'Node.js', 'TypeScript', 'Flutter', 'Next.js', 'Automatización', 'APIs', 'Paneles admin'],
     cta: 'mailto:marcosrodriguezmerlo@gmail.com',
   },
 ]
