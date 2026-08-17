@@ -148,6 +148,8 @@ const BioText = styled(motion.p)`
 const PhotoCol = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   gap: 2.5rem;
 `
 
@@ -275,12 +277,14 @@ const TimelineDesc = styled.p`
 
 /* ─── Foto de perfil ─────────────────────────────────────── */
 const Photo = styled(motion.img)`
-  width: 180px;
-  height: 180px;
+  width: clamp(180px, 22vw, 220px);
+  height: clamp(180px, 22vw, 220px);
   border-radius: 50%;
   object-fit: cover;
+  object-position: center 42%;
   border: 2px solid var(--border);
   flex-shrink: 0;
+  align-self: center;
 `
 
 /* ─── Chips reutilizables (servicios, tecnologías, héroes…) ── */
