@@ -123,7 +123,7 @@ const BackBtn = styled(motion(Link))`
   align-items: center;
   gap: 0.5rem;
   border: 2px solid var(--text-primary);
-  border-radius: 8px;
+  border-radius: 0 0 14px 0;
   padding: 0.8rem 1.8rem;
   font-size: 0.8rem;
   font-weight: 500;

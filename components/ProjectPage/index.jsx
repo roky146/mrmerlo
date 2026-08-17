@@ -52,7 +52,7 @@ const MetaItem = styled.div``
 
 const MetaLabel = styled.span`
   display: block;
-  font-family: var(--font-brand);
+  font-family: var(--font-mono);
   font-size: 0.74rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -67,7 +67,7 @@ const MetaValue = styled.span`
 `
 
 const SectionLabel = styled.h2`
-  font-family: var(--font-brand);
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -159,7 +159,7 @@ const RepoLink = styled.a`
   align-items: center;
   gap: 0.5rem;
   border: 2px solid var(--text-primary);
-  border-radius: 8px;
+  border-radius: 0 0 14px 0;
   padding: 0.7rem 1.4rem;
   font-size: 0.8rem;
   font-weight: 500;
@@ -181,7 +181,7 @@ const PrivateBadge = styled.div`
   gap: 0.5rem;
   padding: 0.6rem 1.1rem;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 999px;
   font-size: 0.8rem;
   color: var(--text-secondary);
   letter-spacing: 0.06em;

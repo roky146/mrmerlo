@@ -144,7 +144,7 @@ const CTAButton = styled(Link)`
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  border-radius: 8px;
+  border-radius: 0;
   transition: opacity 0.2s, transform 0.2s;
 
   &:hover {
@@ -162,7 +162,7 @@ const CTASecondary = styled.a`
   color: var(--text-secondary);
   border: 2px solid var(--text-secondary);
   padding: 0.85rem 1.8rem;
-  border-radius: 8px;
+  border-radius: 2px;
   transition: color 0.2s, border-color 0.2s, transform 0.2s;
 
   &:hover {
@@ -218,7 +218,7 @@ const ScrollPill = styled.div`
 `
 
 const ScrollLabel = styled.span`
-  font-family: var(--font-brand);
+  font-family: var(--font-mono);
   font-size: 0.62rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;

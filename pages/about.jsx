@@ -76,7 +76,7 @@ const Section = styled.div`
 `
 
 const SectionLabel = styled.h2`
-  font-family: var(--font-brand);
+  font-family: var(--font-mono);
   font-size: 0.76rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -285,7 +285,7 @@ const Photo = styled(motion.img)`
 
 /* ─── Chips reutilizables (servicios, tecnologías, héroes…) ── */
 const SubLabel = styled.h3`
-  font-family: var(--font-brand);
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;

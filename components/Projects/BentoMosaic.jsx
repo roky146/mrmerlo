@@ -1,16 +1,19 @@
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
 /* ──────────────────────────────────────────────────────────────
-   Bento de 6 cards, cada una con un icono DISTINTO y representativo.
-   - Desktop: grid rectangular 4×2 (cards anchas para variedad).
-   - Móvil: mosaico condensado 2 columnas con alturas variadas.
-   - Icono dentro de un círculo tintado (más presencia + diferenciado por color).
-   - Colores legibles en claro y oscuro. Animación: entrada + float + hover.
+   Bento de 6 tiles con TRATAMIENTOS DISTINTOS (no una rejilla de
+   tarjetas iguales): type-led, sólido invertido, icono suelto,
+   regla, ghost y línea. Un ÚNICO hue por proyecto usado con
+   moderación, radios mixtos (incluidas esquinas rectas) y
+   jerarquía tipográfica real. Sin iconos en círculo tintado.
+
+   Para meter capturas más adelante: si un highlight se define como
+   { label, src }, el tile 'shot' pinta la imagen a sangre.
    ────────────────────────────────────────────────────────────── */
 
 const S = (p) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"
     strokeLinecap="round" strokeLinejoin="round" {...p} />
 )
 
@@ -32,9 +35,8 @@ const IconTs      = () => <S><rect x="3" y="3" width="18" height="18" rx="2"/><p
 const IconFlutter = () => <S><path d="M14 3 6 11l2.5 2.5L19 3z"/><path d="M14 11 9.5 15.5 14 20h5l-4.5-4.5L19 11z"/></S>
 const IconReceipt = () => <S><path d="M5 3v18l2-1 2 1 2-1 2 1 2-1 2 1V3l-2 1-2-1-2 1-2-1-2 1z"/><path d="M8 8h8M8 12h8M8 16h5"/></S>
 const IconBolt    = () => <S><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></S>
-const IconSpark   = () => <S><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></S>
+const IconSpark   = () => <S><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5-2.5 2.5"/></S>
 
-/* Mapa exacto etiqueta → icono (cada concepto, su propio icono) */
 const ICON = {
   'apis': IconApi, 'graphman': IconGraph, 'restman': IconRest,
   'usuarios': IconUsers, 'cluster-properties': IconSliders, 'mtls': IconShield,
@@ -53,59 +55,48 @@ function pickIcon(label) {
   if (/(mtls|tls|seguridad|distroless)/.test(l)) return IconShield
   if (/(kubernetes|k8s|cluster|pod)/.test(l)) return IconK8s
   if (/(zabbix|telemetr|observab|metric|monitor)/.test(l)) return IconGauge
-  if (/(react)/.test(l)) return IconAtom
-  if (/(node)/.test(l)) return IconServer
+  if (/react/.test(l)) return IconAtom
+  if (/node/.test(l)) return IconServer
   if (/(pos|caja|venta)/.test(l)) return IconReceipt
-  if (/(automat)/.test(l)) return IconBolt
+  if (/automat/.test(l)) return IconBolt
   return IconSpark
 }
 
-/* Los dos primeros = señales del sistema (accent verde + signal ámbar) */
-const HUES = ['#35D69A', '#F2B441', '#6366F1', '#0EA5E9', '#8B5CF6', '#F43F5E']
-const COLSPAN = [2, 1, 1, 1, 1, 2]   // desktop (4 columnas)
-const ROWSPAN_M = [2, 1, 1, 2, 1, 1] // móvil (2 columnas, alturas variadas)
-
-const floaty = keyframes`
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-4px); }
-`
+/* Cada tile: [colspan, rowspan-móvil, tratamiento, radio] */
+const LAYOUT = [
+  { c: 2, rm: 2, kind: 'type',   radius: '0' },
+  { c: 1, rm: 1, kind: 'solid',  radius: '16px' },
+  { c: 1, rm: 2, kind: 'icon',   radius: '2px' },
+  { c: 2, rm: 1, kind: 'rule',   radius: '0' },
+  { c: 1, rm: 1, kind: 'ghost',  radius: '12px' },
+  { c: 2, rm: 1, kind: 'inline', radius: '0 0 20px 0' },
+]
 
 const Bento = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-auto-rows: 128px;
-  gap: 0.7rem;
+  gap: 0.65rem;
 
   @media (max-width: 768px) { grid-auto-rows: 116px; }
   @media (max-width: 560px) {
     grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 86px;
+    grid-auto-rows: 88px;
     gap: 0.5rem;
   }
 `
 
 const Tile = styled(motion.div)`
   grid-column: span ${p => p.$c};
-  /* Contenedor para escalado proporcional del icono/márgenes (cqmin) */
   container-type: size;
-  background: ${p => p.$hue}17;
-  border: 1px solid ${p => p.$hue}3a;
-  border-radius: 14px;
+  border-radius: ${p => p.$radius};
+  padding: clamp(0.6rem, 10cqmin, 1.15rem);
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(0.35rem, 7cqmin, 0.7rem);
-  padding: clamp(0.5rem, 11cqmin, 1.1rem);
-  text-align: center;
+  overflow: hidden;
+  position: relative;
   transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
 
-  &:hover {
-    transform: translateY(-4px);
-    border-color: ${p => p.$hue};
-    background: ${p => p.$hue}28;
-  }
-  &:hover svg { transform: scale(1.14) rotate(-5deg); }
+  &:hover { transform: translateY(-3px); }
 
   @media (max-width: 560px) {
     grid-column: span 1;
@@ -113,62 +104,122 @@ const Tile = styled(motion.div)`
   }
 `
 
-/* Icono en círculo tintado — tamaño proporcional al área de la card */
-const IconWrap = styled.div`
-  width: clamp(32px, 44cqmin, 60px);
-  height: clamp(32px, 44cqmin, 60px);
-  border-radius: 50%;
-  background: ${p => p.$hue}26;
-  color: ${p => p.$hue};
-  display: flex;
+/* — tratamientos — */
+const TypeTile = styled(Tile)`
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: ${p => p.$hue}14;
+  border-left: 3px solid ${p => p.$hue};
+`
+const SolidTile = styled(Tile)`
+  align-items: flex-end;
+  background: ${p => p.$hue};
+`
+const IconTile = styled(Tile)`
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  border: 1px solid ${p => p.$hue}44;
+  background: ${p => p.$hue}0a;
+`
+const RuleTile = styled(Tile)`
+  align-items: flex-end;
+  border-top: 3px solid ${p => p.$hue};
+  background: transparent;
+`
+const GhostTile = styled(Tile)`
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  animation: ${floaty} 3.6s ease-in-out infinite;
-  animation-delay: ${p => p.$d}s;
-
-  svg { width: 54%; height: 54%; transition: transform 0.25s ease; }
+  border: 1px dashed ${p => p.$hue}66;
+`
+const InlineTile = styled(Tile)`
+  align-items: center;
+  gap: 0.7rem;
+  background: ${p => p.$hue}12;
 `
 
-const TileLabel = styled.span`
-  font-size: clamp(0.68rem, 13cqmin, 0.92rem);
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  line-height: 1.15;
+const Index = styled.span`
+  font-family: var(--font-mono);
+  font-size: clamp(0.6rem, 9cqmin, 0.72rem);
+  letter-spacing: 0.1em;
+  color: ${p => p.$hue};
+`
+const BigLabel = styled.span`
+  font-family: 'Gilroy', 'Satoshi', sans-serif;
+  font-size: clamp(1.1rem, 26cqmin, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
   color: var(--text-primary);
 `
+const MonoLabel = styled.span`
+  font-family: var(--font-mono);
+  font-size: clamp(0.62rem, 11cqmin, 0.8rem);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  color: var(--text-primary);
+`
+const InvertLabel = styled(MonoLabel)`
+  color: var(--bg);
+  font-weight: 700;
+`
+const Glyph = styled.span`
+  color: ${p => p.$hue};
+  display: flex;
+  svg { width: clamp(22px, 34cqmin, 40px); height: clamp(22px, 34cqmin, 40px); }
+`
+const GlyphSm = styled(Glyph)`
+  svg { width: clamp(18px, 22cqmin, 26px); height: clamp(18px, 22cqmin, 26px); }
+`
 
-const tileVariants = {
-  offscreen: { opacity: 0, scale: 0.9, y: 12 },
-  onscreen: (i) => ({
-    opacity: 1, scale: 1, y: 0,
-    transition: { delay: i * 0.06, duration: 0.45, ease: [0.16, 1, 0.3, 1] },
-  }),
+const variants = {
+  off: { opacity: 0, y: 10 },
+  on: (i) => ({ opacity: 1, y: 0, transition: { delay: i * 0.055, duration: 0.4, ease: [0.16, 1, 0.3, 1] } }),
 }
 
 export default function BentoMosaic({ project }) {
+  const hue = project.color
   const cards = (project.highlights || []).slice(0, 6)
 
   return (
     <Bento role="img" aria-label={`${project.title} — ${project.subtitle}`}>
       {cards.map((label, i) => {
+        const cfg = LAYOUT[i]
         const Icon = pickIcon(label)
-        const hue = HUES[i % HUES.length]
+        const common = {
+          $c: cfg.c, $rm: cfg.rm, $radius: cfg.radius, $hue: hue,
+          custom: i, initial: 'off', whileInView: 'on',
+          viewport: { once: true, amount: 0.2 }, variants,
+          key: label + i,
+        }
+
+        if (cfg.kind === 'type') return (
+          <TypeTile {...common}>
+            <Index $hue={hue}>{String(i + 1).padStart(2, '0')}</Index>
+            <BigLabel>{label}</BigLabel>
+          </TypeTile>
+        )
+        if (cfg.kind === 'solid') return (
+          <SolidTile {...common}><InvertLabel>{label}</InvertLabel></SolidTile>
+        )
+        if (cfg.kind === 'icon') return (
+          <IconTile {...common}>
+            <Glyph $hue={hue}><Icon /></Glyph>
+            <MonoLabel>{label}</MonoLabel>
+          </IconTile>
+        )
+        if (cfg.kind === 'rule') return (
+          <RuleTile {...common}><MonoLabel>{label}</MonoLabel></RuleTile>
+        )
+        if (cfg.kind === 'ghost') return (
+          <GhostTile {...common}><MonoLabel>{label}</MonoLabel></GhostTile>
+        )
         return (
-          <Tile
-            key={label + i}
-            $c={COLSPAN[i]}
-            $rm={ROWSPAN_M[i]}
-            $hue={hue}
-            custom={i}
-            initial="offscreen"
-            whileInView="onscreen"
-            viewport={{ once: true, amount: 0.2 }}
-            variants={tileVariants}
-          >
-            <IconWrap $hue={hue} $d={(i % 6) * 0.25}><Icon /></IconWrap>
-            <TileLabel>{label}</TileLabel>
-          </Tile>
+          <InlineTile {...common}>
+            <GlyphSm $hue={hue}><Icon /></GlyphSm>
+            <MonoLabel>{label}</MonoLabel>
+          </InlineTile>
         )
       })}
     </Bento>

@@ -15,7 +15,7 @@ const Section = styled.section`
 `
 
 const SectionHeading = styled(motion.h2)`
-  font-family: var(--font-brand);
+  font-family: var(--font-mono);
   font-size: clamp(0.8rem, 1.5vw, 1rem);
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -55,7 +55,7 @@ const ProjectInfo = styled.div`
 `
 
 const ProjectKind = styled.span`
-  font-family: var(--font-brand);
+  font-family: var(--font-mono);
   font-size: 0.74rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -66,11 +66,11 @@ const ProjectKind = styled.span`
 
 const ProjectTitle = styled(motion.h3)`
   font-family: 'Gilroy', 'Satoshi', sans-serif;
-  font-size: clamp(2rem, 5.5vw, 3rem);
-  font-weight: 400;
-  font-variation-settings: "wdth" 100, "wght" 400;
-  letter-spacing: -0.03em;
-  line-height: 1.0;
+  font-size: clamp(2.4rem, 6vw, 3.6rem);
+  font-weight: 800;
+  font-variation-settings: "wdth" 100, "wght" 800;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
   margin-bottom: 1rem;
 `
 
@@ -110,7 +110,7 @@ const ExploreBtn = styled(Link)`
   align-items: center;
   gap: 0.5rem;
   border: 2px solid var(--text-primary);
-  border-radius: 8px;
+  border-radius: 0 0 14px 0;
   padding: 0.7rem 1.4rem;
   font-size: 0.8rem;
   font-weight: 500;

@@ -26,6 +26,7 @@ const GlobalStyle = createGlobalStyle`
     --signal: #B4791A;
     --border: #DCE3E9;
     --nav-bg-rgb: 247, 249, 250;
+    --grain: 0.055;
   }
 
   [data-theme="dark"] {
@@ -40,10 +41,15 @@ const GlobalStyle = createGlobalStyle`
     --signal: #F2B441;
     --border: #1F2A33;
     --nav-bg-rgb: 11, 15, 19;
+    --grain: 0.035;
   }
 
-  /* Cara utility/marca: Major Mono Display (la voz del logo) */
-  :root { --font-brand: 'Major Mono Display', ui-monospace, monospace; }
+  :root {
+    /* Major Mono Display: SOLO el logo (voz de marca, ilegible en textos) */
+    --font-brand: 'Major Mono Display', ui-monospace, monospace;
+    /* Mono legible: labels estructurales (no decoración) */
+    --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+  }
 
   html {
     scroll-behavior: auto;
@@ -60,6 +66,18 @@ const GlobalStyle = createGlobalStyle`
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Grano de papel: textura fija sobre todo el lienzo (ambos temas) */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9997;
+    pointer-events: none;
+    opacity: var(--grain, 0.04);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
   }
 
   /* Cursor personalizado en punteros finos (mouse/trackpad).
