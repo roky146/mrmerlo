@@ -62,7 +62,7 @@ export function personSchema() {
     url: SITE.url,
     image: SITE.image,
     email: `mailto:${SITE.email}`,
-    jobTitle: ['Ingeniero de Producción TI', 'Desarrollador de software'],
+    jobTitle: ['Subgerente de Producción TI', 'Desarrollador de software'],
     description: SITE.description,
     address: {
       '@type': 'PostalAddress',

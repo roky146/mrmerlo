@@ -341,7 +341,19 @@ const designPrinciples = ['Laws of UX', 'Design de Spotify', 'Material Design']
 /* Experiencia & formación (localizada; period/org/title/desc como objetos) */
 const experience = [
   {
-    period: { es: '2025 → presente', en: '2025 → present', it: '2025 → presente', fr: '2025 → présent', pt: '2025 → presente' },
+    period: { es: '2026 → presente', en: '2026 → present', it: '2026 → presente', fr: '2026 → présent', pt: '2026 → presente' },
+    title: { es: 'Subgerente de Producción TI', en: 'IT Production Deputy Manager', it: 'Vice Responsabile di Produzione IT', fr: 'Responsable adjoint de Production IT', pt: 'Subgerente de Produção TI' },
+    org: { es: 'Banco BHD — Santo Domingo, RD', en: 'Banco BHD — Santo Domingo, DR', it: 'Banco BHD — Santo Domingo, RD', fr: 'Banco BHD — Saint-Domingue, RD', pt: 'Banco BHD — Santo Domingo, RD' },
+    desc: {
+      es: 'Responsable de la operación de producción TI: disponibilidad de plataformas y middleware, coordinación de equipos técnicos y control de cambios en ambientes críticos.',
+      en: 'Accountable for IT production operations: platform and middleware availability, coordination of technical teams and change control across critical environments.',
+      it: 'Responsabile delle operazioni di produzione IT: disponibilità di piattaforme e middleware, coordinamento dei team tecnici e controllo dei cambiamenti in ambienti critici.',
+      fr: "Responsable de l'exploitation en production IT : disponibilité des plateformes et du middleware, coordination des équipes techniques et gestion des changements en environnements critiques.",
+      pt: 'Responsável pela operação de produção TI: disponibilidade de plataformas e middleware, coordenação de equipas técnicas e controlo de mudanças em ambientes críticos.',
+    },
+  },
+  {
+    period: { es: '2025 — 2026', en: '2025 — 2026', it: '2025 — 2026', fr: '2025 — 2026', pt: '2025 — 2026' },
     title: { es: 'Ingeniero de Producción TI', en: 'IT Production Engineer', it: 'Ingegnere di Produzione IT', fr: 'Ingénieur de Production IT', pt: 'Engenheiro de Produção TI' },
     org: { es: 'Banco BHD — Santo Domingo, RD', en: 'Banco BHD — Santo Domingo, DR', it: 'Banco BHD — Santo Domingo, RD', fr: 'Banco BHD — Saint-Domingue, RD', pt: 'Banco BHD — Santo Domingo, RD' },
     desc: {
@@ -401,11 +413,11 @@ const FAQS = [
       pt: 'Quem é Marcos Rodríguez Merlo?',
     },
     a: {
-      es: 'Marcos Rodríguez Merlo es Ingeniero de Producción TI y estudiante de Ingeniería en Ciberseguridad en Santo Domingo, República Dominicana. Construye herramientas empresariales, automatización y aplicaciones full-stack.',
-      en: 'Marcos Rodríguez Merlo is an IT Production Engineer and Cybersecurity Engineering student in Santo Domingo, Dominican Republic. He builds enterprise tools, automation and full-stack applications.',
-      it: 'Marcos Rodríguez Merlo è un Ingegnere di Produzione IT e studente di Ingegneria della Cybersecurity a Santo Domingo, Repubblica Dominicana. Costruisce strumenti aziendali, automazione e applicazioni full-stack.',
-      fr: "Marcos Rodríguez Merlo est ingénieur de production IT et étudiant en ingénierie de la cybersécurité à Saint-Domingue, République dominicaine. Il construit des outils d'entreprise, de l'automatisation et des applications full-stack.",
-      pt: 'Marcos Rodríguez Merlo é Engenheiro de Produção TI e estudante de Engenharia em Cibersegurança em Santo Domingo, República Dominicana. Constrói ferramentas empresariais, automação e aplicações full-stack.',
+      es: 'Marcos Rodríguez Merlo es Subgerente de Producción TI y estudiante de Ingeniería en Ciberseguridad en Santo Domingo, República Dominicana. Construye herramientas empresariales, automatización y aplicaciones full-stack.',
+      en: 'Marcos Rodríguez Merlo is an IT Production Deputy Manager and Cybersecurity Engineering student in Santo Domingo, Dominican Republic. He builds enterprise tools, automation and full-stack applications.',
+      it: 'Marcos Rodríguez Merlo è Vice Responsabile di Produzione IT e studente di Ingegneria della Cybersecurity a Santo Domingo, Repubblica Dominicana. Costruisce strumenti aziendali, automazione e applicazioni full-stack.',
+      fr: "Marcos Rodríguez Merlo est responsable adjoint de Production IT et étudiant en ingénierie de la cybersécurité à Saint-Domingue, République dominicaine. Il construit des outils d'entreprise, de l'automatisation et des applications full-stack.",
+      pt: 'Marcos Rodríguez Merlo é Subgerente de Produção TI e estudante de Engenharia em Cibersegurança em Santo Domingo, República Dominicana. Constrói ferramentas empresariais, automação e aplicações full-stack.',
     },
   },
   {
@@ -514,7 +526,7 @@ export default function About() {
     <>
       <Seo
         title="Sobre mí"
-        description="Marcos Rodríguez Merlo — Ingeniero de Producción TI y estudiante de Ingeniería en Ciberseguridad en Santo Domingo, RD. Kubernetes, automatización empresarial, desarrollo full-stack y consultoría tecnológica."
+        description="Marcos Rodríguez Merlo — Subgerente de Producción TI y estudiante de Ingeniería en Ciberseguridad en Santo Domingo, RD. Kubernetes, automatización empresarial, desarrollo full-stack y consultoría tecnológica."
         path="/about/"
       />
       <JsonLd data={graph(faqSchema(FAQS.map((f) => ({ q: f.q.es, a: f.a.es }))))} />

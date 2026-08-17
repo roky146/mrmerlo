@@ -80,7 +80,7 @@ export const translations = {
     currently_location:'Ubicación',
     currently_contact: 'Contacto',
 
-    currently_work_val:    'Producción TI — Sector financiero',
+    currently_work_val:    'Subgerente de Producción TI — Sector financiero',
     currently_study_val:   'Ingeniería en Ciberseguridad — UNICARIBE',
     currently_build_val:   'GOD · mrmerlo.com',
     currently_loc_val:     'Santo Domingo, República Dominicana',
@@ -187,7 +187,7 @@ export const translations = {
     currently_location:'Location',
     currently_contact: 'Contact',
 
-    currently_work_val:    'IT Production — Financial sector',
+    currently_work_val:    'IT Production Deputy Manager — Financial sector',
     currently_study_val:   'Cybersecurity Engineering — UNICARIBE',
     currently_build_val:   'GOD · mrmerlo.com',
     currently_loc_val:     'Santo Domingo, Dominican Republic',
@@ -294,7 +294,7 @@ export const translations = {
     currently_location:'Posizione',
     currently_contact: 'Contatto',
 
-    currently_work_val:    'Produzione IT — Settore finanziario',
+    currently_work_val:    'Vice Responsabile di Produzione IT — Settore finanziario',
     currently_study_val:   'Ingegneria della Cybersecurity — UNICARIBE',
     currently_build_val:   'GOD · mrmerlo.com',
     currently_loc_val:     'Santo Domingo, Repubblica Dominicana',
@@ -401,7 +401,7 @@ export const translations = {
     currently_location:'Localisation',
     currently_contact: 'Contact',
 
-    currently_work_val:    'Production IT — Secteur financier',
+    currently_work_val:    'Responsable adjoint de Production IT — Secteur financier',
     currently_study_val:   'Ingénierie de la Cybersécurité — UNICARIBE',
     currently_build_val:   'GOD · mrmerlo.com',
     currently_loc_val:     'Saint-Domingue, République Dominicaine',
@@ -508,7 +508,7 @@ export const translations = {
     currently_location:'Localização',
     currently_contact: 'Contato',
 
-    currently_work_val:    'Produção TI — Setor financeiro',
+    currently_work_val:    'Subgerente de Produção TI — Setor financeiro',
     currently_study_val:   'Engenharia em Cibersegurança — UNICARIBE',
     currently_build_val:   'GOD · mrmerlo.com',
     currently_loc_val:     'Santo Domingo, República Dominicana',
