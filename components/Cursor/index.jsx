@@ -17,6 +17,7 @@ const Dot = styled.div`
 
   /* Hide on touch/coarse-pointer devices */
   @media (pointer: coarse) { display: none; }
+  @media print { display: none !important; }
 
   /* La bolita SIEMPRE persiste (antes desaparecía sobre botones). */
   &.hovering {
@@ -42,6 +43,7 @@ const Ring = styled.div`
 
   /* Hide on touch/coarse-pointer devices */
   @media (pointer: coarse) { display: none; }
+  @media print { display: none !important; }
 
   &.hovering {
     width: 56px;

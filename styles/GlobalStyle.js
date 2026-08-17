@@ -164,9 +164,14 @@ const GlobalStyle = createGlobalStyle`
       --accent-dim: #076646;
       --grain: 0;
     }
-    body { background: #FFFFFF !important; }
-    body::after { display: none !important; }   /* grano */
-    nav, .skip-link { display: none !important; }
+    html, body {
+      background: #FFFFFF !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: visible !important;
+    }
+    body::after { display: none !important; }        /* grano */
+    nav, .skip-link, #__page-intro { display: none !important; }
     a { text-decoration: none !important; }
     * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }

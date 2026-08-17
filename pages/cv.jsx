@@ -15,7 +15,12 @@ const Stage = styled.main`
   align-items: center;
   gap: 1.2rem;
 
-  @media print { padding: 0; gap: 0; display: block; }
+  @media print {
+    padding: 0 !important;
+    margin: 0 !important;
+    gap: 0;
+    display: block;
+  }
 `
 
 const Bar = styled.div`
@@ -55,7 +60,18 @@ const Page = styled.section`
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
 
   @media (max-width: 720px) { flex-direction: column; }
-  @media print { max-width: none; box-shadow: none; display: flex; }
+
+  /* En papel: hoja completa, sin sombra, misma disposición que en pantalla */
+  @media print {
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-height: 100vh;          /* el aside gris llega hasta abajo */
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #1f1f1f !important;
+  }
 `
 
 const Aside = styled.aside`
@@ -69,7 +85,12 @@ const Aside = styled.aside`
   gap: 26px;
 
   @media (max-width: 720px) { width: 100%; flex: none; padding: 34px 26px; }
-  @media print { width: 245px; flex: 0 0 245px; padding: 116px 26px 34px 30px; }
+  @media print {
+    width: 30% !important;
+    flex: 0 0 30% !important;
+    padding: 116px 26px 34px 30px !important;
+    background: #ebebeb !important;
+  }
 `
 
 const Main = styled.div`
@@ -79,6 +100,7 @@ const Main = styled.div`
   min-width: 0;
 
   @media (max-width: 720px) { padding: 30px 26px; }
+  @media print { padding: 40px 44px 34px 34px !important; }
 `
 
 const Block = styled.div``
@@ -175,6 +197,9 @@ const Entries = styled.div`
   flex-direction: column;
   gap: 15px;
   margin-bottom: 26px;
+
+  /* que ninguna entrada se parta entre páginas */
+  > div { break-inside: avoid; page-break-inside: avoid; }
 `
 const EntryTop = styled.div`
   display: flex;
