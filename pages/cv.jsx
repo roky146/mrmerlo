@@ -87,7 +87,13 @@ const Aside = styled.aside`
   flex-direction: column;
   gap: 26px;
 
-  @media (max-width: 720px) { width: 100%; flex: none; padding: 34px 26px; }
+  /* En móvil va DEBAJO: primero el nombre y el contenido principal */
+  @media (max-width: 720px) {
+    width: 100%;
+    flex: none;
+    padding: 30px 26px 34px;
+    order: 2;
+  }
   @media print {
     width: 2.55in !important;        /* 245px — misma proporción que en pantalla */
     flex: 0 0 2.55in !important;
@@ -102,7 +108,7 @@ const Main = styled.div`
   box-sizing: border-box;
   min-width: 0;
 
-  @media (max-width: 720px) { padding: 30px 26px; }
+  @media (max-width: 720px) { padding: 30px 26px; order: 1; }
   @media print { padding: 0.42in 0.46in 0.35in 0.35in !important; }
 `
 
