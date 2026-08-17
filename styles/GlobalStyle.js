@@ -148,6 +148,29 @@ const GlobalStyle = createGlobalStyle`
     outline-offset: 2px;
   }
 
+  /* ── Impresión (descarga del CV en PDF) ────────────────────── */
+  @media print {
+    /* La hoja del CV ya trae sus propios márgenes internos */
+    @page { size: letter; margin: 0; }
+
+    /* Siempre en claro: legible y sin gastar tinta */
+    :root, [data-theme="dark"], [data-theme="light"] {
+      --bg: #FFFFFF;
+      --bg-secondary: #FFFFFF;
+      --text-primary: #111111;
+      --text-secondary: #444444;
+      --border: #CCCCCC;
+      --accent: #0A7F58;
+      --accent-dim: #076646;
+      --grain: 0;
+    }
+    body { background: #FFFFFF !important; }
+    body::after { display: none !important; }   /* grano */
+    nav, .skip-link { display: none !important; }
+    a { text-decoration: none !important; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
   /* Respetar prefers-reduced-motion: desactiva animaciones/transiciones pesadas */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {

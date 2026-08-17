@@ -123,6 +123,7 @@ const BackToTop = styled(motion.button)`
 
   &:hover { border-color: var(--accent-dim); }
   svg { width: 1.2rem; height: 1.2rem; }
+  @media print { display: none !important; }
 
   @media (max-width: 768px) {
     bottom: 1.25rem;
@@ -568,7 +569,7 @@ const socialLinks = [
   },
   {
     label: 'CV',
-    href: '/cv.pdf',
+    href: '/cv',
     origin: 'bottom right',
     external: false,
     icon: (
