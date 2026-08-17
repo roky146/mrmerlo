@@ -68,12 +68,27 @@ function pickIcon(label) {
    Se eligen por el concepto que representa cada tile. ── */
 const U = (id) => `url("https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&q=55")`
 
-const PHOTO = {
-  rack:    U('photo-1695668548342-c0c1ad479aee'), // racks de servidores — Kevin Ache
-  network: U('photo-1680691257251-5fead813b73e'), // patch panel de red — Dimitri Karastelev
-  monitor: U('photo-1526628953301-3e589a6a8b74'), // pantalla de monitoreo — Stephen Dawson
-  metrics: U('photo-1551288049-bebda4e38f71'),    // gráficas de analítica — Luke Chesser
-  code:    U('photo-1743090661053-3d1feb2beab7'), // código en pantalla — ANOOF C
+/* Un set propio por proyecto, acorde a lo que CADA UNO es —los tres son
+   software, ninguno es hardware, así que no hay racks ni cables:
+   · GOD    → app de escritorio: interfaz, terminal, puesto de trabajo
+   · Reccon → observabilidad: dashboards, series temporales, métricas
+   · Web    → producto y diseño: wireframes, UI, código */
+const SETS = {
+  god: [
+    U('photo-1658479657379-e0adb7cb91e8'), // terminal en pantalla — Xavier Cee
+    U('photo-1618329027137-a520b57c6606'), // monitor con software — Onur Binay
+    U('photo-1761446812468-d88eef0d01da'), // puesto de trabajo con monitor — Clevenider Petit
+  ],
+  reccon: [
+    U('photo-1526628953301-3e589a6a8b74'), // pantalla de monitoreo — Stephen Dawson
+    U('photo-1551288049-bebda4e38f71'),    // gráficas de rendimiento — Luke Chesser
+    U('photo-1560221328-12fe60f83ab8'),    // monitor con series de datos — Nicholas Cappello
+  ],
+  'web-dev': [
+    U('photo-1522542550221-31fd19575a2d'), // wireframes de sitios — Hal Gatewood
+    U('photo-1547658719-da2b51169166'),    // monitor con producto digital — Daniel Korpai
+    U('photo-1743090661053-3d1feb2beab7'), // código en pantalla — ANOOF C
+  ],
 }
 
 /* Grano superpuesto para algunos tiles */
@@ -81,14 +96,7 @@ const GRAIN = `url("data:image/svg+xml,${encodeURIComponent(
   "<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(#g)'/></svg>"
 )}")`
 
-function photoFor(label) {
-  const l = label.toLowerCase()
-  if (/(kubernetes|k8s|cluster|shard|distroless|mtls|tls|segur)/.test(l)) return PHOTO.rack
-  if (/(api|rest|graph|usuario)/.test(l)) return PHOTO.network
-  if (/(zabbix|telemetr|observab|monitor)/.test(l)) return PHOTO.monitor
-  if (/(informer|metric|analiti|analyt)/.test(l)) return PHOTO.metrics
-  return PHOTO.code
-}
+const photosOf = (id) => SETS[id] || SETS['web-dev']
 
 /* Cada tile: [colspan, rowspan-móvil, tratamiento, radio] */
 /* 3 de los 6 tiles llevan fotografía de fondo; dos de ellos con grano */
@@ -237,6 +245,8 @@ const variants = {
 export default function BentoMosaic({ project }) {
   const hue = project.color
   const cards = (project.highlights || []).slice(0, 6)
+  const photos = photosOf(project.id)
+  let shot = 0   // reparte las 3 fotos del proyecto entre los tiles que las llevan
 
   return (
     <Bento role="img" aria-label={`${project.title} — ${project.subtitle}`}>
@@ -245,7 +255,7 @@ export default function BentoMosaic({ project }) {
         const Icon = pickIcon(label)
         const common = {
           $c: cfg.c, $rm: cfg.rm, $radius: cfg.radius, $hue: hue,
-          $img: cfg.img ? photoFor(label) : null,
+          $img: cfg.img ? photos[shot++ % photos.length] : null,
           $grain: !!cfg.noise,
           custom: i, initial: 'off', whileInView: 'on',
           viewport: { once: true, amount: 0.2 }, variants,
