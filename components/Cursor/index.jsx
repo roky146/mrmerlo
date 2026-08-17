@@ -8,7 +8,10 @@ const Dot = styled.div`
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--text-primary);
+  /* Blanco + difference = negativo exacto de lo que haya debajo,
+     sea cual sea el elemento (botones, fotos, tiles, la grilla…). */
+  background: #fff;
+  mix-blend-mode: difference;
   pointer-events: none;
   z-index: 9999;
   transform: translate(-50%, -50%);
@@ -23,7 +26,6 @@ const Dot = styled.div`
   &.hovering {
     width: 6px;
     height: 6px;
-    background: var(--accent-dim);
   }
 `
 
@@ -34,11 +36,12 @@ const Ring = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1.5px solid var(--text-primary);
+  border: 1.5px solid #fff;
+  mix-blend-mode: difference;
   pointer-events: none;
   z-index: 9998;
   transform: translate(-50%, -50%);
-  transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, opacity 0.2s;
+  transition: width 0.25s ease, height 0.25s ease, opacity 0.2s;
   will-change: transform;
 
   /* Hide on touch/coarse-pointer devices */
@@ -48,7 +51,6 @@ const Ring = styled.div`
   &.hovering {
     width: 56px;
     height: 56px;
-    border-color: var(--accent-dim);
   }
 
   &.clicking {

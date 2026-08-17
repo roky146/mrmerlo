@@ -61,16 +61,19 @@ const Page = styled.section`
 
   @media (max-width: 720px) { flex-direction: column; }
 
-  /* En papel: hoja completa, sin sombra, misma disposición que en pantalla */
+  /* En papel: la hoja mide exactamente una carta (8.5in × 11in),
+     así el contenido encaja sin recortes ni márgenes fantasma. */
   @media print {
     display: flex !important;
     flex-direction: row !important;
-    width: 100% !important;
-    max-width: none !important;
-    min-height: 100vh;          /* el aside gris llega hasta abajo */
+    width: 8.5in !important;
+    max-width: 8.5in !important;
+    min-height: 10.98in;        /* el aside gris llega hasta el borde inferior */
+    margin: 0 !important;
     box-shadow: none !important;
     background: #ffffff !important;
     color: #1f1f1f !important;
+    overflow: hidden;
   }
 `
 
@@ -86,9 +89,9 @@ const Aside = styled.aside`
 
   @media (max-width: 720px) { width: 100%; flex: none; padding: 34px 26px; }
   @media print {
-    width: 30% !important;
-    flex: 0 0 30% !important;
-    padding: 116px 26px 34px 30px !important;
+    width: 2.55in !important;        /* 245px — misma proporción que en pantalla */
+    flex: 0 0 2.55in !important;
+    padding: 1.2in 0.27in 0.35in 0.31in !important;
     background: #ebebeb !important;
   }
 `
@@ -100,7 +103,7 @@ const Main = styled.div`
   min-width: 0;
 
   @media (max-width: 720px) { padding: 30px 26px; }
-  @media print { padding: 40px 44px 34px 34px !important; }
+  @media print { padding: 0.42in 0.46in 0.35in 0.35in !important; }
 `
 
 const Block = styled.div``
