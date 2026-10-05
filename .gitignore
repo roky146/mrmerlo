@@ -13,3 +13,7 @@ EXAMPLES/
 
 # foto fuente (se sirve la webp optimizada)
 Headshot.png
+
+# secretos locales de wrangler dev
+.dev.vars
+.wrangler/

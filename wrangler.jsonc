@@ -1,10 +1,20 @@
 {
-  // Cloudflare Workers (Static Assets) — sirve el export estático de Next desde ./out
+  // Cloudflare Worker + Static Assets — sirve el export estático de Next desde ./out.
+  // El Worker (worker/index.js) va delante de las páginas para el modo mantenimiento;
+  // los chunks de /_next/* se sirven directo (sin invocar el Worker).
   "name": "mrmerlo",
+  "main": "worker/index.js",
   "compatibility_date": "2025-06-01",
   "assets": {
     "directory": "./out",
+    "binding": "ASSETS",
     // Next genera 404.html en el export; lo servimos en rutas no encontradas
-    "not_found_handling": "404-page"
-  }
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/*", "!/_next/*"]
+  },
+  // Estado del sitio (clave "maintenance": "on" | "off")
+  "kv_namespaces": [
+    { "binding": "SITE_STATE", "id": "2c00aac09cfb4582bf077bcca28dc537" }
+  ]
+  // Secreto: MAINTENANCE_KEY  →  npx wrangler secret put MAINTENANCE_KEY
 }

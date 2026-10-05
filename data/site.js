@@ -50,9 +50,9 @@ export const CONTACT = {
   phone: '+1 829 587 0648',
   tel: 'tel:+18295870648',
   whatsapp: 'https://wa.me/18295870648',
-  // Clave pública de Web3Forms (https://web3forms.com). Vacía → el formulario
-  // abre el cliente de correo con el mensaje ya redactado.
-  formKey: '',
+  // Clave pública de Web3Forms (https://web3forms.com) — pensada para ir en el
+  // frontend. Si se vacía, el formulario abre el correo con el mensaje redactado.
+  formKey: '3652fdfe-a486-4bd2-8615-fad449bd1ef7',
   formEndpoint: 'https://api.web3forms.com/submit',
 }
 
