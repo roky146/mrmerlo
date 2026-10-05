@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useThemeCtx } from '../../contexts/ThemeContext'
 import { useLang } from '../../contexts/LanguageContext'
-import { useContact } from '../../contexts/ContactContext'
 
 /* ─── Nav shell ─────────────────────────────────────────────── */
 
@@ -547,7 +546,7 @@ const socialLinks = [
   },
   {
     label: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/marcos-rodríguez-merlo-367569224',
+    href: 'https://www.linkedin.com/in/marcos-rodr%C3%ADguez-merlo-367569224',
     origin: 'top right',
     external: true,
     icon: (
@@ -630,13 +629,11 @@ export default function Navbar() {
   const router = useRouter()
   const { dark, toggle: toggleTheme } = useThemeCtx()
   const { lang, t, setLang } = useLang()
-  const { open: openContact } = useContact()
-
   const menuLinks = [
     { label: t('nav_home'),     href: '/' },
     { label: t('nav_projects'), href: '/#projects' },
     { label: t('nav_about'),    href: '/about' },
-    { label: t('nav_contact'),  contact: true },
+    { label: t('nav_contact'),  href: '/#contact' },
   ]
 
   /* Bloquear scroll con overlay abierto */
@@ -705,6 +702,8 @@ export default function Navbar() {
 
   return (
     <>
+      {/* Skip-link: primer foco del documento, en el idioma activo */}
+      <a className="skip-link" href="#main-content">{t('a11y_skip')}</a>
       <Nav
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -742,7 +741,7 @@ export default function Navbar() {
           <DesktopLinks>
             <DesktopLink as={Link} href="/#projects">{t('nav_projects')}</DesktopLink>
             <DesktopLink as={Link} href="/about">{t('nav_about')}</DesktopLink>
-            <DesktopLink as="button" type="button" onClick={openContact}>{t('nav_contact')}</DesktopLink>
+            <DesktopLink as={Link} href="/#contact">{t('nav_contact')}</DesktopLink>
           </DesktopLinks>
 
           {/* ── Social + CV (desktop) ── */}
@@ -764,7 +763,7 @@ export default function Navbar() {
 
           {/* ── Selector de idioma ── */}
           <LangWrapper ref={langRef}>
-            <LangBtn onClick={() => setLangOpen(v => !v)} aria-label="Seleccionar idioma">
+            <LangBtn onClick={() => setLangOpen(v => !v)} aria-label={t('a11y_lang')}>
               <Flag code={lang} />
               {lang.toUpperCase()}
             </LangBtn>
@@ -795,7 +794,7 @@ export default function Navbar() {
           {/* ── Toggle tema ── */}
           <IconBtn
             onClick={toggleTheme}
-            aria-label={dark ? 'Activar modo claro' : 'Activar modo oscuro'}
+            aria-label={dark ? t('a11y_light') : t('a11y_dark')}
           >
             {dark ? <SunIcon /> : <MoonIcon />}
           </IconBtn>
@@ -803,7 +802,7 @@ export default function Navbar() {
           {/* ── Hamburguesa (solo móvil/tablet) ── */}
           <HamburgerBtn
             onClick={() => setOpen(v => !v)}
-            aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+            aria-label={open ? t('a11y_menu_close') : t('a11y_menu_open')}
           >
             <motion.span
               style={{ ...BAR_STYLE, width: '100%' }}
@@ -828,7 +827,7 @@ export default function Navbar() {
           <BackToTop
             key="back-to-top"
             onClick={scrollToTop}
-            aria-label="Volver arriba"
+            aria-label={t('a11y_top')}
             initial={{ scale: 1.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.5, opacity: 0 }}
@@ -870,11 +869,9 @@ export default function Navbar() {
               {menuLinks.map((link, i) => (
                 <MenuItemWrapper key={link.label}>
                   <MenuItem variants={itemVariant(i)} initial="hidden" animate="visible" onClick={close}>
-                    {link.contact
-                      ? <a role="button" tabIndex={0} onClick={openContact}>{link.label}</a>
-                      : link.external
-                        ? <a href={link.href}>{link.label}</a>
-                        : <Link href={link.href}>{link.label}</Link>}
+                    {link.external
+                      ? <a href={link.href}>{link.label}</a>
+                      : <Link href={link.href}>{link.label}</Link>}
                   </MenuItem>
                 </MenuItemWrapper>
               ))}

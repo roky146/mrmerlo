@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import Head from 'next/head'
 import { ThemeProvider } from 'styled-components'
 import { theme } from '../styles/theme'
 import GlobalStyle from '../styles/GlobalStyle'
@@ -54,6 +55,9 @@ export default function App({ Component, pageProps }) {
 
   return (
     <ThemeCtxProvider>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" key="viewport" />
+      </Head>
       <LanguageProvider>
         <ThemeProvider theme={theme}>
           <ContactProvider>

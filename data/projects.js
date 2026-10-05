@@ -88,6 +88,13 @@ export const featuredProjects = [
     typography: ['Gilroy', 'Inter'],
     github: null,
     private: true,
+    /* Capturas / GIFs / vídeos (src en /public; .mp4/.webm se reproducen en bucle).
+       src: null → espacio reservado visible */
+    media: [
+      { type: 'image', src: null, caption: { es: 'Gestión de APIs', en: 'API management', it: 'Gestione delle API', fr: 'Gestion des API', pt: 'Gestão de APIs' } },
+      { type: 'image', src: null, caption: { es: 'Usuarios y Cluster-Properties', en: 'Users and Cluster-Properties', it: 'Utenti e Cluster-Properties', fr: 'Utilisateurs et Cluster-Properties', pt: 'Utilizadores e Cluster-Properties' } },
+      { type: 'video', src: null, caption: { es: 'Migración con Graphman / RestMan', en: 'Migration with Graphman / RestMan', it: 'Migrazione con Graphman / RestMan', fr: 'Migration avec Graphman / RestMan', pt: 'Migração com Graphman / RestMan' } },
+    ],
   },
 
   {
@@ -141,6 +148,11 @@ export const featuredProjects = [
     typography: ['Inter', 'JetBrains Mono'],
     github: null,
     private: true,
+    media: [
+      { type: 'image', src: null, caption: { es: 'Métricas normalizadas en Zabbix', en: 'Normalized metrics in Zabbix', it: 'Metriche normalizzate in Zabbix', fr: 'Métriques normalisées dans Zabbix', pt: 'Métricas normalizadas no Zabbix' } },
+      { type: 'image', src: null, caption: { es: 'Arquitectura del agente', en: 'Agent architecture', it: 'Architettura dell’agente', fr: 'Architecture de l’agent', pt: 'Arquitetura do agente' } },
+      { type: 'video', src: null, caption: { es: 'Sharding y despliegue en Kubernetes', en: 'Sharding and Kubernetes deployment', it: 'Sharding e deploy su Kubernetes', fr: 'Sharding et déploiement sur Kubernetes', pt: 'Sharding e implementação em Kubernetes' } },
+    ],
   },
 
   /* ── Capacidad (no proyecto): desarrollo web/app. Sin detalle, sin citar clientes. ── */

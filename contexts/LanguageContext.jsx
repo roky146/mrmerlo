@@ -20,6 +20,9 @@ export function LanguageProvider({ children }) {
     }
   }, [])
 
+  /* <html lang> sigue al idioma activo (lectores de pantalla, traductores, SEO) */
+  useEffect(() => { document.documentElement.lang = lang }, [lang])
+
   const setLang = (code) => {
     if (!VALID_LANGS.includes(code)) return
     setLangState(code)

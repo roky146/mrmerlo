@@ -7,7 +7,7 @@ export default function Seo({ title, rawTitle, description, path = '/', noindex 
   const canonical = path === '/' ? SITE.url : `${SITE.url}${path}`
   const desc = description || SITE.description
   const fullTitle = rawTitle
-    || (title ? `${title} — ${SITE.name}` : `${SITE.authorName} — ${SITE.name}`)
+    || (title ? `${title} — ${SITE.name}` : SITE.title)
 
   return (
     <Head>

@@ -285,6 +285,9 @@ export default function Hero() {
   }, [])
 
   const lines = [t('hero_line1'), t('hero_line2'), t('hero_line3')]
+  // Frase completa para lectores de pantalla (las líneas van en mayúsculas)
+  const phrase = lines.join(' ').toLowerCase()
+  const headlineLabel = phrase.charAt(0).toUpperCase() + phrase.slice(1)
 
   return (
     <HeroSection ref={sectionRef}>
@@ -300,7 +303,7 @@ export default function Hero() {
         </Eyebrow>
 
         <div ref={headlineRef}>
-          <Headline>
+          <Headline aria-label={headlineLabel}>
             {lines.map((line, i) => (
               <HeadlineLine key={i}>
                 <HeadlineInner
@@ -309,6 +312,8 @@ export default function Hero() {
                   variants={lineAnim(i)}
                 >
                   {line}
+                  {/* espacio real entre líneas: el texto del HTML queda "CONVIERTO LÓGICA EN SOLUCIONES" */}
+                  {i < lines.length - 1 && ' '}
                 </HeadlineInner>
               </HeadlineLine>
             ))}

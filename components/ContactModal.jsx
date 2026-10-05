@@ -176,7 +176,7 @@ export default function ContactModal({ isOpen, onClose }) {
             exit={{ opacity: 0, scale: 0.96, y: 8 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
           >
-            <CloseBtn onClick={onClose} aria-label="Cerrar"><CloseIcon /></CloseBtn>
+            <CloseBtn onClick={onClose} aria-label={t('a11y_close')}><CloseIcon /></CloseBtn>
             <Title>{t('contact_title')}</Title>
             <Lead>{t('contact_lead')}</Lead>
 

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { detailProjects, localize } from '../../data/projects'
 import { useLang } from '../../contexts/LanguageContext'
 import BentoMosaic from '../Projects/BentoMosaic'
+import MediaGallery from './MediaGallery'
 
 const PageWrapper = styled.div`
   padding-top: 8rem;
@@ -280,6 +281,13 @@ export default function ProjectPage({ project: raw }) {
 
         <SectionLabel>{t('proj_overview')}</SectionLabel>
         <Overview>{project.overview}</Overview>
+
+        {project.media?.length > 0 && (
+          <>
+            <SectionLabel>{t('media_label')}</SectionLabel>
+            <MediaGallery items={project.media} pendingLabel={t('media_pending')} />
+          </>
+        )}
 
         {project.features?.length > 0 && (
           <>

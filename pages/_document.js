@@ -39,16 +39,20 @@ export default function Document() {
         <meta property="og:type"         content="website" />
         <meta property="og:locale"       content="es_DO" />
         <meta property="og:site_name"    content="mrmerlo.com" />
+        <meta property="og:locale:alternate" content="en_US" />
         <meta property="og:image"        content={SITE.image} />
+        <meta property="og:image:secure_url" content={SITE.image} />
+        <meta property="og:image:type"   content="image/png" />
         <meta property="og:image:width"  content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt"    content="mrmerlo.com — Marcos Rodríguez Merlo" />
+        <meta property="og:image:alt"    content={SITE.imageAlt} />
 
         {/* Twitter / X card (constantes) */}
         <meta name="twitter:card"    content="summary_large_image" />
         <meta name="twitter:site"    content="@roky146" />
         <meta name="twitter:creator" content="@roky146" />
         <meta name="twitter:image"   content={SITE.image} />
+        <meta name="twitter:image:alt" content={SITE.imageAlt} />
 
         {/* Theme (claro/oscuro) */}
         <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F7F9FA" />
@@ -66,8 +70,6 @@ export default function Document() {
         />
       </Head>
       <body>
-        {/* Skip-link (accesibilidad / teclado) */}
-        <a className="skip-link" href="#main-content">Saltar al contenido</a>
 
         {/* Cortina de intro negra — HTML crudo para que aparezca antes de cualquier JS */}
         <div

@@ -12,14 +12,16 @@ export const SITE = {
   twitter: '@roky146',
   locale: 'es_DO',
   lang: 'es',
-  // Descripción canónica reutilizada en meta + schema
+  // Mensaje único: title + description + og:* comparten esta propuesta
+  title: 'Marcos Rodríguez — Desarrollo web, apps y automatización',
   description:
-    'Marcos Rodríguez Merlo — Ingeniero de Producción TI, estudiante de Ciberseguridad y desarrollador con sede en Santo Domingo, RD.',
-  image: 'https://mrmerlo.com/og-image.svg',
+    'Desarrollo webs, apps y automatizaciones a medida con la fiabilidad de la producción bancaria. Subgerente de Producción TI en Santo Domingo, RD.',
+  image: 'https://mrmerlo.com/og-image.png',
+  imageAlt: 'Marcos Rodríguez — Desarrollo web, apps y automatización',
   sameAs: [
     'https://github.com/roky146',
     'https://x.com/roky146',
-    'https://www.linkedin.com/in/marcos-rodríguez-merlo-367569224',
+    'https://www.linkedin.com/in/marcos-rodr%C3%ADguez-merlo-367569224',
   ],
   // Áreas de conocimiento — alimentan Person.knowsAbout (clave para GEO/LLMO)
   knowsAbout: [
@@ -48,6 +50,10 @@ export const CONTACT = {
   phone: '+1 829 587 0648',
   tel: 'tel:+18295870648',
   whatsapp: 'https://wa.me/18295870648',
+  // Clave pública de Web3Forms (https://web3forms.com). Vacía → el formulario
+  // abre el cliente de correo con el mensaje ya redactado.
+  formKey: '',
+  formEndpoint: 'https://api.web3forms.com/submit',
 }
 
 const abs = (path = '/') => (path === '/' ? SITE.url : `${SITE.url}${path}`)
