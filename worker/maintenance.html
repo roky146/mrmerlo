@@ -22,7 +22,7 @@
     --bg:#140F12; --cream:#FFF3E8; --mut:#CBBBB0; --line:#3B2B31;
     --h:#FF4D6D; --hl:#FF8FA3; --hs:#C9184A; --spark:#FFE3E8;
   }
-  * { margin:0; padding:0; box-sizing:border-box; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html, body { height:100%; }
   body {
     background: radial-gradient(ellipse 70% 60% at 50% 38%, #2B1A21 0%, var(--bg) 70%);
@@ -39,9 +39,13 @@
   .card { position:relative; z-index:1; max-width:1000px; text-align:center;
           display:flex; flex-direction:column; align-items:center; }
 
-  .heartBtn { background:none; border:0; cursor:pointer; padding:14px; margin-bottom:26px;
-              border-radius:28px; -webkit-tap-highlight-color:transparent; }
+  .heartBtn { appearance:none; -webkit-appearance:none; background:none; border:0; cursor:pointer;
+              padding:14px; margin-bottom:26px; border-radius:28px;
+              -webkit-user-select:none; user-select:none; touch-action:manipulation; }
+  /* Sin recuadro al tocar/hacer clic; el anillo solo aparece navegando con teclado */
+  .heartBtn:focus { outline:none; }
   .heartBtn:focus-visible { outline:3px solid var(--hl); outline-offset:6px; }
+  h1 { -webkit-user-select:none; user-select:none; touch-action:none; }
   #heart { width:clamp(128px, 19vw, 208px); height:auto; display:block; overflow:visible; shape-rendering:crispEdges; }
 
   h1 {
@@ -103,7 +107,6 @@
     <span><span data-i="made">Hecho con</span>
       <svg viewBox="0 0 9 8" aria-label="amor" role="img"><path fill="#FF4D6D" d="M1 0h2v1H1zM6 0h2v1H6zM0 1h4v1H0zM5 1h4v1H5zM0 2h9v2H0zM1 4h7v1H1zM2 5h5v1H2zM3 6h3v1H3zM4 7h1v1H4z"/></svg>
       <span data-i="place">en Santo Domingo</span></span>
-    <span data-i="hint">Toca el corazón</span>
   </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
@@ -123,7 +126,7 @@
       title: 'I’m making<br>something for you',
       sub: 'Thanks for stopping by. I’m refreshing the site with new projects, and it’ll be ready very soon.',
       write: 'Write to me', mail: 'Email', made: 'Made with', place: 'in Santo Domingo',
-      hint: 'Tap the heart', thanks: 'Thank you!'
+      thanks: 'Thank you!'
     };
     document.querySelectorAll('[data-i]').forEach(function (n) {
       var k = n.getAttribute('data-i');
@@ -255,15 +258,26 @@
     tl.from(['.sub', '.contact', 'footer'], { y: 18, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.1 }, 0.95);
     tl.add(function () { beat.play(0); });
 
-    // Cada letra rebota al pasar por encima
+    // Cada letra rebota al pasar el ratón… o el dedo por encima
+    function boing(ch) {
+      if (!ch || gsap.isTweening(ch)) return;
+      gsap.timeline()
+        .to(ch, { y: -16, rotation: R(-16, 16), duration: 0.16, ease: 'power2.out' })
+        .to(ch, { y: 0, rotation: 0, duration: 0.8, ease: 'elastic.out(1, 0.32)' });
+    }
     split.chars.forEach(function (ch) {
-      ch.addEventListener('pointerenter', function () {
-        if (gsap.isTweening(ch)) return;
-        gsap.timeline()
-          .to(ch, { y: -16, rotation: R(-16, 16), duration: 0.16, ease: 'power2.out' })
-          .to(ch, { y: 0, rotation: 0, duration: 0.8, ease: 'elastic.out(1, 0.32)' });
-      });
+      ch.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') boing(ch); });
     });
+    // Táctil: el "hover" no existe, así que buscamos la letra que queda bajo cada dedo
+    function underFinger(e) {
+      for (var i = 0; i < e.touches.length; i++) {
+        var t = e.touches[i];
+        var hit = document.elementFromPoint(t.clientX, t.clientY);
+        boing(hit && hit.closest ? hit.closest('h1 .ch') : null);
+      }
+    }
+    document.addEventListener('touchstart', underFinger, { passive: true });
+    document.addEventListener('touchmove', underFinger, { passive: true });
   }
 
   var started = false;
