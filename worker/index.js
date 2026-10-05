@@ -13,6 +13,8 @@
    Sin secreto configurado el modo nunca se activa (falla abierto).
    ────────────────────────────────────────────────────────────── */
 
+import MAINTENANCE_HTML from './maintenance.html'
+
 const ADMIN = '/__mantenimiento'
 const PREVIEW_COOKIE = 'mm_preview'
 const PREVIEW_DAYS = 30
@@ -64,65 +66,15 @@ async function hasPreview(req, env) {
   return c ? safeEqual(c, await previewToken(env)) : false
 }
 
-const prefersEn = (req) => {
-  const al = (req.headers.get('Accept-Language') || '').toLowerCase()
-  return !al.startsWith('es') && /(^|,)\s*en/.test(al)
-}
-
 const SECURITY = {
   'X-Content-Type-Options': 'nosniff',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'X-Frame-Options': 'DENY',
 }
 
-/* ── Página pública de mantenimiento ── */
-function maintenancePage(req) {
-  const en = prefersEn(req)
-  const T = en
-    ? { lang: 'en', title: 'Under maintenance — mrmerlo.com', h: 'Back very soon.', p: 'I’m polishing the site and adding new projects. Meanwhile, you can reach me directly.', s: 'Maintenance in progress' }
-    : { lang: 'es', title: 'En mantenimiento — mrmerlo.com', h: 'Vuelvo muy pronto.', p: 'Estoy puliendo el sitio y sumando proyectos nuevos. Mientras tanto, puedes escribirme directamente.', s: 'Mantenimiento en curso' }
-
-  const html = `<!doctype html>
-<html lang="${T.lang}"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${T.title}</title>
-<meta name="robots" content="noindex">
-<meta name="theme-color" content="#0B0F13">
-<link rel="icon" href="/icon.svg" type="image/svg+xml">
-<style>
-  :root{--bg:#0B0F13;--fg:#E9EEF3;--mut:#8FA0AF;--acc:#35D69A;--bd:#1F2A33}
-  *{margin:0;box-sizing:border-box}
-  html,body{height:100%}
-  body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-    display:grid;place-items:center;padding:1.5rem;overflow:hidden}
-  body::before{content:"";position:fixed;inset:0;opacity:.5;pointer-events:none;
-    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='32'%3E%3Cpath d='M32 0L64 16L32 32L0 16Z' fill='none' stroke='rgb(143,160,175)' stroke-opacity='.14'/%3E%3C/svg%3E");
-    -webkit-mask-image:radial-gradient(circle at 50% 45%,#000 0%,transparent 70%);mask-image:radial-gradient(circle at 50% 45%,#000 0%,transparent 70%)}
-  main{position:relative;max-width:34rem;text-align:center}
-  .logo{width:56px;height:56px;margin:0 auto 2rem}
-  .status{display:inline-flex;align-items:center;gap:.6rem;font:500 .72rem/1 ui-monospace,Consolas,monospace;
-    letter-spacing:.14em;text-transform:uppercase;color:var(--mut);border:1px solid var(--bd);padding:.55rem .9rem;margin-bottom:1.6rem}
-  .dot{width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 0 rgba(53,214,154,.6);animation:p 1.8s infinite}
-  @keyframes p{70%{box-shadow:0 0 0 10px rgba(53,214,154,0)}100%{box-shadow:0 0 0 0 rgba(53,214,154,0)}}
-  h1{font-size:clamp(2.2rem,7vw,3.4rem);font-weight:800;letter-spacing:-.045em;line-height:1;margin-bottom:1rem}
-  p{color:var(--mut);line-height:1.7;margin-bottom:2rem}
-  .links{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
-  a{font:500 .8rem/1 ui-monospace,Consolas,monospace;color:var(--fg);text-decoration:none;border:1.5px solid var(--bd);padding:.8rem 1.1rem;transition:border-color .2s,color .2s}
-  a:hover,a:focus-visible{border-color:var(--acc);color:var(--acc);outline:none}
-  @media (prefers-reduced-motion:reduce){.dot{animation:none}}
-</style></head>
-<body><main>
-  <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13" fill="none" stroke="#E9EEF3" stroke-width="2.2"/><path d="M10 22 L10 11 L16 16.5 L22 11 L22 22" fill="none" stroke="#E9EEF3" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  <div class="status"><span class="dot" aria-hidden="true"></span>${T.s}</div>
-  <h1>${T.h}</h1>
-  <p>${T.p}</p>
-  <div class="links">
-    <a href="mailto:marcosrodriguezmerlo@gmail.com">marcosrodriguezmerlo@gmail.com</a>
-    <a href="https://wa.me/18295870648" rel="noopener">WhatsApp</a>
-  </div>
-</main></body></html>`
-
-  return new Response(html, {
+/* ── Página pública de mantenimiento (worker/maintenance.html, GSAP) ── */
+function maintenancePage() {
+  return new Response(MAINTENANCE_HTML, {
     status: 503,
     headers: {
       'Content-Type': 'text/html; charset=utf-8',
@@ -268,6 +220,6 @@ export default {
 
     if (await hasPreview(req, env)) return withPreviewBadge(await env.ASSETS.fetch(req))
 
-    return maintenancePage(req)
+    return maintenancePage()
   },
 }
