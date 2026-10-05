@@ -3,262 +3,273 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>En obra — mrmerlo.com</title>
+<title>Preparando algo para ti — mrmerlo.com</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#0B0F13">
-<link rel="icon" href="/icon.svg" type="image/svg+xml">
-<!-- Oculta la escena hasta que GSAP arranca (sin destellos); si no carga o hay
-     movimiento reducido, el script quita la clase y todo aparece estático -->
+<meta name="theme-color" content="#140F12">
+<!-- Favicon: corazón pixelado -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-0.5 -1 10 10' shape-rendering='crispEdges'%3E%3Cpath fill='%23FF4D6D' d='M1 0h2v1H1zM6 0h2v1H6zM0 1h4v1H0zM5 1h4v1H5zM0 2h9v2H0zM1 4h7v1H1zM2 5h5v1H2zM3 6h3v1H3zM4 7h1v1H4z'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%23FFE3E8'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- Oculta la escena hasta que GSAP la prepara (sin destellos). Con movimiento
+     reducido o si algo falla, todo aparece estático. -->
 <script>
   if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.className = 'pre';
   setTimeout(function () { document.documentElement.className = ''; }, 3500);
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&family=Manrope:wght@800&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#0B0F13; --fg:#E9EEF3; --mut:#8FA0AF; --acc:#35D69A; --sig:#F2B441; --bd:#1F2A33; }
+  :root {
+    --bg:#140F12; --cream:#FFF3E8; --mut:#CBBBB0; --line:#3B2B31;
+    --h:#FF4D6D; --hl:#FF8FA3; --hs:#C9184A; --spark:#FFE3E8;
+  }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { height:100%; }
-  body { background:var(--bg); color:var(--fg); font-family:Manrope, system-ui, sans-serif; overflow:hidden; }
-  .mono { font-family:"JetBrains Mono", ui-monospace, Consolas, monospace; }
+  body {
+    background: radial-gradient(ellipse 70% 60% at 50% 38%, #2B1A21 0%, var(--bg) 70%);
+    color:var(--cream);
+    font-family:Nunito, system-ui, -apple-system, "Segoe UI", sans-serif;
+    overflow:hidden;
+    display:grid; place-items:center;
+    padding:24px;
+  }
 
-  #stage { position:fixed; top:0; right:0; bottom:0; left:34%; }
-  #scene { width:100%; height:100%; display:block; touch-action:manipulation; }
+  #sky { position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:0; }
+  .mini { position:absolute; bottom:-40px; height:auto; shape-rendering:crispEdges; }
 
-  header { position:fixed; top:28px; left:32px; display:flex; align-items:center; gap:12px;
-           font-size:13px; letter-spacing:.06em; color:var(--mut); }
-  header svg { width:30px; height:30px; }
+  .card { position:relative; z-index:1; max-width:1000px; text-align:center;
+          display:flex; flex-direction:column; align-items:center; }
 
-  main { position:fixed; left:32px; bottom:40px; max-width:min(780px, calc(100% - 64px)); }
-  .eyebrow { font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--sig); margin-bottom:20px; }
-  h1 { font-weight:800; font-size:clamp(44px, 6.2vw, 92px); line-height:.9; letter-spacing:-.055em; margin-bottom:24px; }
-  h1 .l { display:block; overflow:hidden; padding-bottom:.07em; margin-bottom:-.07em; }
-  h1 .w { display:inline-block; }
-  h1 .acc { color:var(--acc); }
-  .sub { color:var(--mut); font-size:16px; line-height:1.65; max-width:40ch; margin-bottom:24px; }
-  .contact { display:flex; gap:18px; align-items:baseline; flex-wrap:wrap; font-size:13px; }
-  .contact span { color:var(--mut); }
-  .contact a { color:var(--fg); text-decoration:none; border-bottom:1px solid var(--bd); padding-bottom:2px;
-               transition:color .2s, border-color .2s; }
-  .contact a:hover, .contact a:focus-visible { color:var(--acc); border-color:var(--acc); outline:none; }
+  .heartBtn { background:none; border:0; cursor:pointer; padding:14px; margin-bottom:26px;
+              border-radius:28px; -webkit-tap-highlight-color:transparent; }
+  .heartBtn:focus-visible { outline:3px solid var(--hl); outline-offset:6px; }
+  #heart { width:clamp(128px, 19vw, 208px); height:auto; display:block; overflow:visible; shape-rendering:crispEdges; }
 
-  footer { position:fixed; right:32px; bottom:40px; text-align:right; font-size:11px; letter-spacing:.14em;
-           text-transform:uppercase; color:var(--mut); line-height:2.1; }
-  footer b { color:var(--fg); font-weight:500; }
-  .hit { cursor:pointer; }
-  .pre #stage, .pre main, .pre footer, .pre header { visibility:hidden; }
+  h1 {
+    font-family:'Luckiest Guy', system-ui, sans-serif; font-weight:400;
+    font-size:clamp(40px, 6.6vw, 86px); line-height:.98; letter-spacing:.015em;
+    color:var(--cream);
+    text-shadow:0 .075em 0 var(--hs);
+    margin-bottom:24px;
+  }
+  h1 .ch { will-change:transform; }
 
-  @media (max-width: 820px) {
-    #stage { left:0; top:54px; bottom:auto; height:50svh; }
-    header { left:20px; top:20px; }
-    main { left:20px; bottom:28px; max-width:calc(100% - 40px); }
-    .sub { font-size:15px; margin-bottom:18px; }
+  .sub { font-size:clamp(16px, 2vw, 19px); line-height:1.65; color:var(--mut); max-width:36ch; margin-bottom:28px; }
+
+  .contact { display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap;
+             font-weight:700; font-size:15px; }
+  .contact .lbl { margin-right:6px; }
+  .contact a { color:var(--cream); text-decoration:none; padding:10px 18px; border-radius:999px;
+               border:2px solid var(--line); transition:border-color .2s, background .2s, transform .2s; }
+  .contact a:hover, .contact a:focus-visible { border-color:var(--h); background:rgba(255,77,109,.12);
+               transform:translateY(-2px); outline:none; }
+
+  footer { position:fixed; left:0; right:0; bottom:22px; z-index:1; display:flex; justify-content:center;
+           gap:20px; flex-wrap:wrap; font-size:13px; color:var(--mut); }
+  footer svg { width:12px; height:11px; vertical-align:-1px; shape-rendering:crispEdges; }
+
+  .pop { position:absolute; left:50%; top:0; transform:translateX(-50%);
+         font-family:'Luckiest Guy', system-ui, sans-serif; font-size:24px; color:var(--hl);
+         pointer-events:none; white-space:nowrap; opacity:0; }
+
+  .pre .card, .pre footer { visibility:hidden; }
+
+  @media (max-height: 660px) {
+    #heart { width:104px; } .heartBtn { margin-bottom:12px; }
+    h1 { font-size:clamp(36px, 7vw, 70px); margin-bottom:14px; } .sub { margin-bottom:18px; }
     footer { display:none; }
   }
 </style>
 </head>
 <body>
-  <header class="mono">
-    <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13" fill="none" stroke="#E9EEF3" stroke-width="2.2"/><path d="M10 22 L10 11 L16 16.5 L22 11 L22 22" fill="none" stroke="#E9EEF3" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    mrmerlo.com
-  </header>
+  <div id="sky" aria-hidden="true"></div>
 
-  <div id="stage" aria-hidden="true"><svg id="scene" viewBox="0 0 1000 760" preserveAspectRatio="xMidYMid meet"></svg></div>
+  <main class="card">
+    <button class="heartBtn" type="button" aria-label="Darle cariño al corazón" data-i-label="heart">
+      <svg id="heart" viewBox="0 0 9 8" aria-hidden="true"><g id="beat"></g></svg>
+    </button>
+    <span class="pop" aria-hidden="true" data-i="thanks">¡Gracias!</span>
 
-  <main>
-    <p class="eyebrow mono" data-i="eyebrow">mrmerlo.com — en obra</p>
-    <h1 data-i="title"><span class="l">Reacomodando</span><span class="l">las <span class="acc">piezas.</span></span></h1>
-    <p class="sub" data-i="sub">Estoy terminando proyectos nuevos y puliendo detalles. Vuelve en un rato.</p>
-    <p class="contact mono">
-      <span data-i="hurry">¿Prisa? Escríbeme:</span>
-      <a href="mailto:marcosrodriguezmerlo@gmail.com" data-i="mail">correo ↗</a>
-      <a href="https://wa.me/18295870648" rel="noopener">whatsapp ↗</a>
+    <h1 data-i="title">Estoy preparando<br>algo para ti</h1>
+    <p class="sub" data-i="sub">Gracias por pasarte. Estoy renovando el sitio con proyectos nuevos y lo tendré listo muy pronto.</p>
+
+    <p class="contact">
+      <span class="lbl" data-i="write">Escríbeme</span>
+      <a href="mailto:marcosrodriguezmerlo@gmail.com" data-i="mail">Correo</a>
+      <a href="https://wa.me/18295870648" rel="noopener">WhatsApp</a>
     </p>
   </main>
 
-  <footer class="mono">
-    <div><b data-i="status">Obra en curso</b> · 503</div>
-    <div data-i="hint">Toca un bloque</div>
+  <footer>
+    <span><span data-i="made">Hecho con</span>
+      <svg viewBox="0 0 9 8" aria-label="amor" role="img"><path fill="#FF4D6D" d="M1 0h2v1H1zM6 0h2v1H6zM0 1h4v1H0zM5 1h4v1H5zM0 2h9v2H0zM1 4h7v1H1zM2 5h5v1H2zM3 6h3v1H3zM4 7h1v1H4z"/></svg>
+      <span data-i="place">en Santo Domingo</span></span>
+    <span data-i="hint">Toca el corazón</span>
   </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Physics2DPlugin.min.js"></script>
 <script>
 (function () {
-  /* ── Idioma (es por defecto, en si el navegador lo prefiere) ── */
+  var NS = 'http://www.w3.org/2000/svg';
+  var HEART_PATH = 'M1 0h2v1H1zM6 0h2v1H6zM0 1h4v1H0zM5 1h4v1H5zM0 2h9v2H0zM1 4h7v1H1zM2 5h5v1H2zM3 6h3v1H3zM4 7h1v1H4z';
+
+  /* ── Idioma: español por defecto, inglés si el navegador lo prefiere ── */
   var en = (navigator.language || '').toLowerCase().indexOf('en') === 0;
   if (en) {
     document.documentElement.lang = 'en';
-    document.title = 'Under construction — mrmerlo.com';
+    document.title = 'Making something for you — mrmerlo.com';
     var T = {
-      eyebrow: 'mrmerlo.com — under construction',
-      title: '<span class="l">Rearranging</span><span class="l">the <span class="acc">pieces.</span></span>',
-      sub: 'I’m finishing new projects and polishing the details. Come back in a bit.',
-      hurry: 'In a hurry? Reach me:', mail: 'email ↗', status: 'Work in progress', hint: 'Tap a block'
+      title: 'I’m making<br>something for you',
+      sub: 'Thanks for stopping by. I’m refreshing the site with new projects, and it’ll be ready very soon.',
+      write: 'Write to me', mail: 'Email', made: 'Made with', place: 'in Santo Domingo',
+      hint: 'Tap the heart', thanks: 'Thank you!'
     };
     document.querySelectorAll('[data-i]').forEach(function (n) {
       var k = n.getAttribute('data-i');
       if (k === 'title') n.innerHTML = T.title; else if (T[k]) n.textContent = T[k];
     });
+    document.querySelector('.heartBtn').setAttribute('aria-label', 'Give the heart some love');
   }
 
-  /* Partir el título en palabras para animarlas */
-  document.querySelectorAll('h1 .l').forEach(function (line) {
-    // copia estática: childNodes es "vivo" y cambia al reemplazar nodos
-    Array.prototype.slice.call(line.childNodes).forEach(function (node) {
-      if (node.nodeType === 3) {
-        var frag = document.createDocumentFragment();
-        node.textContent.split(/(\s+)/).forEach(function (part) {
-          if (!part) return;
-          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
-          var s = document.createElement('span'); s.className = 'w'; s.textContent = part; frag.appendChild(s);
-        });
-        line.replaceChild(frag, node);
-      } else if (node.nodeType === 1) { node.classList.add('w'); }
-    });
+  /* ── El corazón: un píxel = una celda del viewBox ── */
+  var MAP = [
+    '.HX...XX.',
+    'HWXX.XXXX',
+    'HXXXXXXXX',
+    'XXXXXXXXS',
+    '.XXXXXXS.',
+    '..XXXXS..',
+    '...XXS...',
+    '....S....'
+  ];
+  var COLOR = { H: '#FF8FA3', W: '#FFE3E8', X: '#FF4D6D', S: '#C9184A' };
+  var beatG = document.getElementById('beat');
+  var px = [];
+  MAP.forEach(function (row, y) {
+    for (var x = 0; x < row.length; x++) {
+      var c = row[x];
+      if (c === '.') continue;
+      var r = document.createElementNS(NS, 'rect');
+      r.setAttribute('x', x); r.setAttribute('y', y);
+      r.setAttribute('width', 1.02); r.setAttribute('height', 1.02);
+      r.setAttribute('fill', COLOR[c]);
+      beatG.appendChild(r);
+      px.push({ el: r, x: x + 0.5, y: y + 0.5 });
+    }
   });
-
-  /* ── Escena isométrica ── */
-  var NS = 'http://www.w3.org/2000/svg';
-  var svg = document.getElementById('scene');
-  var W2 = 34, H2 = 17, H = 38, OX = 430, OY = 470;
-  function iso(x, y, z) { return { x: OX + (x - y) * W2, y: OY + (x + y) * H2 - z * H }; }
-  function el(tag, attrs, parent) {
-    var e = document.createElementNS(NS, tag);
-    for (var k in attrs) e.setAttribute(k, attrs[k]);
-    (parent || svg).appendChild(e);
-    return e;
-  }
-  function pts(arr) { return arr.map(function (p) { return p[0] + ',' + p[1]; }).join(' '); }
-
-  var world = el('g', {});
-
-  /* Suelo: rejilla de rombos que se desvanece hacia los bordes */
-  var defs = el('defs', {});
-  var rg = el('radialGradient', { id: 'fade', cx: '50%', cy: '58%', r: '55%' }, defs);
-  el('stop', { offset: '0', 'stop-color': '#fff', 'stop-opacity': '1' }, rg);
-  el('stop', { offset: '1', 'stop-color': '#fff', 'stop-opacity': '0' }, rg);
-  var mask = el('mask', { id: 'm' }, defs);
-  el('rect', { x: 0, y: 0, width: 1000, height: 760, fill: 'url(#fade)' }, mask);
-  var floor = el('g', { mask: 'url(#m)' }, world);
-  var d = '';
-  for (var gx = -9; gx <= 13; gx++) for (var gy = -9; gy <= 11; gy++) {
-    var c = iso(gx, gy, 0);
-    d += 'M' + c.x + ' ' + (c.y - H2) + 'L' + (c.x + W2) + ' ' + c.y + 'L' + c.x + ' ' + (c.y + H2) + 'L' + (c.x - W2) + ' ' + c.y + 'Z';
-  }
-  el('path', { d: d, fill: 'none', stroke: '#8FA0AF', 'stroke-opacity': '0.13', 'stroke-width': '1' }, floor);
-
-  /* Bloques: la M (de pie sobre el eje x) + piezas sueltas por colocar */
-  var M = ['X...X', 'XX.XX', 'X.X.X', 'X...X', 'X...X']; // fila 0 = arriba
-  var blocks = [];
-  M.forEach(function (row, r) {
-    for (var i = 0; i < row.length; i++) if (row[i] === 'X') blocks.push({ x: i, y: 0, z: 4 - r, kind: 'n' });
-  });
-  [[6, 2, 0, 'a'], [7, 2, 0, 'n'], [6, 3, 0, 'n'], [7, 3, 0, 'a'], [-3, 2, 0, 'n'], [-3, 2, 1, 'a']]
-    .forEach(function (b) { blocks.push({ x: b[0], y: b[1], z: b[2], kind: b[3] }); });
-
-  var PAL = {
-    n: { top: '#E9EEF3', left: '#53626F', right: '#93A2B0' },
-    a: { top: '#F2B441', left: '#7C5A1C', right: '#B98630' }
-  };
-
-  // Orden de pintado: de atrás hacia delante, de abajo hacia arriba
-  blocks.sort(function (a, b) { return (a.x + a.y) - (b.x + b.y) || a.z - b.z || a.x - b.x; });
-
-  var occupied = {};
-  blocks.forEach(function (b) { occupied[b.x + ',' + b.y + ',' + b.z] = true; });
-
-  blocks.forEach(function (b) {
-    var t = iso(b.x, b.y, b.z + 1); // centro de la cara superior
-    var p = PAL[b.kind];
-    var g = el('g', { transform: 'translate(' + t.x + ',' + t.y + ')' }, world);
-    var inner = el('g', {}, g);
-    el('polygon', { points: pts([[-W2, 0], [0, H2], [0, H2 + H], [-W2, H]]), fill: p.left }, inner);
-    el('polygon', { points: pts([[W2, 0], [0, H2], [0, H2 + H], [W2, H]]), fill: p.right }, inner);
-    var top = el('polygon', { points: pts([[0, -H2], [W2, 0], [0, H2], [-W2, 0]]), fill: p.top }, inner);
-    b.g = g; b.inner = inner; b.top = top; b.base = p.top; b.t = t;
-    b.free = !occupied[b.x + ',' + b.y + ',' + (b.z + 1)]; // nada encima → se puede tocar
-    if (b.free) g.setAttribute('class', 'hit');
-  });
-
-  /* La bola (misma firma que el hero) */
-  var ballG = el('g', {}, world);
-  el('circle', { cx: 0, cy: -10, r: 16, fill: '#35D69A', opacity: '0.22' }, ballG);
-  var ball = el('ellipse', { cx: 0, cy: -9, rx: 9, ry: 9, fill: '#E9EEF3' }, ballG);
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var path = [[0, 4], [1, 3], [2, 2], [3, 3], [4, 4]].map(function (p) {
-    return blocks.filter(function (b) { return b.y === 0 && b.x === p[0] && b.z === p[1]; })[0];
-  });
-  var start = path[0].t;
-
-  if (!window.gsap || reduce) { // sin GSAP o con movimiento reducido: escena estática y completa
-    ballG.setAttribute('transform', 'translate(' + start.x + ',' + start.y + ')');
-    document.documentElement.className = '';
-    return;
-  }
   var gsap = window.gsap;
-  gsap.set(ballG, { x: start.x, y: start.y });
-
-  function flash(b) {
-    gsap.fromTo(b.top, { attr: { fill: '#35D69A' } }, { attr: { fill: b.base }, duration: 1.6, ease: 'power2.out' });
+  if (!gsap || !window.SplitText || !window.Physics2DPlugin || reduce) {
+    document.documentElement.className = '';
+    return; // estático y completo
   }
+  gsap.registerPlugin(SplitText, Physics2DPlugin);
+  var R = gsap.utils.random;
+  var els = px.map(function (p) { return p.el; });
 
-  /* 1 · Construcción: los bloques caen y rebotan en orden aleatorio */
-  var intro = gsap.timeline({ delay: 0.15 });
-  // Estados iniciales ya aplicados por los .from() → ahora sí se puede mostrar
-  intro.call(function () { document.documentElement.className = ''; }, null, 0);
-  intro.from(blocks.map(function (b) { return b.inner; }), {
-    y: -560, opacity: 0, duration: 1.05, ease: 'bounce.out',
-    stagger: { each: 0.075, from: 'random' }
-  });
-  intro.from('h1 .w', { yPercent: 115, duration: 0.95, ease: 'power4.out', stagger: 0.07 }, 0.35);
-  intro.from(['.eyebrow', '.sub', '.contact', 'footer', 'header'], { opacity: 0, y: 12, duration: 0.7, stagger: 0.08 }, 0.6);
-  intro.from(ballG, { y: '-=480', opacity: 0, duration: 0.9, ease: 'bounce.out' }, '-=0.35');
-  intro.add(function () { flash(path[0]); hops.play(); });
-
-  /* 2 · La bola recorre la cima de la M, con squash al aterrizar */
-  var hops = gsap.timeline({ paused: true, repeat: -1 });
-  var seq = path.concat(path.slice(1, -1).reverse());
-  for (var i = 0; i < seq.length; i++) {
-    var a = seq[i], b = seq[(i + 1) % seq.length];
-    var peak = Math.min(a.t.y, b.t.y) - 74;
-    hops.to(ballG, { x: b.t.x, duration: 0.56, ease: 'none' })
-        .to(ballG, { y: peak, duration: 0.28, ease: 'power2.out' }, '<')
-        .to(ballG, { y: b.t.y, duration: 0.28, ease: 'power2.in' }, '>')
-        .to(ball, { attr: { rx: 12, ry: 6.5, cy: -6.5 }, duration: 0.07, ease: 'power1.out' })
-        .add((function (target) { return function () { flash(target); }; })(b), '<')
-        .to(ball, { attr: { rx: 9, ry: 9, cy: -9 }, duration: 0.24, ease: 'back.out(3)' })
-        .to({}, { duration: 0.12 });
-  }
-
-  /* 3 · Obra viva: cada tanto una pieza suelta se levanta y se recoloca */
-  var loose = blocks.filter(function (b) { return b.y !== 0 && b.free; });
-  function bump(b, h) {
-    if (gsap.isTweening(b.inner)) return;
-    gsap.timeline()
-      .to(b.inner, { y: -(h || 64), duration: 0.32, ease: 'power2.out' })
-      .to(b.inner, { y: 0, duration: 0.7, ease: 'bounce.out' });
-    flash(b);
-  }
-  gsap.delayedCall(4, function beat() {
-    bump(loose[Math.floor(Math.random() * loose.length)]);
-    gsap.delayedCall(2.4 + Math.random() * 2.2, beat);
+  // Píxeles dispersos antes de armarse
+  els.forEach(function (el) {
+    gsap.set(el, { x: R(-15, 15), y: R(-13, 9), rotation: R(-200, 200), opacity: 0, transformOrigin: '50% 50%' });
   });
 
-  /* 4 · Interacción: tocar un bloque libre lo hace saltar */
-  blocks.forEach(function (b) {
-    if (!b.free) return;
-    b.g.addEventListener('pointerdown', function () { bump(b, 90); });
+  /* ── Corazoncitos que suben con cada latido ── */
+  var sky = document.getElementById('sky');
+  var alive = 0;
+  function spawnMini() {
+    if (alive > 12 || document.hidden) return;
+    var s = document.createElementNS(NS, 'svg');
+    s.setAttribute('viewBox', '0 0 9 8');
+    s.setAttribute('class', 'mini');
+    var size = R(12, 30);
+    s.style.width = size + 'px';
+    s.style.left = R(4, 96) + '%';
+    var p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', HEART_PATH);
+    p.setAttribute('fill', Math.random() < 0.65 ? '#FF4D6D' : '#FF8FA3');
+    s.appendChild(p);
+    sky.appendChild(s);
+    alive++;
+    var dur = R(7, 11);
+    var peak = R(0.16, 0.42);
+    gsap.set(s, { opacity: 0, rotation: R(-18, 18) });
+    gsap.to(s, { y: -(window.innerHeight + 90), duration: dur, ease: 'none',
+      onComplete: function () { s.remove(); alive--; } });
+    gsap.to(s, { opacity: peak, duration: 1.4 });
+    gsap.to(s, { opacity: 0, duration: 1.6, delay: dur - 1.8 });
+    gsap.to(s, { x: '+=' + R(-46, 46), duration: R(1.6, 2.4), ease: 'sine.inOut', yoyo: true, repeat: Math.ceil(dur / 2) });
+  }
+
+  /* ── Latido (lub-dub) ── */
+  var beat = gsap.timeline({ paused: true, repeat: -1, repeatDelay: 0.9 })
+    .call(spawnMini)
+    .to(beatG, { scale: 1.13, duration: 0.12, ease: 'power2.out', transformOrigin: '50% 55%' })
+    .to(beatG, { scale: 1, duration: 0.17, ease: 'power2.in' })
+    .to(beatG, { scale: 1.07, duration: 0.11, ease: 'power2.out' })
+    .to(beatG, { scale: 1, duration: 0.38, ease: 'power3.out' });
+
+  /* ── Tocar el corazón: estalla en píxeles y se vuelve a armar ── */
+  var btn = document.querySelector('.heartBtn');
+  var pop = document.querySelector('.pop');
+  var busy = false;
+  btn.addEventListener('click', function () {
+    if (busy) return;
+    busy = true;
+    beat.pause();
+    gsap.to(beatG, { scale: 1, duration: 0.1 });
+
+    gsap.fromTo(pop, { y: 0, opacity: 0, scale: 0.6 },
+      { y: -46, opacity: 1, scale: 1, duration: 0.45, ease: 'back.out(2.5)',
+        onComplete: function () { gsap.to(pop, { y: -70, opacity: 0, duration: 0.6, delay: 0.5 }); } });
+    for (var k = 0; k < 4; k++) gsap.delayedCall(k * 0.12, spawnMini);
+
+    var tl = gsap.timeline({ onComplete: function () { busy = false; beat.restart(); } });
+    px.forEach(function (p) {
+      var ang = Math.atan2(p.y - 3.6, p.x - 4.5) * 180 / Math.PI;
+      tl.to(p.el, {
+        duration: 0.8, ease: 'none',
+        physics2D: { velocity: R(16, 32), angle: ang + R(-28, 28) - 18, gravity: 42 },
+        rotation: R(-360, 360)
+      }, 0);
+    });
+    tl.to(els, { x: 0, y: 0, rotation: 0, duration: 1, ease: 'elastic.out(1, 0.55)',
+      stagger: { each: 0.012, from: 'random' } }, 0.82);
   });
 
-  /* 5 · Parallax suave con el puntero */
-  var qx = gsap.quickTo(world, 'x', { duration: 0.9, ease: 'power3.out' });
-  var qy = gsap.quickTo(world, 'y', { duration: 0.9, ease: 'power3.out' });
+  /* El corazón "mira" el puntero: se inclina un poco hacia él */
+  var tilt = gsap.quickTo('#heart', 'rotation', { duration: 0.8, ease: 'power3.out' });
   window.addEventListener('pointermove', function (e) {
-    qx((e.clientX / window.innerWidth - 0.5) * -22);
-    qy((e.clientY / window.innerHeight - 0.5) * -14);
+    tilt((e.clientX / window.innerWidth - 0.5) * 12);
   });
+
+  /* ── Intro (tras cargar las fuentes, para partir bien las letras) ── */
+  function start() {
+    var split = SplitText.create('h1', { type: 'chars,words', charsClass: 'ch' });
+    var tl = gsap.timeline();
+    tl.call(function () { document.documentElement.className = ''; }, null, 0);
+    tl.to(els, { x: 0, y: 0, rotation: 0, opacity: 1, duration: 1.15, ease: 'back.out(1.7)',
+      stagger: { each: 0.022, from: 'random' } }, 0.05);
+    tl.from(split.chars, { yPercent: -140, rotation: function () { return R(-28, 28); }, opacity: 0,
+      duration: 1, ease: 'elastic.out(1, 0.5)', stagger: 0.035 }, 0.35);
+    tl.from(['.sub', '.contact', 'footer'], { y: 18, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.1 }, 0.95);
+    tl.add(function () { beat.play(0); });
+
+    // Cada letra rebota al pasar por encima
+    split.chars.forEach(function (ch) {
+      ch.addEventListener('pointerenter', function () {
+        if (gsap.isTweening(ch)) return;
+        gsap.timeline()
+          .to(ch, { y: -16, rotation: R(-16, 16), duration: 0.16, ease: 'power2.out' })
+          .to(ch, { y: 0, rotation: 0, duration: 0.8, ease: 'elastic.out(1, 0.32)' });
+      });
+    });
+  }
+
+  var started = false;
+  function go() { if (!started) { started = true; start(); } }
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(go);
+  setTimeout(go, 2500);
 })();
 </script>
 </body>

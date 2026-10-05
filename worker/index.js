@@ -93,7 +93,7 @@ function withPreviewBadge(res) {
   headers.set('X-Robots-Tag', 'noindex')
   const out = new Response(res.body, { status: res.status, statusText: res.statusText, headers })
   if (!ct.includes('text/html')) return out
-  const badge = `<a href="${ADMIN}" style="position:fixed;left:16px;bottom:16px;z-index:2147483647;display:inline-flex;align-items:center;gap:8px;padding:9px 13px;background:#0B0F13;color:#E9EEF3;border:1px solid #35D69A;font:500 12px/1 ui-monospace,Consolas,monospace;letter-spacing:.04em;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.35)"><span style="width:7px;height:7px;border-radius:50%;background:#F2B441"></span>Mantenimiento activo · solo tú ves el sitio</a>`
+  const badge = `<a href="${ADMIN}" style="position:fixed;left:16px;bottom:16px;z-index:2147483647;display:inline-flex;align-items:center;gap:8px;padding:9px 13px;background:#0B0F13;color:#E9EEF3;border:1px solid #35D69A;font:500 12px/1 system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:.04em;text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.35)"><span style="width:7px;height:7px;border-radius:50%;background:#F2B441"></span>Mantenimiento activo · solo tú ves el sitio</a>`
   return new HTMLRewriter().on('body', { element(el) { el.append(badge, { html: true }) } }).transform(out)
 }
 
@@ -133,16 +133,16 @@ function adminPage({ state, authed, configured, msg }) {
   main{width:100%;max-width:30rem;border:1px solid #1F2A33;background:#10161D;padding:2rem;border-radius:0 22px 0 0}
   h1{font-size:1.6rem;letter-spacing:-.03em;margin-bottom:1.2rem}
   p{color:#8FA0AF;line-height:1.6;margin-bottom:1.2rem;font-size:.93rem}
-  code{font-family:ui-monospace,Consolas,monospace;color:#35D69A;font-size:.85em}
-  label{display:grid;gap:.5rem;font:500 .72rem ui-monospace,Consolas,monospace;letter-spacing:.12em;text-transform:uppercase;color:#8FA0AF;margin-bottom:1.2rem}
+  code{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:#35D69A;font-size:.85em}
+  label{display:grid;gap:.5rem;font:500 .72rem system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#8FA0AF;margin-bottom:1.2rem}
   input{font:inherit;font-size:1rem;letter-spacing:0;text-transform:none;color:#E9EEF3;background:transparent;border:none;border-bottom:1.5px solid #1F2A33;padding:.5rem 0;outline:none}
   input:focus{border-color:#35D69A}
-  button{font:500 .85rem ui-monospace,Consolas,monospace;padding:.85rem 1.3rem;border:2px solid #E9EEF3;background:#E9EEF3;color:#0B0F13;cursor:pointer}
+  button{font:500 .85rem system-ui,-apple-system,'Segoe UI',sans-serif;padding:.85rem 1.3rem;border:2px solid #E9EEF3;background:#E9EEF3;color:#0B0F13;cursor:pointer}
   button.warn{background:#F2B441;border-color:#F2B441}
   button.link{background:none;border:none;color:#8FA0AF;padding:0;text-decoration:underline}
   .row{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin:1.6rem 0 1rem;flex-wrap:wrap}
-  a{color:#35D69A;font:500 .85rem ui-monospace,Consolas,monospace;text-decoration:none}
-  .state{display:flex;gap:.6rem;align-items:center;font:500 .78rem ui-monospace,Consolas,monospace;color:#E9EEF3}
+  a{color:#35D69A;font:500 .85rem system-ui,-apple-system,'Segoe UI',sans-serif;text-decoration:none}
+  .state{display:flex;gap:.6rem;align-items:center;font:500 .78rem system-ui,-apple-system,'Segoe UI',sans-serif;color:#E9EEF3}
   .state span{width:9px;height:9px;border-radius:50%;flex:none}
   .state.on span{background:#F2B441}.state.off span{background:#35D69A}
   .ok{color:#35D69A}.err{color:#E5484D}.note{font-size:.8rem;margin:0}
